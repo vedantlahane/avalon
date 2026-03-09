@@ -6,6 +6,7 @@ import { activityController } from '../controllers/activityController.js';
 import { taskController } from '../controllers/taskController.js';
 import { emailTemplateController } from '../controllers/emailTemplateController.js';
 import { dashboardController } from '../controllers/dashboardController.js';
+import { emailController } from '../controllers/emailController.js';
 
 const crmRoutes = new Hono();
 
@@ -50,5 +51,11 @@ crmRoutes.get('/email-templates', emailTemplateController.getEmailTemplates);
 crmRoutes.post('/email-templates', emailTemplateController.createEmailTemplate);
 crmRoutes.patch('/email-templates/:id', emailTemplateController.updateEmailTemplate);
 crmRoutes.delete('/email-templates/:id', emailTemplateController.deleteEmailTemplate);
+
+// Emails
+crmRoutes.get('/emails', emailController.getEmails);
+crmRoutes.get('/emails/:id', emailController.getEmailById);
+crmRoutes.patch('/emails/:id', emailController.updateEmail);
+crmRoutes.delete('/emails/:id', emailController.deleteEmail);
 
 export default crmRoutes;

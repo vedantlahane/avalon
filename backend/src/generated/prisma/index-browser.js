@@ -178,6 +178,21 @@ exports.Prisma.ContactScalarFieldEnum = {
   isDeleted: 'isDeleted'
 };
 
+exports.Prisma.EmailScalarFieldEnum = {
+  id: 'id',
+  sender: 'sender',
+  subject: 'subject',
+  content: 'content',
+  timestamp: 'timestamp',
+  isRead: 'isRead',
+  contactId: 'contactId',
+  summary: 'summary',
+  sentiment: 'sentiment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
+};
+
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -289,6 +304,7 @@ exports.Prisma.ModelName = {
   UserIdentity: 'UserIdentity',
   Otp: 'Otp',
   Contact: 'Contact',
+  Email: 'Email',
   Company: 'Company',
   Deal: 'Deal',
   Activity: 'Activity',

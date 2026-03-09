@@ -38,3 +38,9 @@
 - `POST /email-templates` - Create a new email template
 - `PATCH /email-templates/:id` - Update an email template
 - `DELETE /email-templates/:id` - Soft delete an email template
+
+## Emails
+- `GET /emails` - List all emails
+- `GET /emails/:id` - Get an email by id
+- `PATCH /emails/:id` - Update an email (mark as read, add summary etc)
+- `DELETE /emails/:id` - Soft delete an email
