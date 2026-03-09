@@ -19,10 +19,13 @@ export const contactService = {
     
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       newContact = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.floor(Math.random() * 1000) + 100,
         ...contactData,
-        score: 0,
-        sentimentScore: 0.5,
+        leadScore: 0,
+        tags: [],
+        owner: 'Me',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       } as Contact;
     } else {
       const response = await api.post('/contacts', contactData);
@@ -37,7 +40,7 @@ export const contactService = {
         contactId: newContact.id,
         name: `${newContact.firstName} ${newContact.lastName}`,
         email: newContact.email,
-        title: newContact.title,
+        jobTitle: newContact.jobTitle,
       },
       uid: crypto.randomUUID(),
     });
@@ -45,11 +48,29 @@ export const contactService = {
     return newContact;
   },
 
-  getContactById: async (id: string): Promise<Contact | undefined> => {
+  getContactById: async (id: number): Promise<Contact | undefined> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return MOCK_CONTACTS.find(c => c.id === id);
     }
     const response = await api.get(`/contacts/${id}`);
     return response.data;
+  },
+
+  updateContact: async (id: number, contactData: Partial<Contact>): Promise<Contact> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      const index = MOCK_CONTACTS.findIndex(c => c.id === id);
+      if (index === -1) throw new Error('Contact not found');
+      const updatedContact = { ...MOCK_CONTACTS[index], ...contactData, updatedAt: new Date().toISOString() };
+      return updatedContact;
+    }
+    const response = await api.patch(`/contacts/${id}`, contactData);
+    return response.data;
+  },
+
+  deleteContact: async (id: number): Promise<void> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return;
+    }
+    await api.delete(`/contacts/${id}`);
   }
 };

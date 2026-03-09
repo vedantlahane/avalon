@@ -84,23 +84,23 @@ export const Contacts: React.FC = () => {
                       <div className="text-sm font-bold text-gray-900 leading-tight">
                         {contact.firstName} {contact.lastName}
                       </div>
-                      <div className="text-xs text-gray-500">{contact.title}</div>
+                      <div className="text-xs text-gray-500">{contact.jobTitle}</div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <span className={cn(
                     "text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider",
-                    contact.status === 'customer' ? "bg-emerald-50 text-emerald-700" : 
-                    contact.status === 'lead' ? "bg-indigo-50 text-indigo-700" : "bg-amber-50 text-amber-700"
+                    contact.leadStatus === 'Qualified' ? "bg-emerald-50 text-emerald-700" : 
+                    contact.leadStatus === 'New' ? "bg-indigo-50 text-indigo-700" : "bg-amber-50 text-amber-700"
                   )}>
-                    {contact.status}
+                    {contact.leadStatus}
                   </span>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2 text-sm text-gray-600 font-medium">
                     <Building2 size={14} className="text-gray-400" />
-                    Acme Corp
+                    {contact.company?.name || 'No Company'}
                   </div>
                 </td>
                 <td className="px-6 py-4">
@@ -109,12 +109,12 @@ export const Contacts: React.FC = () => {
                       <div 
                         className={cn(
                           "h-full rounded-full transition-all duration-1000",
-                          contact.score > 70 ? "bg-emerald-500" : contact.score > 40 ? "bg-amber-500" : "bg-red-500"
+                          contact.leadScore > 70 ? "bg-emerald-500" : contact.leadScore > 40 ? "bg-amber-500" : "bg-red-500"
                         )}
-                        style={{ width: `${contact.score}%` }}
+                        style={{ width: `${contact.leadScore}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-mono font-bold text-gray-900">{contact.score}</span>
+                    <span className="text-sm font-mono font-bold text-gray-900">{contact.leadScore}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-right">

@@ -1,10 +1,11 @@
-import { errorHandler } from './middlewares/error.ts';
-import ApiError from './utils/ApiError.ts';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { secureHeaders } from 'hono/secure-headers';
 
-// import authRoutes from './routes/auth.routes.ts';
+import { errorHandler } from './middlewares/error.js';
+// import authRoutes from './routes/auth.routes.js';
+import crmRoutes from './routes/crm.routes.js';
+import ApiError from './utils/ApiError.js';
 
 const app = new Hono();
 
@@ -33,6 +34,8 @@ app.get('/health', c => {
 
 // Mount auth routes only if auth needs to be implemented
 // app.route('/auth', authRoutes);
+
+app.route('/', crmRoutes);
 
 // send back a 404 error for any unknown api request
 app.notFound(() => {

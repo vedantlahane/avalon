@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Circle, Clock, Plus, Filter, Search } from 'lucide-react';
-import { MOCK_TASKS } from '../data/mockData';
+import { Task } from '../types';
+import { taskService } from '../services/task.service';
 import { cn } from '../lib/utils';
 import { format } from 'date-fns';
 
 export const Tasks: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    taskService.getTasks().then(data => {
+      setTasks(data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
@@ -35,27 +54,27 @@ export const Tasks: React.FC = () => {
         </div>
 
         <div className="divide-y divide-gray-50">
-          {MOCK_TASKS.map(task => (
+          {tasks.map(task => (
             <div key={task.id} className="p-4 flex items-start gap-4 hover:bg-gray-50 transition-colors group">
               <button className="mt-0.5 text-gray-300 hover:text-indigo-600 transition-colors">
-                {task.isCompleted ? <CheckCircle2 className="text-emerald-500" size={20} /> : <Circle size={20} />}
+                {task.status === 'Completed' ? <CheckCircle2 className="text-emerald-500" size={20} /> : <Circle size={20} />}
               </button>
               <div className="flex-1 min-w-0">
                 <div className={cn(
                   "text-sm font-bold text-gray-900 truncate",
-                  task.isCompleted && "line-through text-gray-400 font-medium"
+                  task.status === 'Completed' && "line-through text-gray-400 font-medium"
                 )}>
                   {task.title}
                 </div>
                 <div className="flex items-center gap-3 mt-1">
                   <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                     <Clock size={10} />
-                    <span>{format(new Date(task.dueDate), 'MMM d, h:mm a')}</span>
+                    <span>{task.dueDate ? format(new Date(task.dueDate), 'MMM d, h:mm a') : 'No due date'}</span>
                   </div>
                   <div className={cn(
                     "px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest",
-                    task.priority === 'high' ? "bg-red-50 text-red-600" : 
-                    task.priority === 'medium' ? "bg-amber-50 text-amber-600" : "bg-blue-50 text-blue-600"
+                    task.priority === 'High' || task.priority === 'Urgent' ? "bg-red-50 text-red-600" : 
+                    task.priority === 'Medium' ? "bg-amber-50 text-amber-600" : "bg-blue-50 text-blue-600"
                   )}>
                     {task.priority}
                   </div>

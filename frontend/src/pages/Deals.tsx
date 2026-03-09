@@ -34,16 +34,18 @@ import {
 import { cn } from '../lib/utils';
 
 const STAGES: { id: DealStage; label: string; color: string }[] = [
-  { id: 'discovery', label: 'Discovery', color: 'bg-blue-500' },
-  { id: 'qualification', label: 'Qualification', color: 'bg-indigo-500' },
-  { id: 'proposal', label: 'Proposal', color: 'bg-violet-500' },
-  { id: 'negotiation', label: 'Negotiation', color: 'bg-amber-500' },
-  { id: 'closed-won', label: 'Closed Won', color: 'bg-emerald-500' },
+  { id: 'Lead', label: 'Lead', color: 'bg-gray-400' },
+  { id: 'Qualified', label: 'Qualified', color: 'bg-blue-500' },
+  { id: 'Discovery', label: 'Discovery', color: 'bg-indigo-500' },
+  { id: 'Proposal', label: 'Proposal', color: 'bg-violet-500' },
+  { id: 'Negotiation', label: 'Negotiation', color: 'bg-amber-500' },
+  { id: 'Closed Won', label: 'Closed Won', color: 'bg-emerald-500' },
+  { id: 'Closed Lost', label: 'Closed Lost', color: 'bg-red-500' },
 ];
 
 export const Deals: React.FC = () => {
   const [deals, setDeals] = useState<Deal[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   useEffect(() => {
     dealService.getDeals().then(setDeals);
@@ -57,14 +59,14 @@ export const Deals: React.FC = () => {
   );
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+    setActiveId(Number(event.active.id));
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeId = active.id as string;
+    const activeId = Number(active.id);
     const overId = over.id as string;
 
     const activeDeal = deals.find(d => d.id === activeId);
@@ -81,7 +83,7 @@ export const Deals: React.FC = () => {
     }
 
     // If dragging over another item
-    const overDeal = deals.find(d => d.id === overId);
+    const overDeal = deals.find(d => d.id === Number(overId));
     if (overDeal && activeDeal.stage !== overDeal.stage) {
       setDeals(prev => prev.map(d => 
         d.id === activeId ? { ...d, stage: overDeal.stage } : d
@@ -93,7 +95,7 @@ export const Deals: React.FC = () => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
       // In a real app, we'd persist the new stage/order here
-      const activeDeal = deals.find(d => d.id === active.id);
+      const activeDeal = deals.find(d => d.id === Number(active.id));
       if (activeDeal) {
         dealService.updateDealStage(activeDeal.id, activeDeal.stage);
       }
@@ -250,7 +252,7 @@ const DealCard = ({ deal, isOverlay }: { deal: Deal, isOverlay?: boolean }) => {
     >
       <div className="flex justify-between items-start mb-2">
         <h4 className="text-sm font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors">
-          {deal.title}
+          {deal.name}
         </h4>
         <button className="text-gray-400 hover:text-gray-600 p-0.5">
           <MoreHorizontal size={14} />
