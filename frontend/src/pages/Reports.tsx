@@ -11,10 +11,13 @@ import {
   Filter, Plus, Info, ChevronRight, MessageSquare
 } from 'lucide-react';
 import { reportService } from '../services/report.service';
+import { EmptyState } from '../components/common/EmptyState';
+import { useNavigate } from 'react-router-dom';
 
 const COLORS = ['#4f46e5', '#8b5cf6', '#ec4899', '#f97316', '#eab308', '#22c55e', '#06b6d4'];
 
 const Reports: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('sales');
   const [loading, setLoading] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
@@ -242,6 +245,17 @@ const Reports: React.FC = () => {
               <div key={i} className="h-80 bg-gray-50 rounded-2xl animate-pulse"></div>
             ))}
           </div>
+        ) : !reportData ? (
+          <EmptyState
+            icon={BarChart3}
+            title="Not enough data for reports yet"
+            description="Add contacts and deals to unlock AI-powered analytics and visual reports."
+            actions={[
+              { label: 'Go to Contacts', onClick: () => navigate('/contacts'), icon: Users },
+              { label: 'Go to Deals', onClick: () => navigate('/deals'), variant: 'secondary', icon: TrendingUp }
+            ]}
+            aiTip="Once you have data, AI can predict your next quarter's revenue with up to 90% accuracy!"
+          />
         ) : (
           <>
             {activeTab === 'sales' && <SalesPerformanceTab data={reportData} />}

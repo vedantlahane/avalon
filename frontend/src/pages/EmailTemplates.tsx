@@ -11,13 +11,15 @@ import {
   Send,
   Mail,
   BarChart2,
-  Code
+  Code,
+  Layout
 } from 'lucide-react';
 import { emailTemplateService } from '../services/emailTemplate.service';
 import { EmailTemplate, EmailTemplateCategory } from '../types';
 import TemplateModal from '../components/emailTemplates/TemplateModal';
 import AIGenerateModal from '../components/emailTemplates/AIGenerateModal';
 import { toast } from 'react-hot-toast';
+import { EmptyState } from '../components/common/EmptyState';
 
 const EmailTemplates: React.FC = () => {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
@@ -188,6 +190,17 @@ const EmailTemplates: React.FC = () => {
             <div key={i} className="h-64 bg-gray-100 rounded-xl border border-gray-200"></div>
           ))}
         </div>
+      ) : templates.length === 0 ? (
+        <EmptyState
+          icon={Layout}
+          title="No templates yet"
+          description="Create your first email template or let AI generate one for you. Save time with reusable communication."
+          actions={[
+            { label: 'Create Template', onClick: handleCreate, icon: Plus },
+            { label: 'AI Generate Template', onClick: handleAIGenerate, variant: 'secondary', icon: Sparkles }
+          ]}
+          aiTip="AI can analyze your best performing emails to suggest templates that convert!"
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTemplates.map((template) => (
@@ -276,21 +289,23 @@ const EmailTemplates: React.FC = () => {
         </div>
       )}
 
-      {!loading && filteredTemplates.length === 0 && (
+      {!loading && templates.length > 0 && filteredTemplates.length === 0 && (
         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
           <div className="p-4 bg-gray-50 rounded-full w-fit mx-auto mb-4">
-            <Mail className="w-8 h-8 text-gray-400" />
+            <Search className="w-8 h-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900">No templates found</h3>
+          <h3 className="text-lg font-semibold text-gray-900">No matching templates</h3>
           <p className="text-gray-500 max-w-sm mx-auto mt-2">
-            Try adjusting your search or filters, or create a new template to get started.
+            Try adjusting your search or category filters to find what you're looking for.
           </p>
           <button 
-            onClick={handleCreate}
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedCategory('All');
+            }}
             className="mt-6 flex items-center gap-2 px-6 py-2 bg-indigo-600 rounded-lg text-sm font-medium text-white hover:bg-indigo-700 transition-colors shadow-sm mx-auto"
           >
-            <Plus className="w-4 h-4" />
-            <span>Create First Template</span>
+            Clear all filters
           </button>
         </div>
       )}

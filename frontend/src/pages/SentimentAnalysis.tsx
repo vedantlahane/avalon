@@ -26,8 +26,11 @@ import {
 } from 'recharts';
 import { emailService } from '../services/email.service';
 import { cn } from '../lib/utils';
+import { EmptyState } from '../components/common/EmptyState';
+import { useNavigate } from 'react-router-dom';
 
 export const SentimentAnalysis: React.FC = () => {
+  const navigate = useNavigate();
   const [summary, setSummary] = useState<any>(null);
   const [trendData, setTrendData] = useState<any[]>([]);
   const [flaggedEmails, setFlaggedEmails] = useState<any[]>([]);
@@ -63,6 +66,24 @@ export const SentimentAnalysis: React.FC = () => {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (!summary || summary.totalEmails === 0) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Sentiment Analysis</h1>
+        <EmptyState
+          icon={Bot}
+          title="No sentiment data yet"
+          description="Connect your email and start communicating with contacts to see AI-powered sentiment analysis and trends."
+          actions={[
+            { label: 'Go to Inbox', onClick: () => navigate('/inbox'), icon: Mail },
+            { label: 'Go to Contacts', onClick: () => navigate('/contacts'), variant: 'secondary', icon: UserPlus }
+          ]}
+          aiTip="AI sentiment analysis helps you identify at-risk deals before it's too late by detecting negative tone in emails."
+        />
       </div>
     );
   }

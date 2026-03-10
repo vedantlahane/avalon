@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { CompanyWithStats } from '../types';
 import { companyService } from '../services/company.service';
 import { cn } from '../lib/utils';
+import { EmptyState } from '../components/common/EmptyState';
 
 export const Companies: React.FC = () => {
   const [companies, setCompanies] = useState<CompanyWithStats[]>([]);
@@ -135,7 +136,20 @@ export const Companies: React.FC = () => {
 
       {/* Company Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCompanies.length > 0 ? (
+        {companies.length === 0 ? (
+          <div className="col-span-full">
+            <EmptyState
+              icon={Building2}
+              title="No companies yet"
+              description="Add your clients and prospects to start building your CRM. Use AI to enrich company details automatically."
+              actions={[
+                { label: 'Add Company', onClick: () => console.log('Add Company'), icon: Plus },
+                { label: 'AI Bulk Enrich', onClick: handleEnrich, variant: 'secondary', icon: Brain }
+              ]}
+              aiTip="Just enter a company website, and AI will pull industry, size, and location for you!"
+            />
+          </div>
+        ) : filteredCompanies.length > 0 ? (
           filteredCompanies.map(company => (
             <div 
               key={company.id} 

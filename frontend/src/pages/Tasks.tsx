@@ -26,6 +26,7 @@ import { cn } from '../lib/utils';
 import { format, isToday, isPast, isFuture, addDays, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, startOfWeek, endOfWeek } from 'date-fns';
 import { TaskModal } from '../components/tasks/TaskModal';
 import { AISuggestTasksModal } from '../components/tasks/AISuggestTasksModal';
+import { EmptyState } from '../components/common/EmptyState';
 
 type ViewMode = 'List' | 'Board' | 'Calendar';
 
@@ -548,9 +549,24 @@ export const Tasks: React.FC = () => {
       </div>
 
       <div className="mt-6">
-        {viewMode === 'List' && renderListView()}
-        {viewMode === 'Board' && renderBoardView()}
-        {viewMode === 'Calendar' && renderCalendarView()}
+        {tasks.length === 0 ? (
+          <EmptyState
+            icon={CheckCircle2}
+            title="No tasks yet"
+            description="No tasks yet. Stay organized by adding tasks or let AI suggest them!"
+            actions={[
+              { label: 'Add Task', onClick: handleAddTask, icon: Plus },
+              { label: 'AI Suggest Tasks', onClick: () => setIsAISuggestModalOpen(true), variant: 'secondary', icon: Sparkles }
+            ]}
+            aiTip="AI can analyze your emails and deals to suggest the most important next steps."
+          />
+        ) : (
+          <>
+            {viewMode === 'List' && renderListView()}
+            {viewMode === 'Board' && renderBoardView()}
+            {viewMode === 'Calendar' && renderCalendarView()}
+          </>
+        )}
       </div>
 
       <TaskModal 

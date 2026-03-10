@@ -40,6 +40,8 @@ import { format } from 'date-fns';
 
 import { useNavigate } from 'react-router-dom';
 import { SalesLeaderboard } from '../components/dashboard/SalesLeaderboard';
+import { EmptyState } from '../components/common/EmptyState';
+import { Layout } from 'lucide-react';
 
 const KPI_CARDS = [
   { id: 'pipeline', label: 'Pipeline Value', icon: BadgeDollarSign, color: 'bg-indigo-50 text-indigo-600', path: '/deals' },
@@ -109,7 +111,23 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  if (!data) return null;
+  if (!data || (data.stats.pipelineValue === 0 && data.activities.length === 0)) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 space-y-8 animate-in fade-in duration-500">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{greeting}</h1>
+        <EmptyState
+          icon={Layout}
+          title="Welcome to NexusCRM!"
+          description="Your dashboard is currently empty. Start by adding your first contact or deal to unlock AI-powered insights, revenue forecasting, and performance tracking."
+          actions={[
+            { label: 'Add Contact', onClick: () => navigate('/contacts'), icon: Users },
+            { label: 'Create Deal', onClick: () => navigate('/deals'), variant: 'secondary', icon: BadgeDollarSign }
+          ]}
+          aiTip="NexusCRM uses AI to analyze your activities and predict which deals are most likely to close this month!"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[1600px] mx-auto p-6 space-y-8 animate-in fade-in duration-500">

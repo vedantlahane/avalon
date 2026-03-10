@@ -36,6 +36,7 @@ import { cn } from '../lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContactModal } from '../components/contacts/ContactModal';
+import { EmptyState } from '../components/common/EmptyState';
 
 type ViewMode = 'list' | 'grid';
 type SortOption = 'name-az' | 'name-za' | 'score-high' | 'score-low' | 'recently-added' | 'last-contacted';
@@ -505,22 +506,39 @@ export const Contacts: React.FC = () => {
 
         {/* Main Content */}
         <div className="min-h-[400px]">
-          {filteredContacts.length === 0 ? (
+          {contacts.length === 0 ? (
+            <EmptyState
+              icon={UserPlus}
+              title="No contacts yet"
+              description="Start building your network! Add contacts manually or import them from a CSV file."
+              actions={[
+                { label: 'Add Contact', onClick: handleAddContact, icon: Plus },
+                { label: 'Import CSV', onClick: () => console.log('Import CSV'), variant: 'secondary', icon: Download }
+              ]}
+              aiTip="Enter just an email and AI will enrich the rest!"
+            />
+          ) : filteredContacts.length === 0 ? (
             <div className="bg-white border border-gray-200 rounded-3xl p-12 text-center flex flex-col items-center justify-center space-y-4">
               <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center text-gray-400">
-                <UserPlus size={48} />
+                <Search size={48} />
               </div>
               <div className="max-w-xs">
-                <h3 className="text-lg font-bold text-gray-900">No contacts found</h3>
+                <h3 className="text-lg font-bold text-gray-900">No results found</h3>
                 <p className="text-sm text-gray-500 mt-1">
                   Try adjusting your search or filters to find what you're looking for.
                 </p>
               </div>
               <button 
-                onClick={handleAddContact}
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedStatus([]);
+                  setSelectedSource([]);
+                  setSelectedTags([]);
+                  setScoreRange([0, 100]);
+                }}
                 className="bg-indigo-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-sm"
               >
-                Add your first contact
+                Clear all filters
               </button>
             </div>
           ) : viewMode === 'list' ? (

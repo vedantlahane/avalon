@@ -47,6 +47,7 @@ import { format } from 'date-fns';
 import { DealModal } from '../components/deals/DealModal';
 import { DealForecast } from '../components/deals/DealForecast';
 import { DealListView } from '../components/deals/DealListView';
+import { EmptyState } from '../components/common/EmptyState';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
   { id: 'Lead', label: 'Lead', borderColor: 'border-t-[#9CA3AF]', color: 'text-[#9CA3AF]' },
@@ -331,46 +332,60 @@ export const Deals: React.FC = () => {
         "flex-1 overflow-x-auto pb-4",
         view === 'Kanban' ? "-mx-6 px-6" : ""
       )}>
-        {view === 'Kanban' && (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCorners}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-          >
-            <div className="flex gap-4 h-full min-w-max pb-2">
-              {STAGES.map(stage => (
-                <Column 
-                  key={stage.id} 
-                  stage={stage} 
-                  deals={filteredDeals.filter(d => d.stage === stage.id)} 
-                  onAddDeal={() => openAddModal(stage.id)}
-                  onCardClick={goToDealDetail}
-                />
-              ))}
-            </div>
-
-            <DragOverlay dropAnimation={dropAnimation}>
-              {activeId ? (
-                <DealCard deal={deals.find(d => d.id === activeId)!} isOverlay />
-              ) : null}
-            </DragOverlay>
-          </DndContext>
-        )}
-
-        {view === 'List' && (
-          <DealListView 
-            deals={filteredDeals}
-            onDealClick={goToDealDetail}
-            onUpdateDeal={handleUpdateDeal}
-            onDeleteDeals={handleDeleteDeals}
-            onBulkUpdateDeals={handleBulkUpdateDeals}
+        {deals.length === 0 ? (
+          <EmptyState
+            icon={TrendingUp}
+            title="No deals yet"
+            description="No deals in your pipeline yet. Create your first deal to start tracking revenue!"
+            actions={[
+              { label: 'Create Deal', onClick: () => openAddModal(), icon: Plus }
+            ]}
+            aiTip="Link deals to contacts for AI-powered win probability predictions"
           />
-        )}
+        ) : (
+          <>
+            {view === 'Kanban' && (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCorners}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDragEnd={handleDragEnd}
+              >
+                <div className="flex gap-4 h-full min-w-max pb-2">
+                  {STAGES.map(stage => (
+                    <Column 
+                      key={stage.id} 
+                      stage={stage} 
+                      deals={filteredDeals.filter(d => d.stage === stage.id)} 
+                      onAddDeal={() => openAddModal(stage.id)}
+                      onCardClick={goToDealDetail}
+                    />
+                  ))}
+                </div>
 
-        {view === 'Forecast' && (
-          <DealForecast onDealClick={goToDealDetail} />
+                <DragOverlay dropAnimation={dropAnimation}>
+                  {activeId ? (
+                    <DealCard deal={deals.find(d => d.id === activeId)!} isOverlay />
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
+            )}
+
+            {view === 'List' && (
+              <DealListView 
+                deals={filteredDeals}
+                onDealClick={goToDealDetail}
+                onUpdateDeal={handleUpdateDeal}
+                onDeleteDeals={handleDeleteDeals}
+                onBulkUpdateDeals={handleBulkUpdateDeals}
+              />
+            )}
+
+            {view === 'Forecast' && (
+              <DealForecast onDealClick={goToDealDetail} />
+            )}
+          </>
         )}
       </div>
 

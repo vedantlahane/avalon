@@ -25,11 +25,13 @@ import {
   ArrowUpRight, 
   Search as SearchIcon,
   Tag,
-  RefreshCw
+  RefreshCw,
+  Mail
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { composerStore } from '../lib/composer-store';
+import { EmptyState } from '../components/common/EmptyState';
 
 export const Inbox: React.FC = () => {
   const [emails, setEmails] = useState<Email[]>([]);
@@ -185,8 +187,24 @@ export const Inbox: React.FC = () => {
           </nav>
         </div>
 
-        {/* MIDDLE PANEL - Email List */}
-        <div className="w-[350px] bg-white border-r border-gray-200 flex flex-col">
+        {/* MIDDLE & RIGHT PANEL - Email List and Detail */}
+        {emails.length === 0 && !isLoading ? (
+          <div className="flex-1 bg-white">
+            <EmptyState
+              icon={Mail}
+              title="Your inbox is empty"
+              description="Connect your email to start tracking communications and get AI-powered insights."
+              actions={[
+                { label: 'Connect Gmail', onClick: () => console.log('Connect Gmail'), icon: Mail },
+                { label: 'Connect Outlook', onClick: () => console.log('Connect Outlook'), variant: 'secondary', icon: Mail }
+              ]}
+              aiTip="NexusCRM can automatically summarize your emails and update contact sentiment scores!"
+            />
+          </div>
+        ) : (
+          <>
+            {/* MIDDLE PANEL - Email List */}
+            <div className="w-[350px] bg-white border-r border-gray-200 flex flex-col">
           <div className="p-4 space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -549,7 +567,9 @@ export const Inbox: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </>
+    )}
+  </div>
+</div>
   );
 };
