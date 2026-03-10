@@ -119,11 +119,14 @@ export interface Task {
 
 export interface EmailTemplate {
   id: number;
-  name?: string;
-  subject?: string;
-  body?: string;
-  category?: EmailTemplateCategory;
+  name: string;
+  subject: string;
+  body: string;
+  category: EmailTemplateCategory;
   aiGenerated: boolean;
+  variablesCount: number;
+  usedCount: number;
+  avgOpenRate: number;
   createdAt: string;
   updatedAt: string;
 }

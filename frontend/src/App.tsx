@@ -13,6 +13,7 @@ import { Tasks } from './pages/Tasks';
 import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 import { ContactDetail } from './pages/ContactDetail';
+import EmailTemplates from './pages/EmailTemplates';
 import { Toaster } from 'react-hot-toast';
 import { EmailComposerModal } from './components/layout/EmailComposerModal';
 
@@ -40,6 +41,7 @@ const App: React.FC = () => {
               <Route path="/contacts/:id" element={<ContactDetail />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/inbox" element={<Inbox />} />
+              <Route path="/templates" element={<EmailTemplates />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />

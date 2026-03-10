@@ -14383,10 +14383,16 @@ export namespace Prisma {
 
   export type EmailTemplateAvgAggregateOutputType = {
     id: number | null
+    variablesCount: number | null
+    usedCount: number | null
+    avgOpenRate: number | null
   }
 
   export type EmailTemplateSumAggregateOutputType = {
     id: number | null
+    variablesCount: number | null
+    usedCount: number | null
+    avgOpenRate: number | null
   }
 
   export type EmailTemplateMinAggregateOutputType = {
@@ -14396,6 +14402,9 @@ export namespace Prisma {
     body: string | null
     category: string | null
     aiGenerated: boolean | null
+    variablesCount: number | null
+    usedCount: number | null
+    avgOpenRate: number | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -14408,6 +14417,9 @@ export namespace Prisma {
     body: string | null
     category: string | null
     aiGenerated: boolean | null
+    variablesCount: number | null
+    usedCount: number | null
+    avgOpenRate: number | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -14420,6 +14432,9 @@ export namespace Prisma {
     body: number
     category: number
     aiGenerated: number
+    variablesCount: number
+    usedCount: number
+    avgOpenRate: number
     createdAt: number
     updatedAt: number
     isDeleted: number
@@ -14429,10 +14444,16 @@ export namespace Prisma {
 
   export type EmailTemplateAvgAggregateInputType = {
     id?: true
+    variablesCount?: true
+    usedCount?: true
+    avgOpenRate?: true
   }
 
   export type EmailTemplateSumAggregateInputType = {
     id?: true
+    variablesCount?: true
+    usedCount?: true
+    avgOpenRate?: true
   }
 
   export type EmailTemplateMinAggregateInputType = {
@@ -14442,6 +14463,9 @@ export namespace Prisma {
     body?: true
     category?: true
     aiGenerated?: true
+    variablesCount?: true
+    usedCount?: true
+    avgOpenRate?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -14454,6 +14478,9 @@ export namespace Prisma {
     body?: true
     category?: true
     aiGenerated?: true
+    variablesCount?: true
+    usedCount?: true
+    avgOpenRate?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -14466,6 +14493,9 @@ export namespace Prisma {
     body?: true
     category?: true
     aiGenerated?: true
+    variablesCount?: true
+    usedCount?: true
+    avgOpenRate?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -14565,6 +14595,9 @@ export namespace Prisma {
     body: string | null
     category: string | null
     aiGenerated: boolean
+    variablesCount: number
+    usedCount: number
+    avgOpenRate: number
     createdAt: Date
     updatedAt: Date
     isDeleted: boolean
@@ -14596,6 +14629,9 @@ export namespace Prisma {
     body?: boolean
     category?: boolean
     aiGenerated?: boolean
+    variablesCount?: boolean
+    usedCount?: boolean
+    avgOpenRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -14608,6 +14644,9 @@ export namespace Prisma {
     body?: boolean
     category?: boolean
     aiGenerated?: boolean
+    variablesCount?: boolean
+    usedCount?: boolean
+    avgOpenRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -14620,6 +14659,9 @@ export namespace Prisma {
     body?: boolean
     category?: boolean
     aiGenerated?: boolean
+    variablesCount?: boolean
+    usedCount?: boolean
+    avgOpenRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -14632,12 +14674,15 @@ export namespace Prisma {
     body?: boolean
     category?: boolean
     aiGenerated?: boolean
+    variablesCount?: boolean
+    usedCount?: boolean
+    avgOpenRate?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
   }
 
-  export type EmailTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "subject" | "body" | "category" | "aiGenerated" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["emailTemplate"]>
+  export type EmailTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "subject" | "body" | "category" | "aiGenerated" | "variablesCount" | "usedCount" | "avgOpenRate" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["emailTemplate"]>
 
   export type $EmailTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "EmailTemplate"
@@ -14649,6 +14694,9 @@ export namespace Prisma {
       body: string | null
       category: string | null
       aiGenerated: boolean
+      variablesCount: number
+      usedCount: number
+      avgOpenRate: number
       createdAt: Date
       updatedAt: Date
       isDeleted: boolean
@@ -15081,6 +15129,9 @@ export namespace Prisma {
     readonly body: FieldRef<"EmailTemplate", 'String'>
     readonly category: FieldRef<"EmailTemplate", 'String'>
     readonly aiGenerated: FieldRef<"EmailTemplate", 'Boolean'>
+    readonly variablesCount: FieldRef<"EmailTemplate", 'Int'>
+    readonly usedCount: FieldRef<"EmailTemplate", 'Int'>
+    readonly avgOpenRate: FieldRef<"EmailTemplate", 'Float'>
     readonly createdAt: FieldRef<"EmailTemplate", 'DateTime'>
     readonly updatedAt: FieldRef<"EmailTemplate", 'DateTime'>
     readonly isDeleted: FieldRef<"EmailTemplate", 'Boolean'>
@@ -15665,6 +15716,9 @@ export namespace Prisma {
     body: 'body',
     category: 'category',
     aiGenerated: 'aiGenerated',
+    variablesCount: 'variablesCount',
+    usedCount: 'usedCount',
+    avgOpenRate: 'avgOpenRate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     isDeleted: 'isDeleted'
@@ -16832,6 +16886,9 @@ export namespace Prisma {
     body?: StringNullableFilter<"EmailTemplate"> | string | null
     category?: StringNullableFilter<"EmailTemplate"> | string | null
     aiGenerated?: BoolFilter<"EmailTemplate"> | boolean
+    variablesCount?: IntFilter<"EmailTemplate"> | number
+    usedCount?: IntFilter<"EmailTemplate"> | number
+    avgOpenRate?: FloatFilter<"EmailTemplate"> | number
     createdAt?: DateTimeFilter<"EmailTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"EmailTemplate"> | Date | string
     isDeleted?: BoolFilter<"EmailTemplate"> | boolean
@@ -16844,6 +16901,9 @@ export namespace Prisma {
     body?: SortOrderInput | SortOrder
     category?: SortOrderInput | SortOrder
     aiGenerated?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -16859,6 +16919,9 @@ export namespace Prisma {
     body?: StringNullableFilter<"EmailTemplate"> | string | null
     category?: StringNullableFilter<"EmailTemplate"> | string | null
     aiGenerated?: BoolFilter<"EmailTemplate"> | boolean
+    variablesCount?: IntFilter<"EmailTemplate"> | number
+    usedCount?: IntFilter<"EmailTemplate"> | number
+    avgOpenRate?: FloatFilter<"EmailTemplate"> | number
     createdAt?: DateTimeFilter<"EmailTemplate"> | Date | string
     updatedAt?: DateTimeFilter<"EmailTemplate"> | Date | string
     isDeleted?: BoolFilter<"EmailTemplate"> | boolean
@@ -16871,6 +16934,9 @@ export namespace Prisma {
     body?: SortOrderInput | SortOrder
     category?: SortOrderInput | SortOrder
     aiGenerated?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -16891,6 +16957,9 @@ export namespace Prisma {
     body?: StringNullableWithAggregatesFilter<"EmailTemplate"> | string | null
     category?: StringNullableWithAggregatesFilter<"EmailTemplate"> | string | null
     aiGenerated?: BoolWithAggregatesFilter<"EmailTemplate"> | boolean
+    variablesCount?: IntWithAggregatesFilter<"EmailTemplate"> | number
+    usedCount?: IntWithAggregatesFilter<"EmailTemplate"> | number
+    avgOpenRate?: FloatWithAggregatesFilter<"EmailTemplate"> | number
     createdAt?: DateTimeWithAggregatesFilter<"EmailTemplate"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"EmailTemplate"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"EmailTemplate"> | boolean
@@ -18062,6 +18131,9 @@ export namespace Prisma {
     body?: string | null
     category?: string | null
     aiGenerated?: boolean
+    variablesCount?: number
+    usedCount?: number
+    avgOpenRate?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -18074,6 +18146,9 @@ export namespace Prisma {
     body?: string | null
     category?: string | null
     aiGenerated?: boolean
+    variablesCount?: number
+    usedCount?: number
+    avgOpenRate?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -18085,6 +18160,9 @@ export namespace Prisma {
     body?: NullableStringFieldUpdateOperationsInput | string | null
     category?: NullableStringFieldUpdateOperationsInput | string | null
     aiGenerated?: BoolFieldUpdateOperationsInput | boolean
+    variablesCount?: IntFieldUpdateOperationsInput | number
+    usedCount?: IntFieldUpdateOperationsInput | number
+    avgOpenRate?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -18097,6 +18175,9 @@ export namespace Prisma {
     body?: NullableStringFieldUpdateOperationsInput | string | null
     category?: NullableStringFieldUpdateOperationsInput | string | null
     aiGenerated?: BoolFieldUpdateOperationsInput | boolean
+    variablesCount?: IntFieldUpdateOperationsInput | number
+    usedCount?: IntFieldUpdateOperationsInput | number
+    avgOpenRate?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -18109,6 +18190,9 @@ export namespace Prisma {
     body?: string | null
     category?: string | null
     aiGenerated?: boolean
+    variablesCount?: number
+    usedCount?: number
+    avgOpenRate?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -18120,6 +18204,9 @@ export namespace Prisma {
     body?: NullableStringFieldUpdateOperationsInput | string | null
     category?: NullableStringFieldUpdateOperationsInput | string | null
     aiGenerated?: BoolFieldUpdateOperationsInput | boolean
+    variablesCount?: IntFieldUpdateOperationsInput | number
+    usedCount?: IntFieldUpdateOperationsInput | number
+    avgOpenRate?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -18132,6 +18219,9 @@ export namespace Prisma {
     body?: NullableStringFieldUpdateOperationsInput | string | null
     category?: NullableStringFieldUpdateOperationsInput | string | null
     aiGenerated?: BoolFieldUpdateOperationsInput | boolean
+    variablesCount?: IntFieldUpdateOperationsInput | number
+    usedCount?: IntFieldUpdateOperationsInput | number
+    avgOpenRate?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -19109,6 +19199,9 @@ export namespace Prisma {
     body?: SortOrder
     category?: SortOrder
     aiGenerated?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -19116,6 +19209,9 @@ export namespace Prisma {
 
   export type EmailTemplateAvgOrderByAggregateInput = {
     id?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
   }
 
   export type EmailTemplateMaxOrderByAggregateInput = {
@@ -19125,6 +19221,9 @@ export namespace Prisma {
     body?: SortOrder
     category?: SortOrder
     aiGenerated?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -19137,6 +19236,9 @@ export namespace Prisma {
     body?: SortOrder
     category?: SortOrder
     aiGenerated?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -19144,6 +19246,9 @@ export namespace Prisma {
 
   export type EmailTemplateSumOrderByAggregateInput = {
     id?: SortOrder
+    variablesCount?: SortOrder
+    usedCount?: SortOrder
+    avgOpenRate?: SortOrder
   }
 
   export type UserIdentityCreateNestedManyWithoutUserInput = {

@@ -46,6 +46,7 @@ crmRoutes.delete('/tasks/:id', taskController.deleteTask);
 // Email Templates
 crmRoutes.get('/email-templates', emailTemplateController.getEmailTemplates);
 crmRoutes.post('/email-templates', emailTemplateController.createEmailTemplate);
+crmRoutes.post('/email-templates/generate', emailTemplateController.generateTemplate);
 crmRoutes.patch('/email-templates/:id', emailTemplateController.updateEmailTemplate);
 crmRoutes.delete('/email-templates/:id', emailTemplateController.deleteEmailTemplate);
 // Emails

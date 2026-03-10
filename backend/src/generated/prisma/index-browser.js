@@ -292,6 +292,9 @@ exports.Prisma.EmailTemplateScalarFieldEnum = {
   body: 'body',
   category: 'category',
   aiGenerated: 'aiGenerated',
+  variablesCount: 'variablesCount',
+  usedCount: 'usedCount',
+  avgOpenRate: 'avgOpenRate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isDeleted: 'isDeleted'

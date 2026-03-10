@@ -821,12 +821,54 @@ export const MOCK_ACTIVITIES: Activity[] = [
 export const MOCK_EMAIL_TEMPLATES: EmailTemplate[] = [
   {
     id: 1,
-    name: 'Initial Outreach',
-    subject: 'Connecting regarding Avalon',
-    body: 'Hello {{firstName}}, I would like to introduce you to Avalon.',
-    category: 'Introduction',
+    name: 'Post-Demo Follow Up',
+    subject: 'Next steps: {{company_name}} x Avalon',
+    body: 'Hi {{first_name}},\n\nThank you for taking the time to see our demo today. It was great to learn more about your goals at {{company_name}}.\n\nAs discussed, I think the {{deal_name}} package would be a great fit for your team. I\'ve attached the implementation timeline we talked about.\n\nLooking forward to our next meeting on {{next_step}}.\n\nBest regards,\n[Your Name]',
+    category: 'Follow-up',
     aiGenerated: true,
-    createdAt: new Date().toISOString(),
+    variablesCount: 4,
+    usedCount: 12,
+    avgOpenRate: 68,
+    createdAt: new Date(Date.now() - 86400000 * 10).toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 2,
+    name: 'Initial Introduction',
+    subject: 'Question regarding {{company_name}}\'s CRM strategy',
+    body: 'Hi {{first_name}},\n\nI\'ve been following {{company_name}}\'s growth in the {{industry}} sector and wanted to reach out.\n\nWe\'ve helped similar companies streamline their sales process. Would you be open to a 15-minute chat next week?\n\nBest,\n[Your Name]',
+    category: 'Introduction',
+    aiGenerated: false,
+    variablesCount: 3,
+    usedCount: 45,
+    avgOpenRate: 42,
+    createdAt: new Date(Date.now() - 86400000 * 20).toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 3,
+    name: 'Enterprise Proposal',
+    subject: 'Proposal for {{deal_name}} - {{company_name}}',
+    body: 'Hi {{first_name}},\n\nIt was a pleasure speaking with you and the team. Based on our conversation, I\'ve put together a tailored proposal for {{company_name}}.\n\nThe total value for this engagement is {{deal_value}}.\n\nPlease let me know if you have any questions.\n\nBest regards,\n[Your Name]',
+    category: 'Proposal',
+    aiGenerated: false,
+    variablesCount: 4,
+    usedCount: 8,
+    avgOpenRate: 85,
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 4,
+    name: 'Re-engagement: Stalled Deal',
+    subject: 'Still interested in {{deal_name}}?',
+    body: 'Hi {{first_name}},\n\nI wanted to circle back on our last conversation regarding {{deal_name}}. We haven\'t heard from you in a while and wanted to see if your priorities have shifted.\n\nIs there anything else you need from my side to move this forward?\n\nBest,\n[Your Name]',
+    category: 'Re-engagement',
+    aiGenerated: true,
+    variablesCount: 2,
+    usedCount: 15,
+    avgOpenRate: 35,
+    createdAt: new Date(Date.now() - 86400000 * 15).toISOString(),
     updatedAt: new Date().toISOString()
   }
 ];
