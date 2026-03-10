@@ -424,3 +424,34 @@ model LeadScoreHistory {
 
   @@index([contactId])
 }
+
+model Automation {
+  id             Int             @id @default(autoincrement())
+  name           String
+  description    String?
+  status         String          @default("Active") // Active, Paused, Draft
+  trigger        Json // { type, config }
+  conditions     Json            @default("[]") // Array of conditions
+  actions        Json            @default("[]") // Array of actions
+  triggeredCount Int             @default(0)
+  lastRun        DateTime?
+  logs           AutomationLog[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  isDeleted      Boolean         @default(false)
+}
+
+model AutomationLog {
+  id           Int        @id @default(autoincrement())
+  automationId Int
+  automation   Automation @relation(fields: [automationId], references: [id])
+  status       String // Success, Failure
+  message      String
+  details      Json?
+  timestamp    DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  isDeleted    Boolean    @default(false)
+
+  @@index([automationId])
+}

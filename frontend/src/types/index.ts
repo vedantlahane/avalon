@@ -351,3 +351,55 @@ export interface EnrichmentResult {
   recentNews?: string;
   technologies?: string[];
 }
+
+export type AutomationStatus = 'Active' | 'Paused' | 'Draft';
+export type AutomationTriggerType =
+  | 'Contact Created'
+  | 'Deal Stage Changed'
+  | 'Time-based'
+  | 'Email Received'
+  | 'Lead Score Changed'
+  | 'Task Overdue'
+  | 'AI Detects Risk'
+  | 'Metric Threshold';
+
+export interface AutomationTrigger {
+  type: AutomationTriggerType;
+  config: Record<string, any>;
+}
+
+export interface AutomationCondition {
+  field: string;
+  operator: string;
+  value: string;
+  logic?: 'AND' | 'OR';
+}
+
+export interface AutomationAction {
+  id: string;
+  type: string;
+  config: Record<string, any>;
+}
+
+export interface Automation {
+  id: number;
+  name: string;
+  description?: string;
+  status: AutomationStatus;
+  trigger: AutomationTrigger;
+  conditions: AutomationCondition[];
+  actions: AutomationAction[];
+  triggeredCount: number;
+  lastRun?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AutomationLog {
+  id: number;
+  automationId: number;
+  status: 'Success' | 'Failure';
+  message: string;
+  details?: Record<string, any>;
+  timestamp: string;
+}

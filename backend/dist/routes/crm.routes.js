@@ -8,7 +8,8 @@ import { emailTemplateController } from '../controllers/emailTemplateController.
 import { dashboardController } from '../controllers/dashboardController.js';
 import { emailController } from '../controllers/emailController.js';
 import { reportController } from '../controllers/reportController.js';
-import { analyzeImport, previewImport, executeImport, exportData } from "../controllers/importExportController.js";
+import { analyzeImport, previewImport, executeImport, exportData } from '../controllers/importExportController.js';
+import { automationController } from '../controllers/automationController.js';
 const crmRoutes = new Hono();
 // Dashboard
 crmRoutes.get('/dashboard/stats', dashboardController.getStats);
@@ -88,4 +89,13 @@ crmRoutes.delete('/emails/:id', emailController.deleteEmail);
 crmRoutes.patch('/emails/:id/star', emailController.toggleStar);
 crmRoutes.patch('/emails/:id/read', emailController.markAsRead);
 crmRoutes.post('/emails/:id/generate-reply', emailController.generateAiReply);
+// Automations
+crmRoutes.get('/automations', automationController.getAutomations);
+crmRoutes.get('/automations/:id', automationController.getAutomationById);
+crmRoutes.post('/automations', automationController.createAutomation);
+crmRoutes.patch('/automations/:id', automationController.updateAutomation);
+crmRoutes.delete('/automations/:id', automationController.deleteAutomation);
+crmRoutes.get('/automations/:id/logs', automationController.getAutomationLogs);
+crmRoutes.post('/automations/:id/toggle', automationController.toggleAutomation);
+crmRoutes.post('/automations/:id/test', automationController.testAutomation);
 export default crmRoutes;

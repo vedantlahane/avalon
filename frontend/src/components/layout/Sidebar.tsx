@@ -14,7 +14,8 @@ import {
   ChevronRight,
   Brain,
   TrendingUp,
-  Circle
+  Circle,
+  Zap
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -34,6 +35,7 @@ const navItems: NavItem[] = [
   { icon: Inbox, label: 'Inbox', path: '/inbox', badge: 12, section: 'Navigation' },
   { icon: CheckSquare, label: 'Tasks', path: '/tasks', badge: 5, section: 'Navigation' },
   { icon: BarChart3, label: 'Reports', path: '/reports', section: 'Navigation' },
+  { icon: Zap, label: 'Automations', path: '/automations', section: 'Navigation' },
   
   { icon: Bot, label: 'AI Assistant', path: '/ai', section: 'AI' },
   { icon: Brain, label: 'AI Insights', path: '/ai-insights', section: 'AI' },

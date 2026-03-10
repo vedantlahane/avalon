@@ -35,6 +35,7 @@ const AIInsights = lazy(() => import('./pages/AIInsights'));
 const EmailTemplates = lazy(() => import('./pages/EmailTemplates').then(m => ({ default: m.EmailTemplates })));
 const SentimentAnalysis = lazy(() => import('./pages/SentimentAnalysis').then(m => ({ default: m.SentimentAnalysis })));
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
+const Automations = lazy(() => import('./pages/Automations'));
 
 const PageLoader = () => (
   <div className="flex flex-col items-center justify-center h-full space-y-4 animate-pulse">
@@ -63,6 +64,7 @@ const AnimatedRoutes: React.FC = () => {
     else if (path.startsWith('/tasks')) title = "NexusCRM AI | Tasks";
     else if (path.startsWith('/reports')) title = "NexusCRM AI | Reports";
     else if (path.startsWith('/ai-insights')) title = "NexusCRM AI | AI Insights";
+    else if (path.startsWith('/automations')) title = "NexusCRM AI | Automations";
     else if (path.startsWith('/settings')) title = "NexusCRM AI | Settings";
     
     document.title = title;
@@ -93,6 +95,7 @@ const AnimatedRoutes: React.FC = () => {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/ai-insights" element={<AIInsights />} />
+            <Route path="/automations" element={<Automations />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />

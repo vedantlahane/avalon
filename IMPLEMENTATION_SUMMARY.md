@@ -1,5 +1,17 @@
 # Implementation Summary
 
+## Workflow Automation
+- Created a comprehensive **Automations** page to manage AI-powered workflows.
+- Implemented **Automation Cards** showing status, triggers, conditions, actions, and execution history.
+- Developed a **4-Step Automation Wizard**:
+  - **Step 1: Choose Trigger**: Support for Contact Created, Deal Stage Changed, Time-based, AI Risk, and more.
+  - **Step 2: Add Conditions**: Flexible condition builder with field, operator, and value mapping.
+  - **Step 3: Define Actions**: Multi-action support including Send Email, Create Task, Update Field, and AI Enrichment.
+  - **Step 4: Review & Activate**: Summary review before activation.
+- Integrated a **Visual Flow Builder** representation to visualize the automation logic.
+- Implemented backend services, controllers, and Prisma models for persistent automation storage and logging.
+- Added automation execution tracking (Triggered count, Last run time).
+
 ## AI Insights Page
 - Created a dedicated **AI Insights** page accessible from the sidebar.
 - Implemented **AI Executive Summary** with confidence levels and data point tracking.

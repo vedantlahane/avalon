@@ -1,4 +1,4 @@
-import { Contact, Company, Deal, Email, Task, Activity, EmailTemplate, Notification } from '../types';
+import { Contact, Company, Deal, Email, Task, Activity, EmailTemplate, Notification, Automation } from '../types';
 
 export const MOCK_NOTIFICATIONS: Notification[] = [
   {
@@ -952,4 +952,127 @@ export const MOCK_EMAIL_TEMPLATES: EmailTemplate[] = [
     createdAt: new Date(Date.now() - 86400000 * 15).toISOString(),
     updatedAt: new Date().toISOString()
   }
+];
+
+export const mockAutomations: Automation[] = [
+  {
+    id: 1,
+    name: 'New Lead Auto-Assignment',
+    description: 'Set up AI-powered automations to save time',
+    status: 'Active',
+    trigger: {
+      type: 'Contact Created',
+      config: { source: 'Website' },
+    },
+    conditions: [
+      { field: 'leadSource', operator: 'equals', value: 'Website' },
+    ],
+    actions: [
+      { id: '1', type: 'Assign to User', config: { userId: '1' } },
+      { id: '2', type: 'Update Field', config: { field: 'leadStatus', value: 'New' } },
+      { id: '3', type: 'Send Email', config: { templateId: '1' } },
+      { id: '4', type: 'Create Task', config: { title: 'Follow-up', dueInHours: 24 } },
+      { id: '5', type: 'AI: Enrich Contact', config: {} },
+    ],
+    triggeredCount: 12,
+    lastRun: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    name: 'Deal Stage Change Actions',
+    description: 'Actions triggered when deal stage changes',
+    status: 'Active',
+    trigger: {
+      type: 'Deal Stage Changed',
+      config: { stage: 'Proposal' },
+    },
+    conditions: [
+      { field: 'stage', operator: 'equals', value: 'Proposal' },
+    ],
+    actions: [
+      { id: '6', type: 'Create Task', config: { title: 'Send proposal', dueInDays: 2 } },
+      { id: '7', type: 'Send Notification', config: { message: 'Deal moved to Proposal' } },
+      { id: '8', type: 'Update Field', config: { field: 'probability', value: 60 } },
+      { id: '9', type: 'AI: Draft Email', config: { type: 'Proposal' } },
+    ],
+    triggeredCount: 5,
+    lastRun: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    name: 'At-Risk Deal Alert',
+    description: 'Alert when a deal has no activity',
+    status: 'Active',
+    trigger: {
+      type: 'AI Detects Risk',
+      config: { riskType: 'Inactivity' },
+    },
+    conditions: [
+      { field: 'lastActivityDays', operator: 'greater than', value: '7' },
+      { field: 'stage', operator: 'not equals', value: 'Closed Won' },
+      { field: 'stage', operator: 'not equals', value: 'Closed Lost' },
+    ],
+    actions: [
+      { id: '10', type: 'Send Notification', config: { message: 'AI: Deal at risk' } },
+      { id: '11', type: 'Create Task', config: { title: 'Follow up', priority: 'Urgent' } },
+      { id: '12', type: 'AI: Draft Email', config: { type: 'Re-engagement' } },
+      { id: '13', type: 'Update Field', config: { field: 'probability', decrement: 10 } },
+    ],
+    triggeredCount: 8,
+    lastRun: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 4,
+    name: 'Lead Score Threshold Actions',
+    description: 'Actions when lead score crosses threshold',
+    status: 'Active',
+    trigger: {
+      type: 'Lead Score Changed',
+      config: { threshold: 80, direction: 'above' },
+    },
+    conditions: [
+      { field: 'leadScore', operator: 'greater than', value: '80' },
+    ],
+    actions: [
+      { id: '14', type: 'Update Field', config: { field: 'leadStatus', value: 'Qualified' } },
+      { id: '15', type: 'Send Notification', config: { message: 'Hot lead!' } },
+      { id: '16', type: 'Create Task', config: { title: 'Call within 1 hour', dueInHours: 1 } },
+      { id: '17', type: 'AI: Generate Insights', config: { type: 'Personalized Pitch' } },
+    ],
+    triggeredCount: 4,
+    lastRun: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 5,
+    name: 'Post-Won Deal Actions',
+    description: 'Actions after a deal is won',
+    status: 'Active',
+    trigger: {
+      type: 'Deal Stage Changed',
+      config: { stage: 'Closed Won' },
+    },
+    conditions: [
+      { field: 'stage', operator: 'equals', value: 'Closed Won' },
+    ],
+    actions: [
+      { id: '18', type: 'Send Email', config: { templateId: 'congrats' } },
+      { id: '19', type: 'Create Task', config: { title: 'Send thank you note', dueInDays: 1 } },
+      { id: '20', type: 'Create Task', config: { title: 'Schedule onboarding', dueInDays: 3 } },
+      { id: '21', type: 'Create Task', config: { title: '30-day check-in', dueInDays: 30 } },
+      { id: '22', type: 'AI: Generate Insights', config: { type: 'Upsell' } },
+      { id: '23', type: 'System: Confetti', config: {} },
+    ],
+    triggeredCount: 1,
+    lastRun: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
 ];

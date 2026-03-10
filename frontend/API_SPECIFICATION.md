@@ -89,3 +89,13 @@
   - Query params: `resource` (contacts|deals|companies), `ids` (comma separated or 'all'), `format` (csv|xlsx|pdf|json), `fields` (comma separated), `includeAiSummary` (boolean)
   - Response: File download
 - `POST /crm/contacts/:id/enrich` - Enrich contact with AI data
+
+### Automation Management
+- `GET /automations` - Get all automations
+- `GET /automations/:id` - Get automation by ID
+- `POST /automations` - Create a new automation
+- `PATCH /automations/:id` - Update an automation
+- `DELETE /automations/:id` - Soft delete an automation
+- `GET /automations/:id/logs` - Get execution logs for an automation
+- `POST /automations/:id/test` - Test automation with sample data
+- `POST /automations/:id/toggle` - Toggle automation status (active/paused)

@@ -345,6 +345,33 @@ exports.Prisma.LeadScoreHistoryScalarFieldEnum = {
   isDeleted: 'isDeleted'
 };
 
+exports.Prisma.AutomationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  trigger: 'trigger',
+  conditions: 'conditions',
+  actions: 'actions',
+  triggeredCount: 'triggeredCount',
+  lastRun: 'lastRun',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
+};
+
+exports.Prisma.AutomationLogScalarFieldEnum = {
+  id: 'id',
+  automationId: 'automationId',
+  status: 'status',
+  message: 'message',
+  details: 'details',
+  timestamp: 'timestamp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -352,6 +379,10 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -385,7 +416,9 @@ exports.Prisma.ModelName = {
   Task: 'Task',
   EmailTemplate: 'EmailTemplate',
   Notification: 'Notification',
-  LeadScoreHistory: 'LeadScoreHistory'
+  LeadScoreHistory: 'LeadScoreHistory',
+  Automation: 'Automation',
+  AutomationLog: 'AutomationLog'
 };
 
 /**
