@@ -30,6 +30,36 @@ export const emailController = {
         const reply = await emailService.generateAiReply(id);
         return c.json({ reply });
     }),
+    generateEmail: catchAsync(async (c) => {
+        const body = await c.req.json();
+        const result = await emailService.generateEmail(body);
+        return c.json(result);
+    }),
+    improveEmail: catchAsync(async (c) => {
+        const body = await c.req.json();
+        const result = await emailService.improveEmail(body);
+        return c.json({ text: result });
+    }),
+    suggestSubjects: catchAsync(async (c) => {
+        const body = await c.req.json();
+        const result = await emailService.suggestSubjects(body.context);
+        return c.json({ subjects: result });
+    }),
+    scoreEmail: catchAsync(async (c) => {
+        const body = await c.req.json();
+        const result = await emailService.scoreEmail(body.content);
+        return c.json(result);
+    }),
+    suggestTime: catchAsync(async (c) => {
+        const contactId = c.req.query('contactId') ? parseInt(c.req.query('contactId')) : undefined;
+        const result = await emailService.suggestTime(contactId);
+        return c.json(result);
+    }),
+    sendEmail: catchAsync(async (c) => {
+        const body = await c.req.json();
+        const result = await emailService.sendEmail(body);
+        return c.json(result);
+    }),
     updateEmail: catchAsync(async (c) => {
         const id = parseInt(c.req.param('id'));
         const body = await c.req.json();

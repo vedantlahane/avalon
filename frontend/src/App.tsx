@@ -14,6 +14,7 @@ import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 import { ContactDetail } from './pages/ContactDetail';
 import { Toaster } from 'react-hot-toast';
+import { EmailComposerModal } from './components/layout/EmailComposerModal';
 
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
@@ -59,6 +60,7 @@ const App: React.FC = () => {
         </div>
 
         <AIPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
+        <EmailComposerModal />
       </div>
     </Router>
   );

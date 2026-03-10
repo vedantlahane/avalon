@@ -47,6 +47,7 @@ import {
 import { cn } from '../lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { composerStore } from '../lib/composer-store';
 
 type Tab = 'Activity' | 'Emails' | 'Tasks' | 'Notes' | 'Files';
 
@@ -257,7 +258,10 @@ export const DealDetail: React.FC = () => {
               </div>
 
               <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-gray-100">
-                <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95">
+                <button 
+                  onClick={() => deal && composerStore.open({ deal, contact: deal.contact })}
+                  className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95"
+                >
                   <Mail size={18} />
                   <span>Email</span>
                 </button>
@@ -389,7 +393,10 @@ export const DealDetail: React.FC = () => {
                     className="space-y-6"
                   >
                     <div className="flex justify-end">
-                      <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95">
+                      <button 
+                        onClick={() => deal && composerStore.open({ deal, contact: deal.contact })}
+                        className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95"
+                      >
                         <Brain size={18} />
                         <span>Compose with AI</span>
                       </button>

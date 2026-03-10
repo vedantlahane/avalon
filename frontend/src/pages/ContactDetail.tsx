@@ -48,6 +48,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContactModal } from '../components/contacts/ContactModal';
 import { EnrichmentResult } from '../types';
+import { composerStore } from '../lib/composer-store';
 
 type Tab = 'Activity Timeline' | 'Emails' | 'Deals' | 'Tasks' | 'Notes';
 
@@ -327,7 +328,10 @@ export const ContactDetail: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-50">
-                  <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-sm active:scale-95">
+                  <button 
+                    onClick={() => contact && composerStore.open({ contact })}
+                    className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-sm active:scale-95"
+                  >
                     <Mail size={18} />
                     <span>Email</span>
                   </button>
@@ -609,7 +613,10 @@ export const ContactDetail: React.FC = () => {
                     className="space-y-6"
                   >
                     <div className="flex justify-end">
-                      <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95">
+                      <button 
+                        onClick={() => contact && composerStore.open({ contact })}
+                        className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95"
+                      >
                         <Brain size={18} />
                         <span>Compose with AI</span>
                       </button>

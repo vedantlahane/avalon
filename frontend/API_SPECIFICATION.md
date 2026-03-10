@@ -34,6 +34,12 @@
 - GET /emails/:id - Get email details
 - PATCH /emails/:id/star - Toggle star status
 - PATCH /emails/:id/read - Mark as read
+- POST /emails/generate - Generate email content using AI
+- POST /emails/improve - Improve existing email text using AI
+- POST /emails/suggest-subject - Suggest subject lines using AI
+- POST /emails/score - Score email content using AI
+- POST /emails/suggest-time - Suggest best time to send email
+- POST /emails/send - Send an email and log activity
 - POST /emails/:id/generate-reply - Generate AI reply
 
 ## Tasks

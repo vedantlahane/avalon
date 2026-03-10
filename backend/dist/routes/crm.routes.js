@@ -50,6 +50,12 @@ crmRoutes.patch('/email-templates/:id', emailTemplateController.updateEmailTempl
 crmRoutes.delete('/email-templates/:id', emailTemplateController.deleteEmailTemplate);
 // Emails
 crmRoutes.get('/emails', emailController.getEmails);
+crmRoutes.post('/emails/generate', emailController.generateEmail);
+crmRoutes.post('/emails/improve', emailController.improveEmail);
+crmRoutes.post('/emails/suggest-subject', emailController.suggestSubjects);
+crmRoutes.post('/emails/score', emailController.scoreEmail);
+crmRoutes.get('/emails/suggest-time', emailController.suggestTime);
+crmRoutes.post('/emails/send', emailController.sendEmail);
 crmRoutes.get('/emails/:id', emailController.getEmailById);
 crmRoutes.patch('/emails/:id', emailController.updateEmail);
 crmRoutes.delete('/emails/:id', emailController.deleteEmail);

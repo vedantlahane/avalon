@@ -1,5 +1,6 @@
 import React from 'react';
-import { Search, Bell, User, Plus } from 'lucide-react';
+import { Search, Bell, User, Plus, Mail } from 'lucide-react';
+import { composerStore } from '../../lib/composer-store';
 
 export const Header: React.FC = () => {
   return (
@@ -16,7 +17,15 @@ export const Header: React.FC = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm">
+        <button 
+          onClick={() => composerStore.open()}
+          className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm"
+        >
+          <Mail size={18} className="text-indigo-600" />
+          <span>Compose</span>
+        </button>
+
+        <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors shadow-sm">
           <Plus size={18} />
           <span>New Entry</span>
         </button>

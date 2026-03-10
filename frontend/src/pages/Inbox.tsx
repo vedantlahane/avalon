@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
+import { composerStore } from '../lib/composer-store';
 
 export const Inbox: React.FC = () => {
   const [emails, setEmails] = useState<Email[]>([]);
@@ -139,7 +140,10 @@ export const Inbox: React.FC = () => {
       <div className="flex h-full">
         {/* LEFT PANEL - Folders */}
         <div className="w-[250px] bg-white border-r border-gray-200 flex flex-col p-4">
-          <button className="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-xl shadow-lg shadow-indigo-200 mb-6 flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all">
+          <button 
+            onClick={() => composerStore.open()}
+            className="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-xl shadow-lg shadow-indigo-200 mb-6 flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all"
+          >
             <Edit3 size={18} />
             <span>Compose</span>
           </button>
@@ -306,7 +310,15 @@ export const Inbox: React.FC = () => {
                   </button>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-600 hover:bg-gray-50 rounded-lg transition-all border border-gray-200">
+                  <button 
+                    onClick={() => selectedEmail && composerStore.open({ 
+                      to: selectedEmail.sender, 
+                      subject: `Re: ${selectedEmail.subject}`,
+                      replyToId: selectedEmail.id,
+                      contact: selectedEmail.contact
+                    })}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-600 hover:bg-gray-50 rounded-lg transition-all border border-gray-200"
+                  >
                     <Reply size={14} />
                     <span>Reply</span>
                   </button>
@@ -445,7 +457,15 @@ export const Inbox: React.FC = () => {
                                 <Calendar size={14} />
                                 <span>Schedule Meeting</span>
                               </button>
-                              <button onClick={handleGenerateAiReply} className="flex-1 bg-white text-indigo-600 border border-indigo-200 py-2 rounded-xl text-xs font-bold hover:bg-indigo-50 transition-all flex items-center justify-center gap-2">
+                              <button 
+                                onClick={() => selectedEmail && composerStore.open({ 
+                                  to: selectedEmail.sender, 
+                                  subject: `Re: ${selectedEmail.subject}`,
+                                  replyToId: selectedEmail.id,
+                                  contact: selectedEmail.contact
+                                })} 
+                                className="flex-1 bg-white text-indigo-600 border border-indigo-200 py-2 rounded-xl text-xs font-bold hover:bg-indigo-50 transition-all flex items-center justify-center gap-2"
+                              >
                                 <Sparkles size={14} />
                                 <span>Draft Reply</span>
                               </button>
