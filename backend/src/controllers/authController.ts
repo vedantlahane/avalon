@@ -1,8 +1,8 @@
-import * as tokenService from '../services/tokenService.ts';
-import * as userService from '../services/userService.ts';
-import * as otpService from '../services/otpService.ts';
-import ApiError from '../utils/ApiError.ts';
-import { validateEmailPassword } from '../utils/emailPassword.ts';
+import * as tokenService from '../services/tokenService.js';
+import * as userService from '../services/userService.js';
+import * as otpService from '../services/otpService.js';
+import ApiError from '../utils/ApiError.js';
+import { validateEmailPassword } from '../utils/emailPassword.js';
 import { OAuth, OAuthProvider } from '@uptiqai/integrations-sdk';
 import { Context } from 'hono';
 

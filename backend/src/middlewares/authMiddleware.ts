@@ -1,5 +1,5 @@
-import * as tokenService from '../services/tokenService.ts';
-import ApiError from '../utils/ApiError.ts';
+import * as tokenService from '../services/tokenService.js';
+import ApiError from '../utils/ApiError.js';
 import { Context, Next } from 'hono';
 
 /**

@@ -1,4 +1,4 @@
-import { AuthTokens, TokenPayload } from '../types/token.ts';
+import { AuthTokens, TokenPayload } from '../types/token.js';
 import jwt from 'jsonwebtoken';
 
 /**

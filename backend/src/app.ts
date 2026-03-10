@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import { secureHeaders } from 'hono/secure-headers';
 
 import { errorHandler } from './middlewares/error.js';
-// import authRoutes from './routes/auth.routes.js';
+import authRoutes from './routes/auth.routes.js';
 import crmRoutes from './routes/crm.routes.js';
 import ApiError from './utils/ApiError.js';
 import aiRoutes from './routes/ai.routes.js';
@@ -38,7 +38,7 @@ app.get('/health', c => {
 });
 
 // Mount auth routes only if auth needs to be implemented
-// app.route('/auth', authRoutes);
+app.route('/auth', authRoutes);
 
 app.route('/', crmRoutes);
 

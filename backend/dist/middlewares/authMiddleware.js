@@ -1,5 +1,5 @@
-import * as tokenService from "../services/tokenService.js";
-import ApiError from "../utils/ApiError.js";
+import * as tokenService from '../services/tokenService.js';
+import ApiError from '../utils/ApiError.js';
 /**
  * Auth Middleware - Functional approach for protecting routes by verifying JWT tokens
  *

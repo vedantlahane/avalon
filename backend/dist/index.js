@@ -1,5 +1,5 @@
-import app from "./app.js";
-import prisma from "./client.js";
+import app from './app.js';
+import prisma from './client.js';
 import { serve } from '@hono/node-server';
 import dotenv from 'dotenv';
 let server;

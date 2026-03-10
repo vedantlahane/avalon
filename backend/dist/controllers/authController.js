@@ -1,8 +1,8 @@
-import * as tokenService from "../services/tokenService.js";
-import * as userService from "../services/userService.js";
-import * as otpService from "../services/otpService.js";
-import ApiError from "../utils/ApiError.js";
-import { validateEmailPassword } from "../utils/emailPassword.js";
+import * as tokenService from '../services/tokenService.js';
+import * as userService from '../services/userService.js';
+import * as otpService from '../services/otpService.js';
+import ApiError from '../utils/ApiError.js';
+import { validateEmailPassword } from '../utils/emailPassword.js';
 import { OAuth, OAuthProvider } from '@uptiqai/integrations-sdk';
 /**
  * Auth Controller - Functional approach for handling auth-related HTTP requests

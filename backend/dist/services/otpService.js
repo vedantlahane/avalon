@@ -1,5 +1,5 @@
-import ApiError from "../utils/ApiError.js";
-import prisma from "../client.js";
+import ApiError from '../utils/ApiError.js';
+import prisma from '../client.js';
 import bcrypt from 'bcrypt';
 import { Messaging, MessagingProvider } from '@uptiqai/integrations-sdk';
 const OTP_EXPIRATION_TIME = 600000; // 10 minutes

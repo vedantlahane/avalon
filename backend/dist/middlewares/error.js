@@ -1,5 +1,5 @@
 import { Prisma } from '../generated/prisma/index.js';
-import ApiError from "../utils/ApiError.js";
+import ApiError from '../utils/ApiError.js';
 import dotenv from 'dotenv';
 import { HTTPException } from 'hono/http-exception';
 import { ZodError } from 'zod';

@@ -1,4 +1,4 @@
-import prisma from "../client.js";
+import prisma from '../client.js';
 import bcrypt from 'bcrypt';
 /**
  * User Service - Functional approach for user and identity management

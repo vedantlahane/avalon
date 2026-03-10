@@ -1,6 +1,6 @@
-import * as authController from '../controllers/authController.ts';
-import { authMiddleware } from '../middlewares/authMiddleware.ts';
-import catchAsync from '../utils/catchAsync.ts';
+import * as authController from '../controllers/authController.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import catchAsync from '../utils/catchAsync.js';
 import { Hono } from 'hono';
 
 /**

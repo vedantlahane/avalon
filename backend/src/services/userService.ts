@@ -1,5 +1,5 @@
-import prisma from '../client.ts';
-import { User } from '../types/user.ts';
+import prisma from '../client.js';
+import { User } from '../types/user.js';
 import { HandleOAuthCallback200 } from '@uptiqai/integrations-sdk';
 import bcrypt from 'bcrypt';
 
