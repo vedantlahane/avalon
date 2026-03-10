@@ -9,6 +9,7 @@ import { DealDetail } from './pages/DealDetail';
 import { Contacts } from './pages/Contacts';
 import { ContactDetail } from './pages/ContactDetail';
 import { Companies } from './pages/Companies';
+import { CompanyDetail } from './pages/CompanyDetail';
 import { Inbox } from './pages/Inbox';
 import { Tasks } from './pages/Tasks';
 import { Reports } from './pages/Reports';
@@ -60,6 +61,7 @@ const App: React.FC = () => {
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/contacts/:id" element={<ContactDetail />} />
               <Route path="/companies" element={<Companies />} />
+              <Route path="/companies/:id" element={<CompanyDetail />} />
               <Route path="/inbox" element={<Inbox />} />
                         <Route path="/templates" element={<EmailTemplates />} />
                         <Route path="/sentiment" element={<SentimentAnalysis />} />

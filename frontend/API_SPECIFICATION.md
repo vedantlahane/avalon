@@ -1,5 +1,15 @@
 # API Specification
 
+### Company Management
+- `GET /crm/companies` - Get all companies with stats
+- `GET /crm/companies/:id` - Get company by ID with stats
+- `GET /crm/companies/:id/insights` - Get AI insights for a company
+- `POST /crm/companies` - Create a new company
+- `PATCH /crm/companies/:id` - Update a company
+- `POST /crm/companies/:id/enrich` - Enrich company data via AI
+- `POST /crm/companies/bulk-enrich` - Bulk enrich companies via AI
+  - Body: `{ ids: number[] }`
+
 ### Email Template Management
 - `GET /email-templates` - Get all email templates
 - `POST /email-templates` - Create a new email template

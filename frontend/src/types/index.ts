@@ -21,8 +21,26 @@ export interface Company {
   website?: string;
   linkedinUrl?: string;
   description?: string;
+  healthScore?: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CompanyWithStats extends Company {
+  contactCount: number;
+  activeDealCount: number;
+  activeDealValue: number;
+  wonDealCount: number;
+  totalRevenue: number;
+  avgDealSize: number;
+}
+
+export interface CompanyInsight {
+  health: 'Strong' | 'Steady' | 'At Risk';
+  keyInsights: string[];
+  opportunityScore: number;
+  recommendedStrategy: string;
+  similarCompanies: { id: number; name: string }[];
 }
 
 export interface Contact {

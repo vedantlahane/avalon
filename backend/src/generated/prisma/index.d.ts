@@ -8063,10 +8063,12 @@ export namespace Prisma {
 
   export type CompanyAvgAggregateOutputType = {
     id: number | null
+    healthScore: number | null
   }
 
   export type CompanySumAggregateOutputType = {
     id: number | null
+    healthScore: number | null
   }
 
   export type CompanyMinAggregateOutputType = {
@@ -8080,6 +8082,7 @@ export namespace Prisma {
     website: string | null
     linkedinUrl: string | null
     description: string | null
+    healthScore: number | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -8096,6 +8099,7 @@ export namespace Prisma {
     website: string | null
     linkedinUrl: string | null
     description: string | null
+    healthScore: number | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -8112,6 +8116,7 @@ export namespace Prisma {
     website: number
     linkedinUrl: number
     description: number
+    healthScore: number
     createdAt: number
     updatedAt: number
     isDeleted: number
@@ -8121,10 +8126,12 @@ export namespace Prisma {
 
   export type CompanyAvgAggregateInputType = {
     id?: true
+    healthScore?: true
   }
 
   export type CompanySumAggregateInputType = {
     id?: true
+    healthScore?: true
   }
 
   export type CompanyMinAggregateInputType = {
@@ -8138,6 +8145,7 @@ export namespace Prisma {
     website?: true
     linkedinUrl?: true
     description?: true
+    healthScore?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -8154,6 +8162,7 @@ export namespace Prisma {
     website?: true
     linkedinUrl?: true
     description?: true
+    healthScore?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -8170,6 +8179,7 @@ export namespace Prisma {
     website?: true
     linkedinUrl?: true
     description?: true
+    healthScore?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -8273,6 +8283,7 @@ export namespace Prisma {
     website: string | null
     linkedinUrl: string | null
     description: string | null
+    healthScore: number | null
     createdAt: Date
     updatedAt: Date
     isDeleted: boolean
@@ -8308,6 +8319,7 @@ export namespace Prisma {
     website?: boolean
     linkedinUrl?: boolean
     description?: boolean
+    healthScore?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -8327,6 +8339,7 @@ export namespace Prisma {
     website?: boolean
     linkedinUrl?: boolean
     description?: boolean
+    healthScore?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -8343,6 +8356,7 @@ export namespace Prisma {
     website?: boolean
     linkedinUrl?: boolean
     description?: boolean
+    healthScore?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -8359,12 +8373,13 @@ export namespace Prisma {
     website?: boolean
     linkedinUrl?: boolean
     description?: boolean
+    healthScore?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "domain" | "industry" | "size" | "revenue" | "location" | "website" | "linkedinUrl" | "description" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "domain" | "industry" | "size" | "revenue" | "location" | "website" | "linkedinUrl" | "description" | "healthScore" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contacts?: boolean | Company$contactsArgs<ExtArgs>
     deals?: boolean | Company$dealsArgs<ExtArgs>
@@ -8390,6 +8405,7 @@ export namespace Prisma {
       website: string | null
       linkedinUrl: string | null
       description: string | null
+      healthScore: number | null
       createdAt: Date
       updatedAt: Date
       isDeleted: boolean
@@ -8828,6 +8844,7 @@ export namespace Prisma {
     readonly website: FieldRef<"Company", 'String'>
     readonly linkedinUrl: FieldRef<"Company", 'String'>
     readonly description: FieldRef<"Company", 'String'>
+    readonly healthScore: FieldRef<"Company", 'Int'>
     readonly createdAt: FieldRef<"Company", 'DateTime'>
     readonly updatedAt: FieldRef<"Company", 'DateTime'>
     readonly isDeleted: FieldRef<"Company", 'Boolean'>
@@ -15625,6 +15642,7 @@ export namespace Prisma {
     website: 'website',
     linkedinUrl: 'linkedinUrl',
     description: 'description',
+    healthScore: 'healthScore',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     isDeleted: 'isDeleted'
@@ -16381,6 +16399,7 @@ export namespace Prisma {
     website?: StringNullableFilter<"Company"> | string | null
     linkedinUrl?: StringNullableFilter<"Company"> | string | null
     description?: StringNullableFilter<"Company"> | string | null
+    healthScore?: IntNullableFilter<"Company"> | number | null
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     isDeleted?: BoolFilter<"Company"> | boolean
@@ -16399,6 +16418,7 @@ export namespace Prisma {
     website?: SortOrderInput | SortOrder
     linkedinUrl?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    healthScore?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -16420,6 +16440,7 @@ export namespace Prisma {
     website?: StringNullableFilter<"Company"> | string | null
     linkedinUrl?: StringNullableFilter<"Company"> | string | null
     description?: StringNullableFilter<"Company"> | string | null
+    healthScore?: IntNullableFilter<"Company"> | number | null
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
     isDeleted?: BoolFilter<"Company"> | boolean
@@ -16438,6 +16459,7 @@ export namespace Prisma {
     website?: SortOrderInput | SortOrder
     linkedinUrl?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    healthScore?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -16462,6 +16484,7 @@ export namespace Prisma {
     website?: StringNullableWithAggregatesFilter<"Company"> | string | null
     linkedinUrl?: StringNullableWithAggregatesFilter<"Company"> | string | null
     description?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    healthScore?: IntNullableWithAggregatesFilter<"Company"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"Company"> | boolean
@@ -17573,6 +17596,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -17591,6 +17615,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -17608,6 +17633,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17626,6 +17652,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17644,6 +17671,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -17659,6 +17687,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17675,6 +17704,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -18857,6 +18887,7 @@ export namespace Prisma {
     website?: SortOrder
     linkedinUrl?: SortOrder
     description?: SortOrder
+    healthScore?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -18864,6 +18895,7 @@ export namespace Prisma {
 
   export type CompanyAvgOrderByAggregateInput = {
     id?: SortOrder
+    healthScore?: SortOrder
   }
 
   export type CompanyMaxOrderByAggregateInput = {
@@ -18877,6 +18909,7 @@ export namespace Prisma {
     website?: SortOrder
     linkedinUrl?: SortOrder
     description?: SortOrder
+    healthScore?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -18893,6 +18926,7 @@ export namespace Prisma {
     website?: SortOrder
     linkedinUrl?: SortOrder
     description?: SortOrder
+    healthScore?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -18900,6 +18934,7 @@ export namespace Prisma {
 
   export type CompanySumOrderByAggregateInput = {
     id?: SortOrder
+    healthScore?: SortOrder
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -20340,6 +20375,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -20357,6 +20393,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -20581,6 +20618,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -20598,6 +20636,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21246,6 +21285,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -21263,6 +21303,7 @@ export namespace Prisma {
     website?: string | null
     linkedinUrl?: string | null
     description?: string | null
+    healthScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -21527,6 +21568,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21544,6 +21586,7 @@ export namespace Prisma {
     website?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    healthScore?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean

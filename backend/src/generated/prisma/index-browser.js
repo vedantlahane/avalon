@@ -216,6 +216,7 @@ exports.Prisma.CompanyScalarFieldEnum = {
   website: 'website',
   linkedinUrl: 'linkedinUrl',
   description: 'description',
+  healthScore: 'healthScore',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isDeleted: 'isDeleted'

@@ -35,9 +35,12 @@ crmRoutes.get('/contacts/sentiment/breakdown', contactController.getSentimentBre
 // Companies
 crmRoutes.get('/companies', companyController.getCompanies);
 crmRoutes.get('/companies/:id', companyController.getCompanyById);
+crmRoutes.get('/companies/:id/insights', companyController.getCompanyInsights);
 crmRoutes.post('/companies', companyController.createCompany);
 crmRoutes.patch('/companies/:id', companyController.updateCompany);
 crmRoutes.delete('/companies/:id', companyController.deleteCompany);
+crmRoutes.post('/companies/:id/enrich', companyController.enrichCompany);
+crmRoutes.post('/companies/bulk-enrich', companyController.bulkEnrich);
 
 // Deals
 crmRoutes.get('/deals', dealController.getDeals);

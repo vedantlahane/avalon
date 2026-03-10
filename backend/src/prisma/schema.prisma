@@ -226,13 +226,15 @@ model Contact {
 
   website      String?
 
-  linkedinUrl  String?
+    linkedinUrl  String?
 
-  description  String?
+    description  String?
 
-  contacts     Contact[]
+    healthScore  Int?       @default(0)
 
-  deals        Deal[]
+    contacts     Contact[]
+
+    deals        Deal[]
 
   createdAt    DateTime   @default(now())
 
