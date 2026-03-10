@@ -60,6 +60,24 @@ export const dashboardService = {
         { category: 'Cool', count: 30, color: '#EAB308', range: '40-59' },
         { category: 'Cold', count: 20, color: '#9CA3AF', range: '0-39' },
       ],
+      salesLeaderboard: {
+        title: 'Sales Leaderboard - March 2026',
+        period: 'This Month',
+        reps: [
+          { id: 1, rank: 1, name: 'Alex Johnson', revenue: 185000, dealsWon: 8, target: 120, status: 'success' },
+          { id: 2, rank: 2, name: 'You (Demo User)', revenue: 142000, dealsWon: 6, target: 95, isCurrentUser: true, status: 'info' },
+          { id: 3, rank: 3, name: 'Maria Garcia', revenue: 128000, dealsWon: 5, target: 85, status: 'info' },
+          { id: 4, rank: 4, name: 'David Kim', revenue: 98000, dealsWon: 4, target: 65, status: 'warning' },
+          { id: 5, rank: 5, name: 'Lisa Wang', revenue: 76000, dealsWon: 3, target: 51, status: 'warning' },
+        ],
+        achievements: [
+          { id: '1', icon: '🔥', title: 'Hot Streak', description: '3 deals won in a row' },
+          { id: '2', icon: '📧', title: 'Email Pro', description: '90%+ open rate this month' },
+          { id: '3', icon: '⚡', title: 'Speed Demon', description: 'Fastest deal close (12 days)' },
+          { id: '4', icon: '🎯', title: 'Sharpshooter', description: '60%+ win rate' },
+        ],
+        aiCoaching: "You're $8K away from hitting your monthly target! The CloudNine deal ($45K, 55% probability) is your best bet. Focus on scheduling the technical review this week.",
+      },
     };
   }
 };

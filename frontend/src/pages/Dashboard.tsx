@@ -39,6 +39,7 @@ import { cn, formatCurrency } from '../lib/utils';
 import { format } from 'date-fns';
 
 import { useNavigate } from 'react-router-dom';
+import { SalesLeaderboard } from '../components/dashboard/SalesLeaderboard';
 
 const KPI_CARDS = [
   { id: 'pipeline', label: 'Pipeline Value', icon: BadgeDollarSign, color: 'bg-indigo-50 text-indigo-600', path: '/deals' },
@@ -99,6 +100,10 @@ export const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 h-96 bg-gray-100 rounded-2xl"></div>
           <div className="h-96 bg-gray-100 rounded-2xl"></div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
+          <div className="lg:col-span-6 h-96 bg-gray-100 rounded-2xl"></div>
+          <div className="lg:col-span-4 h-96 bg-gray-100 rounded-2xl"></div>
         </div>
       </div>
     );
@@ -413,6 +418,9 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Sales Leaderboard Section */}
+      <SalesLeaderboard data={data.salesLeaderboard} />
 
       {/* Fourth Row - Tables & Donut */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

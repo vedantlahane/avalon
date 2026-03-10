@@ -213,6 +213,32 @@ export interface LeadScoreDistribution {
   range: string;
 }
 
+export interface LeaderboardRep {
+  id: number;
+  rank: number;
+  name: string;
+  revenue: number;
+  dealsWon: number;
+  target: number;
+  isCurrentUser?: boolean;
+  status: 'success' | 'warning' | 'info';
+}
+
+export interface AchievementBadge {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface SalesLeaderboard {
+  title: string;
+  period: 'This Week' | 'This Month' | 'This Quarter' | 'All Time';
+  reps: LeaderboardRep[];
+  achievements: AchievementBadge[];
+  aiCoaching: string;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   revenueForecast: RevenueForecastPoint[];
@@ -223,6 +249,7 @@ export interface DashboardData {
   upcomingTasks: Task[];
   upcomingMeetings: Activity[];
   leadScoreDistribution: LeadScoreDistribution[];
+  salesLeaderboard: SalesLeaderboard;
 }
 
 export interface EnrichmentResult {
