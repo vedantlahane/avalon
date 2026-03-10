@@ -2,6 +2,7 @@ import prisma from '../client.js';
 export const dealService = {
     getDeals: async () => {
         return await prisma.deal.findMany({
+            where: { isDeleted: false },
             include: {
                 contact: true,
                 company: true
