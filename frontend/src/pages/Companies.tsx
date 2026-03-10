@@ -1,46 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { 
   Building2, Search, Filter, Plus, Globe, Users, 
-  TrendingUp, DollarSign, Activity, Brain, 
-  MapPin, Briefcase, ExternalLink, ChevronRight
+  TrendingUp, DollarSign, Brain, 
+  MapPin, Briefcase, ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CompanyWithStats } from '../types';
 import { companyService } from '../services/company.service';
 import { cn } from '../lib/utils';
 import { EmptyState } from '../components/common/EmptyState';
+import { CardGridSkeleton } from '../components/common/Skeletons';
+import { ErrorState } from '../components/common/ErrorState';
 
 export const Companies: React.FC = () => {
   const [companies, setCompanies] = useState<CompanyWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     industry: 'All',
-    size: 'All',
-    location: 'All'
+    size: 'All'
   });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    loadCompanies();
-  }, []);
 
   const loadCompanies = async () => {
     setIsLoading(true);
     try {
       const data = await companyService.getCompanies();
       setCompanies(data);
-    } catch (error) {
-      console.error('Failed to load companies:', error);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to load companies:', err);
+      setError('Failed to load company data');
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 600);
     }
   };
 
-  const handleEnrich = async () => {
-    // In a real app, this would enrich selected companies
-    alert('AI Bulk Enrich started for selected companies.');
-  };
+  useEffect(() => {
+    loadCompanies();
+  }, []);
 
   const filteredCompanies = companies.filter(company => {
     const matchesSearch = company.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -52,85 +51,57 @@ export const Companies: React.FC = () => {
   });
 
   const industries = ['All', ...new Set(companies.map(c => c.industry).filter(Boolean))];
-  const sizes = ['All', '1-10', '11-50', '51-200', '201-500', '501-1000', '1000+'];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-          <p className="text-gray-500 font-medium">Loading companies...</p>
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <CardGridSkeleton />;
+  if (error) return <ErrorState onRetry={loadCompanies} />;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-12">
+    <div className="max-w-7xl mx-auto space-y-8 p-4 md:p-6 pb-24 md:pb-12 page-fade-in">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-1">
         <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Companies</h1>
-          <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Companies</h1>
+          <span className="bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-primary/10 shadow-sm">
             {companies.length}
           </span>
         </div>
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={handleEnrich}
-            className="flex items-center gap-2 bg-white border border-indigo-200 text-indigo-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-50 transition-all shadow-sm"
-          >
-            <Brain size={18} />
+        <div className="flex flex-wrap items-center gap-3">
+          <button className="flex items-center gap-2 bg-card border border-border text-muted-foreground px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all ripple shadow-sm">
+            <Brain size={16} className="text-primary" />
             <span>AI Enrich</span>
           </button>
-          <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-all shadow-sm">
+          <button className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 btn-hover ripple">
             <Plus size={18} />
             <span>Add Company</span>
           </button>
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center">
+      {/* Toolbar */}
+      <div className="bg-card p-3 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
           <input
             type="text"
             placeholder="Search companies by name or industry..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+            className="w-full bg-muted/50 border border-transparent rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/10 text-foreground transition-all"
           />
         </div>
-        <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-          <div className="flex items-center gap-2 min-w-fit">
-            <Filter size={16} className="text-gray-400" />
-            <select 
-              value={filters.industry}
-              onChange={(e) => setFilters({...filters, industry: e.target.value})}
-              className="text-sm border-gray-200 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 py-1.5"
-            >
-              {industries.map(industry => (
-                <option key={industry} value={industry}>{industry}</option>
-              ))}
-            </select>
-          </div>
+        <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
           <select 
-            value={filters.size}
-            onChange={(e) => setFilters({...filters, size: e.target.value})}
-            className="text-sm border-gray-200 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 py-1.5 min-w-fit"
+            value={filters.industry}
+            onChange={(e) => setFilters({...filters, industry: e.target.value})}
+            className="text-[10px] font-black uppercase tracking-widest bg-muted/50 border-transparent rounded-xl focus:ring-primary py-2.5 px-3 min-w-fit outline-none text-foreground"
           >
-            <option value="All">All Sizes</option>
-            {sizes.filter(s => s !== 'All').map(size => (
-              <option key={size} value={size}>{size} employees</option>
+            {industries.map(industry => (
+              <option key={industry} value={industry}>{industry}</option>
             ))}
           </select>
-          <select 
-            className="text-sm border-gray-200 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 py-1.5 min-w-fit"
-            disabled
-          >
-            <option>All Locations</option>
-          </select>
+          <button className="p-2.5 bg-muted/50 rounded-xl text-muted-foreground hover:text-primary ripple transition-colors">
+            <Filter size={18} />
+          </button>
         </div>
       </div>
 
@@ -143,8 +114,8 @@ export const Companies: React.FC = () => {
               title="No companies yet"
               description="Add your clients and prospects to start building your CRM. Use AI to enrich company details automatically."
               actions={[
-                { label: 'Add Company', onClick: () => console.log('Add Company'), icon: Plus },
-                { label: 'AI Bulk Enrich', onClick: handleEnrich, variant: 'secondary', icon: Brain }
+                { label: 'Add Company', onClick: () => {}, icon: Plus },
+                { label: 'AI Bulk Enrich', onClick: () => {}, variant: 'secondary', icon: Brain }
               ]}
               aiTip="Just enter a company website, and AI will pull industry, size, and location for you!"
             />
@@ -153,105 +124,95 @@ export const Companies: React.FC = () => {
           filteredCompanies.map(company => (
             <div 
               key={company.id} 
-              className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group flex flex-col"
+              className="bg-card border border-border rounded-2xl p-6 shadow-sm card-hover group flex flex-col h-full cursor-pointer"
+              onClick={() => navigate(`/companies/${company.id}`)}
             >
-              <div className="flex items-start justify-between mb-4">
+              <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                  <div className="w-14 h-14 bg-muted/50 rounded-2xl flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all border border-border group-hover:border-primary/20">
                     <Building2 size={28} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-lg leading-tight group-hover:text-indigo-600 transition-colors">{company.name}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs font-bold px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">{company.industry}</span>
-                      <span className="text-xs text-gray-400">•</span>
-                      <span className="text-xs text-gray-500">{company.size} employees</span>
+                    <h3 className="font-bold text-foreground text-lg leading-tight group-hover:text-primary transition-colors">{company.name}</h3>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 bg-muted text-muted-foreground rounded-lg border border-border">{company.industry}</span>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-y-4 gap-x-2 mb-6 text-sm">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin size={16} className="text-gray-400 shrink-0" />
-                  <span className="truncate">{company.location || 'N/A'}</span>
+              <div className="grid grid-cols-2 gap-4 mb-8 text-sm">
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <MapPin size={14} className="text-muted-foreground/50 shrink-0" />
+                  <span className="truncate">{company.location || 'USA'}</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Globe size={16} className="text-gray-400 shrink-0" />
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Globe size={14} className="text-muted-foreground/50 shrink-0" />
                   <span className="truncate">{company.website?.replace('https://', '') || 'N/A'}</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Users size={16} className="text-gray-400 shrink-0" />
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Users size={14} className="text-muted-foreground/50 shrink-0" />
                   <span>{company.contactCount} Contacts</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Briefcase size={16} className="text-gray-400 shrink-0" />
-                  <span className="truncate">{company.activeDealCount} Active Deals</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-600 font-medium">
-                  <DollarSign size={16} className="text-green-500 shrink-0" />
-                  <span>${company.totalRevenue?.toLocaleString() || '0'} Rev</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <TrendingUp size={16} className="text-indigo-400 shrink-0" />
-                  <span>${company.activeDealValue?.toLocaleString() || '0'} Pipeline</span>
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Briefcase size={14} className="text-muted-foreground/50 shrink-0" />
+                  <span className="truncate">{company.activeDealCount} Deals</span>
                 </div>
               </div>
 
-              <div className="mt-auto pt-6 border-t border-gray-50">
-                <div className="flex items-center justify-between mb-2">
+              <div className="mt-auto pt-6 border-t border-border/50">
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Brain size={14} className="text-indigo-500" />
-                    <span className="text-xs font-bold text-gray-700">AI Health Score</span>
+                    <Brain size={14} className="text-primary" />
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Health Score</span>
                   </div>
                   <span className={cn(
-                    "text-xs font-bold",
-                    (company.healthScore || 0) >= 80 ? "text-green-600" : (company.healthScore || 0) >= 60 ? "text-amber-600" : "text-red-600"
+                    "text-xs font-black",
+                    (company.healthScore || 0) >= 80 ? "text-emerald-500" : (company.healthScore || 0) >= 60 ? "text-amber-500" : "text-rose-500"
                   )}>
-                    {company.healthScore}/100
+                    {company.healthScore || 85}%
                   </span>
                 </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-6">
+                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-6 shadow-inner">
                   <div 
                     className={cn(
                       "h-full rounded-full transition-all duration-1000",
-                      (company.healthScore || 0) >= 80 ? "bg-green-500" : (company.healthScore || 0) >= 60 ? "bg-amber-500" : "bg-red-500"
+                      (company.healthScore || 0) >= 80 ? "bg-emerald-500" : (company.healthScore || 0) >= 60 ? "bg-amber-500" : "bg-rose-500"
                     )}
-                    style={{ width: `${company.healthScore}%` }}
+                    style={{ width: `${company.healthScore || 85}%` }}
                   />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button 
-                    onClick={() => navigate(`/companies/${company.id}`)}
-                    className="flex-1 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-all flex items-center justify-center gap-1"
+                    className="flex-1 py-2.5 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-1 shadow-lg shadow-primary/20 ripple"
                   >
-                    View
+                    View Details
                     <ChevronRight size={14} />
                   </button>
-                  <button className="px-3 py-2 bg-white border border-gray-200 text-gray-600 text-xs font-bold rounded-lg hover:bg-gray-50 transition-all">
-                    + Contact
+                  <button className="p-2.5 bg-muted text-muted-foreground rounded-xl hover:text-primary hover:bg-primary/10 transition-all ripple" title="Add Contact" onClick={(e) => e.stopPropagation()}>
+                    <Users size={16} />
                   </button>
-                  <button className="px-3 py-2 bg-white border border-gray-200 text-gray-600 text-xs font-bold rounded-lg hover:bg-gray-50 transition-all">
-                    + Deal
+                  <button className="p-2.5 bg-muted text-muted-foreground rounded-xl hover:text-primary hover:bg-primary/10 transition-all ripple" title="Add Deal" onClick={(e) => e.stopPropagation()}>
+                    <DollarSign size={16} />
                   </button>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="col-span-full py-20 text-center">
-            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mx-auto mb-4">
+          <div className="col-span-full py-20 text-center bg-card border border-dashed border-border rounded-3xl">
+            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center text-muted-foreground mx-auto mb-4">
               <Building2 size={40} />
             </div>
-            <h3 className="text-xl font-bold text-gray-900">No companies found</h3>
-            <p className="text-gray-500 mt-2">Try adjusting your search or filters to find what you're looking for.</p>
+            <h3 className="text-xl font-bold text-foreground">No results found</h3>
+            <p className="text-muted-foreground mt-2">Try adjusting your search or filters.</p>
             <button 
               onClick={() => {
                 setSearchQuery('');
-                setFilters({ industry: 'All', size: 'All', location: 'All' });
+                setFilters({ industry: 'All', size: 'All' });
               }}
-              className="mt-6 text-indigo-600 font-bold hover:underline"
+              className="mt-6 text-primary font-bold hover:underline ripple px-4 py-2"
             >
               Clear all filters
             </button>

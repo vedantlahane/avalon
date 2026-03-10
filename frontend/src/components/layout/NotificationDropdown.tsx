@@ -70,14 +70,14 @@ export const NotificationDropdown: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col max-h-[600px]">
+    <div className="flex flex-col max-h-[600px] w-[400px]">
       <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
         <div className="flex items-center gap-2">
           <Bell size={18} className="text-indigo-600" />
           <h3 className="font-bold text-gray-900">Notifications</h3>
           {state.unreadCount > 0 && (
             <span className="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
-              {state.unreadCount} New
+              {state.unreadCount}
             </span>
           )}
         </div>
@@ -85,24 +85,30 @@ export const NotificationDropdown: React.FC = () => {
           onClick={() => notificationStore.markAllAsRead()}
           className="text-xs text-indigo-600 font-semibold hover:text-indigo-700 hover:bg-indigo-50 px-2 py-1 rounded transition-colors"
         >
-          Mark all as read
+          Mark All Read
         </button>
       </div>
 
       <div className="p-2 border-b border-gray-100 flex items-center gap-1 overflow-x-auto no-scrollbar">
-        {(['All', 'AI', 'Deal', 'Task'] as const).map(f => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-              filter === f 
-                ? 'bg-indigo-600 text-white' 
-                : 'text-gray-500 hover:bg-gray-100'
-            }`}
-          >
-            {f}
-          </button>
-        ))}
+        <div className="flex items-center gap-1 px-1">
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Filter:</span>
+          {(['All', 'AI', 'Deals', 'Tasks'] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setFilter(f === 'Deals' ? 'Deal' : f === 'Tasks' ? 'Task' : f as any)}
+              className={`px-3 py-1 rounded-full text-[11px] font-bold whitespace-nowrap transition-all ${
+                (filter === 'All' && f === 'All') || 
+                (filter === 'AI' && f === 'AI') || 
+                (filter === 'Deal' && f === 'Deals') || 
+                (filter === 'Task' && f === 'Tasks')
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' 
+                  : 'text-gray-500 hover:bg-gray-100'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-[300px]">

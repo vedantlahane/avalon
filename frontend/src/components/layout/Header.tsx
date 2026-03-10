@@ -1,54 +1,81 @@
 import React from 'react';
-import { Search, Bell, User, Plus, Mail } from 'lucide-react';
-import { composerStore } from '../../lib/composer-store';
-import { commandPaletteStore } from '../../lib/command-palette-store';
+import { Search, Bell, Settings, Bot, Terminal, Menu, Sun, Moon, Laptop } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
+import { commandPaletteStore } from '../../lib/command-palette-store';
+import { useTheme } from '../../hooks/useTheme';
+import { cn } from '../../lib/utils';
 
 export const Header: React.FC = () => {
+  const { theme, setTheme, isDark } = useTheme();
+
+  const toggleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
+  };
+
+  const getThemeIcon = () => {
+    if (theme === 'system') return <Laptop size={20} />;
+    return isDark ? <Moon size={20} /> : <Sun size={20} />;
+  };
+
   return (
-    <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 sticky top-0 z-10">
-      <div className="flex items-center flex-1 max-w-xl">
+    <header className="h-16 bg-card border-b border-border px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 shrink-0">
+      <div className="flex items-center gap-4 flex-1">
+        <button className="md:hidden p-2 text-muted-foreground hover:bg-muted rounded-lg">
+          <Menu size={20} />
+        </button>
         <div 
-          className="relative w-full cursor-pointer"
           onClick={() => commandPaletteStore.open()}
+          className="relative max-w-md w-full group cursor-pointer"
         >
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search contacts, deals, or tasks... (⌘K)"
-            className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer"
-            readOnly
-          />
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-muted-foreground group-hover:text-primary transition-colors">
+            <Search size={18} />
+          </div>
+          <div className="w-full bg-muted/50 border border-transparent rounded-xl py-2 pl-10 pr-12 text-sm text-muted-foreground flex items-center group-hover:bg-muted group-hover:border-border transition-all">
+            Type <span className="mx-1 px-1.5 py-0.5 bg-card border border-border rounded text-[10px] font-bold">Ctrl K</span> to search...
+          </div>
+          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+            <Terminal size={14} className="text-muted-foreground/30" />
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4 ml-4">
         <button 
-          onClick={() => composerStore.open()}
-          className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm"
+          onClick={toggleTheme}
+          className="p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl transition-all relative group ripple"
+          title={`Current theme: ${theme}. Click to cycle.`}
         >
-          <Mail size={18} className="text-indigo-600" />
-          <span>Compose</span>
+          {getThemeIcon()}
         </button>
 
-        <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors shadow-sm">
-          <Plus size={18} />
-          <span>New Entry</span>
+        <button 
+          onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-panel'))}
+          className="p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl transition-all relative group ripple"
+          title="AI Assistant"
+        >
+          <Bot size={20} />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary border-2 border-card rounded-full"></span>
         </button>
         
         <NotificationBell />
         
-        <div className="h-8 w-[1px] bg-gray-200 mx-1"></div>
+        <div className="h-8 w-px bg-border mx-1 hidden sm:block"></div>
         
-        <button className="flex items-center gap-3 pl-2 pr-1 py-1 hover:bg-gray-100 rounded-lg transition-colors">
-          <div className="text-right hidden sm:block">
-            <div className="text-sm font-semibold text-gray-900">Alex Rivers</div>
-            <div className="text-xs text-gray-500">Sales Lead</div>
+        <button className="p-2.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl transition-all ripple">
+          <Settings size={20} />
+        </button>
+        
+        <div className="flex items-center gap-3 pl-2">
+          <div className="hidden md:block text-right">
+            <p className="text-xs font-bold text-foreground leading-none">Alex Rivera</p>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Admin</p>
           </div>
-          <div className="w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold text-sm border border-indigo-200">
+          <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-md shadow-primary/20 ring-2 ring-card transition-transform hover:scale-105 cursor-pointer">
             AR
           </div>
-        </button>
+        </div>
       </div>
     </header>
   );

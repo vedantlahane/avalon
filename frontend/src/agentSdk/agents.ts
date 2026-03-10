@@ -11,10 +11,7 @@ export const AGENT_CONFIGS: AgentConfig[] = [
         "name": "new_lead_captured",
         "description": "When a new contact or lead is added to the CRM, the agent should analyze their profile and provide a suggested personalized outreach script.",
         "type": "sync",
-        "outputSchema": z.object({
-          suggestedScript: z.string(),
-          recommendedNextSteps: z.array(z.string())
-        })
+        "outputSchema": z.any()
       },
       {
         "name": "deal_stagnation_alert",
@@ -25,11 +22,7 @@ export const AGENT_CONFIGS: AgentConfig[] = [
         "name": "incoming_email_analysis",
         "description": "When a new email is received in the Inbox, the agent should automatically summarize the content and update the contact's sentiment score.",
         "type": "sync",
-        "outputSchema": z.object({
-          summary: z.string(),
-          sentimentScore: z.number(),
-          suggestedReply: z.string().optional()
-        })
+        "outputSchema": z.any()
       }
     ],
     "config": {

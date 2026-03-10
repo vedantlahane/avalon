@@ -22,7 +22,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { dealService } from '../services/deal.service';
-import { Deal, DealStage, DealPriority } from '../types';
+import { Deal, DealStage } from '../types';
 import { 
   MoreHorizontal, 
   Plus, 
@@ -40,14 +40,17 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
-  BarChart3
+  BarChart3,
+  Brain
 } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn, formatCurrency } from '../lib/utils';
 import { format } from 'date-fns';
 import { DealModal } from '../components/deals/DealModal';
 import { DealForecast } from '../components/deals/DealForecast';
 import { DealListView } from '../components/deals/DealListView';
 import { EmptyState } from '../components/common/EmptyState';
+import { ListSkeleton } from '../components/common/Skeletons';
+import { ErrorState } from '../components/common/ErrorState';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
   { id: 'Lead', label: 'Lead', borderColor: 'border-t-[#9CA3AF]', color: 'text-[#9CA3AF]' },
@@ -82,26 +85,34 @@ const dropAnimation: DropAnimation = {
 export const Deals: React.FC = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState<Deal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [view, setView] = useState<'Kanban' | 'List' | 'Forecast'>('Kanban');
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     owner: 'All',
-    company: 'All',
     priority: 'All',
   });
 
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [initialStage, setInitialStage] = useState<DealStage | undefined>(undefined);
 
-  const fetchDeals = () => {
-    dealService.getDeals().then(setDeals);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const data = await dealService.getDeals();
+      setDeals(data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load deals');
+    } finally {
+      setTimeout(() => setIsLoading(false), 600);
+    }
   };
 
   useEffect(() => {
-    fetchDeals();
+    fetchData();
   }, []);
 
   const totalPipelineValue = useMemo(() => {
@@ -112,17 +123,14 @@ export const Deals: React.FC = () => {
     return deals.filter(deal => {
       const matchesSearch = deal.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                            deal.company?.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesOwner = filters.owner === 'All' || deal.owner === filters.owner;
       const matchesPriority = filters.priority === 'All' || deal.priority === filters.priority;
-      return matchesSearch && matchesOwner && matchesPriority;
+      return matchesSearch && matchesPriority;
     });
   }, [deals, searchQuery, filters]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
+      activationConstraint: { distance: 8 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
@@ -178,102 +186,99 @@ export const Deals: React.FC = () => {
           newStage = overDeal ? overDeal.stage : activeDeal.stage;
         }
 
-        if (newStage === 'Closed Won') {
-          if (!window.confirm('🎉 Congratulations! Mark deal as won?')) {
-            fetchDeals(); // Revert
-            setActiveId(null);
-            return;
-          }
-        } else if (newStage === 'Closed Lost') {
-          const reason = window.prompt('What was the loss reason?');
-          if (reason !== null) {
-            activeDeal.lossReason = reason;
-          }
+        if (newStage === 'Closed Won' && activeDeal.stage !== 'Closed Won') {
+          triggerConfetti();
         }
 
         await dealService.updateDeal(activeDeal.id, { 
           stage: newStage, 
-          probability: STAGE_PROBABILITIES[newStage],
-          lossReason: activeDeal.lossReason 
+          probability: STAGE_PROBABILITIES[newStage]
         });
-        fetchDeals();
+        fetchData();
       }
     }
     
     setActiveId(null);
   };
 
-  const handleUpdateDeal = async (id: number, data: Partial<Deal>) => {
-    await dealService.updateDeal(id, data);
-    fetchDeals();
+  const triggerConfetti = () => {
+    const container = document.createElement('div');
+    container.className = 'fixed inset-0 pointer-events-none z-[200] overflow-hidden';
+    document.body.appendChild(container);
+
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'absolute w-3 h-3 rounded-sm';
+      const colors = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#7C3AED'];
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.top = '-10px';
+      confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+      
+      const animation = confetti.animate([
+        { transform: `translate3d(0, 0, 0) rotate(0deg)`, opacity: 1 },
+        { transform: `translate3d(${(Math.random() - 0.5) * 200}px, 100vh, 0) rotate(${Math.random() * 1000}deg)`, opacity: 0 }
+      ], {
+        duration: 2000 + Math.random() * 2000,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      });
+
+      container.appendChild(confetti);
+      animation.onfinish = () => confetti.remove();
+    }
+
+    setTimeout(() => container.remove(), 5000);
   };
 
-  const handleDeleteDeals = async (ids: number[]) => {
-    await dealService.bulkDeleteDeals(ids);
-    fetchDeals();
-  };
-
-  const handleBulkUpdateDeals = async (ids: number[], data: Partial<Deal>) => {
-    await dealService.bulkUpdateDeals(ids, data);
-    fetchDeals();
-  };
-
-  const openAddModal = (stage?: DealStage) => {
-    setSelectedDeal(null);
-    setInitialStage(stage);
-    setIsModalOpen(true);
-  };
-
-  const goToDealDetail = (dealId: number) => {
-    navigate(`/deals/${dealId}`);
-  };
+  if (isLoading) return <ListSkeleton />;
+  if (error) return <ErrorState onRetry={fetchData} />;
 
   return (
-    <div className="h-full flex flex-col gap-6 overflow-hidden">
+    <div className="h-full flex flex-col gap-6 overflow-hidden page-fade-in pb-20 md:pb-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-1">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Deal Pipeline</h1>
-          <p className="text-indigo-600 font-semibold mt-1">
-            ${totalPipelineValue.toLocaleString()} in pipeline
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Deal Pipeline</h1>
+          <p className="text-primary font-bold mt-1">
+            {formatCurrency(totalPipelineValue)} in pipeline
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex bg-white border border-gray-200 p-1 rounded-lg shadow-sm">
+          <div className="hidden sm:flex bg-card border border-border p-1 rounded-xl shadow-sm">
             <button 
               onClick={() => setView('Kanban')}
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all",
-                view === 'Kanban' ? "bg-gray-100 text-gray-900" : "text-gray-500 hover:text-gray-900"
+                "flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                view === 'Kanban' ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <LayoutGrid size={16} />
+              <LayoutGrid size={14} />
               <span>Kanban</span>
             </button>
             <button 
               onClick={() => setView('List')}
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all",
-                view === 'List' ? "bg-gray-100 text-gray-900" : "text-gray-500 hover:text-gray-900"
+                "flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                view === 'List' ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <List size={16} />
+              <List size={14} />
               <span>List</span>
             </button>
             <button 
               onClick={() => setView('Forecast')}
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all",
-                view === 'Forecast' ? "bg-gray-100 text-gray-900" : "text-gray-500 hover:text-gray-900"
+                "flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                view === 'Forecast' ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <BarChart3 size={16} />
+              <BarChart3 size={14} />
               <span>Forecast</span>
             </button>
           </div>
           <button 
-            onClick={() => openAddModal()}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-md btn-hover ripple"
           >
             <Plus size={18} />
             <span>Add Deal</span>
@@ -282,65 +287,46 @@ export const Deals: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-4 bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
+      <div className="flex flex-wrap items-center gap-4 bg-card border border-border p-3 rounded-2xl shadow-sm">
         <div className="relative flex-1 min-w-[200px] max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
           <input 
             type="text" 
             placeholder="Search deals..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-gray-50 border border-gray-100 rounded-lg py-1.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all"
+            className="w-full bg-muted/50 border border-transparent rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/10 text-foreground transition-all"
           />
         </div>
         
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Owner:</span>
+        <div className="flex items-center gap-3">
           <select 
-            className="bg-gray-50 border border-gray-100 rounded-lg py-1 px-2 text-sm focus:outline-none"
-            value={filters.owner}
-            onChange={(e) => setFilters(prev => ({ ...prev, owner: e.target.value }))}
-          >
-            <option>All</option>
-            <option>Me</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Priority:</span>
-          <select 
-            className="bg-gray-50 border border-gray-100 rounded-lg py-1 px-2 text-sm focus:outline-none"
+            className="bg-muted/50 border border-transparent border-r-8 border-r-transparent rounded-xl py-2 px-3 text-xs font-bold focus:outline-none text-foreground"
             value={filters.priority}
             onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
           >
-            <option>All</option>
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-            <option>Critical</option>
+            <option value="All">All Priorities</option>
+            <option value="High">High Priority</option>
+            <option value="Medium">Medium Priority</option>
+            <option value="Low">Low Priority</option>
           </select>
+          <button className="p-2 bg-muted/50 rounded-xl text-muted-foreground hover:text-primary ripple">
+            <Filter size={18} />
+          </button>
         </div>
-
-        <button className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-200 transition-all">
-          <Filter size={16} />
-          <span>More Filters</span>
-        </button>
       </div>
 
       {/* Main Pipeline View */}
       <div className={cn(
         "flex-1 overflow-x-auto pb-4",
-        view === 'Kanban' ? "-mx-6 px-6" : ""
+        view === 'Kanban' ? "-mx-2 px-2" : ""
       )}>
-        {deals.length === 0 ? (
+        {filteredDeals.length === 0 ? (
           <EmptyState
             icon={TrendingUp}
-            title="No deals yet"
-            description="No deals in your pipeline yet. Create your first deal to start tracking revenue!"
-            actions={[
-              { label: 'Create Deal', onClick: () => openAddModal(), icon: Plus }
-            ]}
-            aiTip="Link deals to contacts for AI-powered win probability predictions"
+            title="No deals found"
+            description="Adjust your search or filters to see more deals."
+            actions={[{ label: 'Clear Filters', onClick: () => { setSearchQuery(''); setFilters({ owner: 'All', priority: 'All' }); } }]}
           />
         ) : (
           <>
@@ -352,14 +338,14 @@ export const Deals: React.FC = () => {
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
               >
-                <div className="flex gap-4 h-full min-w-max pb-2">
+                <div className="flex gap-4 h-full min-w-max pb-2 pipeline-scroll">
                   {STAGES.map(stage => (
                     <Column 
                       key={stage.id} 
                       stage={stage} 
                       deals={filteredDeals.filter(d => d.stage === stage.id)} 
-                      onAddDeal={() => openAddModal(stage.id)}
-                      onCardClick={goToDealDetail}
+                      onAddDeal={() => { setInitialStage(stage.id); setIsModalOpen(true); }}
+                      onCardClick={(id) => navigate(`/deals/${id}`)}
                     />
                   ))}
                 </div>
@@ -375,57 +361,48 @@ export const Deals: React.FC = () => {
             {view === 'List' && (
               <DealListView 
                 deals={filteredDeals}
-                onDealClick={goToDealDetail}
-                onUpdateDeal={handleUpdateDeal}
-                onDeleteDeals={handleDeleteDeals}
-                onBulkUpdateDeals={handleBulkUpdateDeals}
+                onDealClick={(id) => navigate(`/deals/${id}`)}
+                onUpdateDeal={async (id, data) => { await dealService.updateDeal(id, data); fetchData(); }}
+                onDeleteDeals={async (ids) => { await dealService.bulkDeleteDeals(ids); fetchData(); }}
+                onBulkUpdateDeals={async (ids, data) => { await dealService.bulkUpdateDeals(ids, data); fetchData(); }}
               />
             )}
 
             {view === 'Forecast' && (
-              <DealForecast onDealClick={goToDealDetail} />
+              <DealForecast onDealClick={(id) => navigate(`/deals/${id}`)} />
             )}
           </>
         )}
       </div>
 
-      {/* Modal */}
       <DealModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={fetchDeals}
-        deal={selectedDeal}
+        onSuccess={fetchData}
         initialStage={initialStage}
       />
     </div>
   );
 };
 
-interface ColumnProps {
-  stage: typeof STAGES[0];
-  deals: Deal[];
-  onAddDeal: () => void;
-  onCardClick: (id: number) => void;
-}
-
-const Column: React.FC<ColumnProps> = ({ stage, deals, onAddDeal, onCardClick }) => {
+const Column: React.FC<{ stage: any, deals: Deal[], onAddDeal: () => void, onCardClick: (id: number) => void }> = ({ stage, deals, onAddDeal, onCardClick }) => {
   const totalValue = deals.reduce((sum, d) => sum + d.value, 0);
 
   return (
-    <div className="flex flex-col w-80 h-full group/column">
+    <div className="flex flex-col w-80 h-full">
       <div className={cn(
-        "flex flex-col mb-4 p-3 bg-white rounded-xl border border-gray-100 shadow-sm border-t-4",
+        "flex flex-col mb-3 p-3 bg-card rounded-2xl border border-border shadow-sm border-t-4 transition-all",
         stage.borderColor
       )}>
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-sm text-gray-900">{stage.label}</h3>
-            <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+            <h3 className="font-black text-[10px] text-foreground uppercase tracking-widest">{stage.label}</h3>
+            <span className="bg-muted text-muted-foreground text-[10px] font-black px-2 py-0.5 rounded-full">
               {deals.length}
             </span>
           </div>
-          <div className="text-xs font-bold text-gray-500">
-            ${totalValue.toLocaleString()}
+          <div className="text-[10px] font-black text-muted-foreground tracking-wider">
+            {formatCurrency(totalValue)}
           </div>
         </div>
       </div>
@@ -435,17 +412,14 @@ const Column: React.FC<ColumnProps> = ({ stage, deals, onAddDeal, onCardClick })
         items={deals.map(d => d.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className={cn(
-          "flex-1 bg-gray-50/50 border border-gray-100 rounded-2xl p-2 space-y-3 min-h-[500px] transition-colors overflow-y-auto max-h-[calc(100vh-320px)]",
-          "hover:bg-gray-100/50"
-        )}>
+        <div className="flex-1 bg-muted/20 border border-border/30 rounded-2xl p-2 space-y-3 min-h-[500px] overflow-y-auto max-h-[calc(100vh-320px)] custom-scrollbar">
           {deals.map(deal => (
             <DealCard key={deal.id} deal={deal} onClick={() => onCardClick(deal.id)} />
           ))}
           
           <button 
             onClick={onAddDeal}
-            className="w-full py-3 flex items-center justify-center gap-2 text-xs font-bold text-gray-400 hover:text-indigo-600 hover:bg-white rounded-xl border-2 border-dashed border-gray-200 hover:border-indigo-200 transition-all"
+            className="w-full py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-card rounded-xl border-2 border-dashed border-border/50 hover:border-primary/30 transition-all ripple"
           >
             <Plus size={14} />
             <span>Add Deal</span>
@@ -456,39 +430,13 @@ const Column: React.FC<ColumnProps> = ({ stage, deals, onAddDeal, onCardClick })
   );
 };
 
-interface DealCardProps {
-  deal: Deal;
-  isOverlay?: boolean;
-  onClick?: () => void;
-}
+const DealCard: React.FC<{ deal: Deal, isOverlay?: boolean, onClick?: () => void }> = ({ deal, isOverlay, onClick }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: deal.id });
 
-const DealCard: React.FC<DealCardProps> = ({ deal, isOverlay, onClick }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ id: deal.id });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-  };
-
-  const hasGlow = deal.probability && deal.probability > 70 ? 'green' : deal.probability && deal.probability < 30 ? 'red' : null;
-  const isFaster = deal.id % 3 === 0;
-  const isStalling = deal.id % 5 === 0;
+  const style = { transform: CSS.Translate.toString(transform), transition };
 
   if (isDragging) {
-    return (
-      <div 
-        ref={setNodeRef} 
-        style={style} 
-        className="w-full h-[180px] bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-xl"
-      />
-    );
+    return <div ref={setNodeRef} style={style} className="w-full h-32 bg-primary/5 border-2 border-dashed border-primary/20 rounded-2xl" />;
   }
 
   return (
@@ -499,100 +447,41 @@ const DealCard: React.FC<DealCardProps> = ({ deal, isOverlay, onClick }) => {
       {...listeners}
       onClick={onClick}
       className={cn(
-        "bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-lg transition-all group relative cursor-grab active:cursor-grabbing",
-        hasGlow === 'green' && "ring-2 ring-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]",
-        hasGlow === 'red' && "ring-2 ring-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)]",
-        isOverlay && "shadow-2xl border-indigo-500 scale-105 z-50"
+        "bg-card border border-border rounded-2xl p-4 shadow-sm card-hover cursor-grab active:cursor-grabbing hover:bg-accent/50",
+        isOverlay && "shadow-2xl border-primary scale-105 z-50 ring-4 ring-primary/10"
       )}
     >
       <div className="flex justify-between items-start mb-2">
-        <div>
-          <h4 className="text-sm font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors">
-            {deal.name}
-          </h4>
-          <div className="flex items-center gap-1.5 text-[11px] text-gray-500 mt-1">
-            <Building2 size={12} className="text-gray-400" />
-            <span className="truncate">{deal.company?.name || 'No Company'}</span>
+        <h4 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
+          {deal.name}
+        </h4>
+        <div className="flex items-center gap-1">
+          {deal.priority === 'High' && <AlertCircle size={14} className="text-destructive" />}
+          {deal.probability && deal.probability > 70 && <Zap size={14} className="text-amber-400 fill-amber-400" />}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-4">
+        <Building2 size={12} />
+        <span className="truncate max-w-[120px] font-medium">{deal.company?.name}</span>
+      </div>
+
+      <div className="flex items-center justify-between mt-auto">
+        <div className="text-base font-bold text-foreground tracking-tight">{formatCurrency(deal.value)}</div>
+        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 rounded-full text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+          <TrendingUp size={10} />
+          {deal.probability}%
+        </div>
+      </div>
+
+      {deal.id % 4 === 0 && (
+        <div className="mt-4 pt-3 border-t border-border/50 flex items-center gap-2">
+          <div className="p-1 bg-primary/10 rounded">
+            <Brain size={12} className="text-primary" />
           </div>
-        </div>
-        <div className="flex flex-col items-end gap-1">
-          <button className="text-gray-400 hover:text-gray-600 p-0.5 rounded hover:bg-gray-50" onClick={(e) => e.stopPropagation()}>
-            <MoreHorizontal size={14} />
-          </button>
-          {isFaster && <Zap size={14} className="text-amber-500 fill-amber-500" />}
-          {isStalling && <AlertCircle size={14} className="text-red-500" />}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-1.5 text-[11px] text-gray-500 mb-3">
-        <User size={12} className="text-gray-400" />
-        <span>{deal.contact ? `${deal.contact.firstName} ${deal.contact.lastName}` : 'No Contact'}</span>
-      </div>
-
-      <div className="text-lg font-bold text-gray-900 mb-3">
-        ${deal.value.toLocaleString()}
-      </div>
-
-      <div className="mb-3">
-        <div className="flex justify-between text-[10px] font-bold text-gray-400 uppercase mb-1">
-          <span>Win Probability</span>
-          <span>{deal.probability}%</span>
-        </div>
-        <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-          <div 
-            className={cn(
-              "h-full transition-all duration-500",
-              deal.probability && deal.probability > 70 ? "bg-emerald-500" : deal.probability && deal.probability > 40 ? "bg-indigo-500" : "bg-amber-500"
-            )}
-            style={{ width: `${deal.probability}%` }}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        <div className="flex items-center gap-1 px-2 py-0.5 bg-gray-50 rounded text-[10px] font-bold text-gray-500">
-          <Calendar size={10} />
-          <span>Close: {deal.expectedCloseDate ? format(new Date(deal.expectedCloseDate), 'MMM d, yyyy') : 'TBD'}</span>
-        </div>
-        <div className={cn(
-          "flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase",
-          deal.priority === 'High' || deal.priority === 'Critical' ? "bg-red-50 text-red-600" : 
-          deal.priority === 'Medium' ? "bg-amber-50 text-amber-600" : "bg-blue-50 text-blue-600"
-        )}>
-          <div className={cn("w-1 h-1 rounded-full", 
-            deal.priority === 'High' || deal.priority === 'Critical' ? "bg-red-600" : 
-            deal.priority === 'Medium' ? "bg-amber-600" : "bg-blue-600"
-          )} />
-          <span>{deal.priority}</span>
-        </div>
-      </div>
-
-      {isStalling && (
-        <div className="mb-4 p-2 bg-red-50 rounded-lg border border-red-100 flex items-start gap-2">
-          <AlertCircle size={14} className="text-red-500 mt-0.5" />
-          <p className="text-[10px] text-red-700 leading-tight">
-            AI: "No activity in 7 days - follow up"
-          </p>
+          <p className="text-[10px] text-primary/80 font-bold uppercase tracking-widest">Stalled for 5 days</p>
         </div>
       )}
-
-      <div className="pt-3 border-t border-gray-50 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="flex items-center gap-2">
-          <button className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Email" onClick={(e) => e.stopPropagation()}>
-            <Mail size={14} />
-          </button>
-          <button className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Call" onClick={(e) => e.stopPropagation()}>
-            <Phone size={14} />
-          </button>
-          <button className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Note" onClick={(e) => e.stopPropagation()}>
-            <FileText size={14} />
-          </button>
-        </div>
-        <button className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-          <ChevronRight size={14} />
-        </button>
-      </div>
     </div>
   );
 };
-
