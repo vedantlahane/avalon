@@ -6,6 +6,7 @@ import { errorHandler } from './middlewares/error.js';
 import crmRoutes from './routes/crm.routes.js';
 import ApiError from './utils/ApiError.js';
 import aiRoutes from './routes/ai.routes.js';
+import notificationRoutes from './routes/notification.routes.js';
 const app = new Hono();
 // set security HTTP headers only in production
 if (process.env.NODE_ENV === 'production')
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'production')
 app.use(cors());
 // AI Routes
 app.route('/ai', aiRoutes);
+app.route('/notifications', notificationRoutes);
 app.get('/', (c) => {
     return c.text('Server is up and running');
 });

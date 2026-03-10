@@ -301,6 +301,24 @@ exports.Prisma.EmailTemplateScalarFieldEnum = {
   isDeleted: 'isDeleted'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
+  timestamp: 'timestamp',
+  link: 'link',
+  actionLabel: 'actionLabel',
+  actionLink: 'actionLink',
+  secondaryActionLabel: 'secondaryActionLabel',
+  secondaryActionLink: 'secondaryActionLink',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -339,7 +357,8 @@ exports.Prisma.ModelName = {
   LineItem: 'LineItem',
   Activity: 'Activity',
   Task: 'Task',
-  EmailTemplate: 'EmailTemplate'
+  EmailTemplate: 'EmailTemplate',
+  Notification: 'Notification'
 };
 
 /**

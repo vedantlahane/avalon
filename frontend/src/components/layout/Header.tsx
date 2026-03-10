@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, Bell, User, Plus, Mail } from 'lucide-react';
 import { composerStore } from '../../lib/composer-store';
 import { commandPaletteStore } from '../../lib/command-palette-store';
+import { NotificationBell } from './NotificationBell';
 
 export const Header: React.FC = () => {
   return (
@@ -35,10 +36,7 @@ export const Header: React.FC = () => {
           <span>New Entry</span>
         </button>
         
-        <button className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors relative">
-          <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-        </button>
+        <NotificationBell />
         
         <div className="h-8 w-[1px] bg-gray-200 mx-1"></div>
         

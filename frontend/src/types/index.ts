@@ -257,6 +257,25 @@ export interface SalesLeaderboard {
   aiCoaching: string;
 }
 
+export type NotificationType = 'AI' | 'Deal' | 'Task' | 'Email' | 'Contact' | 'System';
+
+export interface Notification {
+  id: number;
+  type: NotificationType;
+  title: string;
+  message: string;
+  isRead: boolean;
+  timestamp: string;
+  link?: string;
+  actionLabel?: string;
+  actionLink?: string;
+  secondaryActionLabel?: string;
+  secondaryActionLink?: string;
+  metadata?: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   revenueForecast: RevenueForecastPoint[];

@@ -412,3 +412,21 @@ model EmailTemplate {
   updatedAt      DateTime @updatedAt
   isDeleted      Boolean  @default(false)
 }
+
+model Notification {
+  id                   Int      @id @default(autoincrement())
+  type                 String   // AI, Deal, Task, Email, Contact, System
+  title                String
+  message              String
+  isRead               Boolean  @default(false)
+  timestamp            DateTime @default(now())
+  link                 String?
+  actionLabel          String?
+  actionLink           String?
+  secondaryActionLabel String?
+  secondaryActionLink  String?
+  metadata             Json?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  isDeleted            Boolean  @default(false)
+}

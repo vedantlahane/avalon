@@ -1,4 +1,85 @@
-import { Contact, Company, Deal, Email, Task, Activity, EmailTemplate } from '../types';
+import { Contact, Company, Deal, Email, Task, Activity, EmailTemplate, Notification } from '../types';
+
+export const MOCK_NOTIFICATIONS: Notification[] = [
+  {
+    id: 1,
+    type: 'AI',
+    title: 'AI Alert',
+    message: 'Quantum Finance deal at risk - negative sentiment detected in Sarah\'s latest email',
+    isRead: false,
+    timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(), // 5 mins ago
+    actionLabel: 'View Deal',
+    actionLink: '/deals/3',
+    secondaryActionLabel: 'View Email',
+    secondaryActionLink: '/inbox?id=1',
+    createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+  },
+  {
+    id: 2,
+    type: 'Deal',
+    title: 'Deal Update',
+    message: 'BrightPath deal moved to Proposal stage ($60,000)',
+    isRead: true,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // 1 hr ago
+    actionLabel: 'View Deal',
+    actionLink: '/deals/2',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+  },
+  {
+    id: 3,
+    type: 'Task',
+    title: 'Task Reminder',
+    message: 'Demo preparation for CloudNine is due in 4 hours',
+    isRead: true,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hrs ago
+    actionLabel: 'View Task',
+    actionLink: '/tasks',
+    secondaryActionLabel: 'Mark Complete',
+    secondaryActionLink: '#',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+  },
+  {
+    id: 4,
+    type: 'AI',
+    title: 'AI Suggestion',
+    message: '3 new AI-suggested tasks based on your pipeline analysis',
+    isRead: true,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(), // 3 hrs ago
+    actionLabel: 'View Suggestions',
+    actionLink: '/tasks?aiSuggestions=true',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
+  },
+  {
+    id: 5,
+    type: 'Email',
+    title: 'Email Opened',
+    message: 'John Smith opened your proposal email (3rd view)',
+    isRead: true,
+    timestamp: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    actionLabel: 'View Email',
+    actionLink: '/inbox?id=4',
+    secondaryActionLabel: 'Send Follow-up',
+    secondaryActionLink: '/inbox?compose=true&to=1',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    id: 6,
+    type: 'Contact',
+    title: 'Lead Score Change',
+    message: 'Sarah Chen\'s score dropped from 72 → 58 based on recent activity',
+    isRead: true,
+    timestamp: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    actionLabel: 'View Contact',
+    actionLink: '/contacts/1',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000).toISOString(),
+  }
+];
 
 export const MOCK_COMPANIES: Company[] = [
   {

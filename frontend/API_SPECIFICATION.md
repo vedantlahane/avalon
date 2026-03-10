@@ -47,3 +47,9 @@
 - `POST /ai/generate-template`: Generate email template variations based on prompt
   - Body: `{ description: string, tone: string, length: string }`
   - Response: `{ variations: [{ subject: string, body: string }] }`
+
+### Notification Management
+- `GET /notifications` - Get all notifications
+- `PATCH /notifications/:id/read` - Mark a notification as read
+- `POST /notifications/mark-all-read` - Mark all notifications as read
+- `DELETE /notifications/:id` - Soft delete a notification

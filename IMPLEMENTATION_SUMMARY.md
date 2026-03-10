@@ -27,3 +27,12 @@
 - [x] Notifications
 - [x] Import/Export
 - [x] Integrations
+
+### Notification System
+- **Notification Bell**: Header-mounted bell icon with unread count badge and real-time updates.
+- **Notification Dropdown**: Categorized and time-grouped (Today, Yesterday, Older) notification list.
+- **Toast Notifications**: Interactive top-right alerts for critical AI and system events with auto-dismiss.
+- **Service Integration**: Full frontend/backend integration for marking notifications as read or deleting them.
+- **AI Alerts**: Specialized styling and icons for AI-detected deal risks and sentiment changes.
+
+## Technical Details
