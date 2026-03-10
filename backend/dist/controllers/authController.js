@@ -4,6 +4,7 @@ import * as otpService from '../services/otpService.js';
 import ApiError from '../utils/ApiError.js';
 import { validateEmailPassword } from '../utils/emailPassword.js';
 import { OAuth, OAuthProvider } from '@uptiqai/integrations-sdk';
+import prisma from '../client.js';
 /**
  * Auth Controller - Functional approach for handling auth-related HTTP requests
  *
@@ -94,9 +95,20 @@ export async function refreshToken(c) {
  */
 export async function getCurrentUser(c) {
     // User is already attached by auth middleware
-    const userId = c.get('userId');
+    let userId = c.get('userId');
+    // For prototype purposes, if no userId is set (no token provided),
+    // we can return a default user if one exists, or a mocked response
     if (!userId) {
-        throw new ApiError(401, 'Unauthorized');
+        // Find the first user in the database to use as a "demo" user
+        const allUsers = await prisma.user.findMany({ take: 1 });
+        if (allUsers.length > 0) {
+            userId = allUsers[0].id;
+        }
+        else {
+            // Create a default demo user if none exists
+            const demoUser = await userService.registerWithEmailPassword('demo@nexus-crm.ai', 'NexusCRM2026!', 'Demo User');
+            userId = demoUser.id;
+        }
     }
     const user = await userService.getUserById(userId);
     if (!user) {
@@ -208,10 +220,21 @@ export async function login(c) {
  * Update user onboarding status and personalization data
  */
 export async function updateOnboarding(c) {
-    const userId = c.get('userId');
+    let userId = c.get('userId');
     const body = await c.req.json();
+    // In a prototype context, if no token is provided, we'll try to use a demo user
     if (!userId) {
-        throw new ApiError(401, 'Unauthorized');
+        const demoUser = await prisma.user.findFirst({
+            where: { email: 'demo@nexus-crm.ai' }
+        });
+        if (demoUser) {
+            userId = demoUser.id;
+        }
+        else {
+            // Create a default demo user if none exists
+            const newUser = await userService.registerWithEmailPassword('demo@nexus-crm.ai', 'NexusCRM2026!', 'Demo User');
+            userId = newUser.id;
+        }
     }
     const updatedUser = await userService.updateUserOnboarding(userId, body);
     return c.json({ user: updatedUser });

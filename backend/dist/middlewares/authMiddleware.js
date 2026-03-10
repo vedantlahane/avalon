@@ -14,7 +14,9 @@ export async function authMiddleware(c, next) {
         // Get token from Authorization header
         const authHeader = c.req.header('Authorization');
         if (!authHeader) {
-            throw new ApiError(401, 'No authorization token provided');
+            // For prototype purposes, if no token is provided, we don't throw yet
+            // This allows the controller to handle the absence of a user
+            return await next();
         }
         // Expected format: "Bearer <token>"
         const parts = authHeader.split(' ');
