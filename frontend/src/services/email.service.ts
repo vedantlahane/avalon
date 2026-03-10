@@ -188,5 +188,83 @@ export const emailService = {
       ...emailData,
       summary: (result as any)?.summary || 'Email summarized by AI',
     };
-  }
+  },
+
+  getSentimentSummary: async (): Promise<{
+    totalEmails: number;
+    positive: number;
+    neutral: number;
+    negative: number;
+    trends: {
+      positive: number;
+      neutral: number;
+      negative: number;
+    };
+  }> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return {
+        totalEmails: 156,
+        positive: 68,
+        neutral: 22,
+        negative: 10,
+        trends: { positive: 5, neutral: -2, negative: 3 }
+      };
+    }
+    const response = await api.get('/emails/sentiment/summary');
+    return response.data;
+  },
+
+  getSentimentTrend: async (): Promise<any[]> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return Array.from({ length: 30 }, (_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        positive: Math.floor(Math.random() * 20) + 40,
+        neutral: Math.floor(Math.random() * 15) + 15,
+        negative: Math.floor(Math.random() * 10) + 5,
+      }));
+    }
+    const response = await api.get('/emails/sentiment/trend');
+    return response.data;
+  },
+
+  getFlaggedEmails: async (): Promise<any[]> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return [
+        {
+          id: 1,
+          from: "Sarah Chen",
+          company: "Quantum Finance Group",
+          subject: "Disappointed with response time",
+          sentiment: "Negative",
+          confidence: 92,
+          keyPhrases: ["frustrated", "considering alternatives", "unacceptable delay"],
+          dealName: "Quantum - Premium Package",
+          dealValue: 80000,
+          recommendation: "Immediate personal call + offer expedited support setup"
+        }
+      ];
+    }
+    const response = await api.get('/emails/sentiment/flagged');
+    return response.data;
+  },
+
+  getContactSentimentBreakdown: async (): Promise<any[]> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return [
+        { id: 1, contact: "John S.", company: "Acme", sentiment: "Positive", trend: "up", lastEmail: "2d ago" },
+        { id: 2, contact: "Sarah C.", company: "Quantum", sentiment: "Negative", trend: "down", lastEmail: "5h ago" },
+        { id: 3, contact: "Mike R.", company: "Beta", sentiment: "Neutral", trend: "stable", lastEmail: "1d ago" },
+      ];
+    }
+    const response = await api.get('/contacts/sentiment/breakdown');
+    return response.data;
+  },
+
+  getSentimentInsights: async (): Promise<string> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return "Overall communication health is good. 3 contacts show declining sentiment this week. Sarah Chen at Quantum Finance requires immediate attention - sentiment dropped from positive to negative in the last 2 emails. Recommended action: Personal outreach within 24 hours.";
+    }
+    const response = await api.get('/emails/sentiment/insights');
+    return response.data.insights;
+  },
 };

@@ -21,6 +21,7 @@ crmRoutes.patch('/contacts/:id', contactController.updateContact);
 crmRoutes.delete('/contacts/:id', contactController.deleteContact);
 crmRoutes.post('/contacts/enrich', contactController.enrichContact);
 crmRoutes.post('/contacts/bulk-enrich', contactController.bulkEnrichContacts);
+crmRoutes.get('/contacts/sentiment/breakdown', contactController.getSentimentBreakdown);
 
 // Companies
 crmRoutes.get('/companies', companyController.getCompanies);
@@ -60,6 +61,10 @@ crmRoutes.delete('/email-templates/:id', emailTemplateController.deleteEmailTemp
 
 // Emails
 crmRoutes.get('/emails', emailController.getEmails);
+crmRoutes.get('/emails/sentiment/summary', emailController.getSentimentSummary);
+crmRoutes.get('/emails/sentiment/trend', emailController.getSentimentTrend);
+crmRoutes.get('/emails/sentiment/flagged', emailController.getFlaggedEmails);
+crmRoutes.get('/emails/sentiment/insights', emailController.getSentimentInsights);
 crmRoutes.post('/emails/generate', emailController.generateEmail);
 crmRoutes.post('/emails/improve', emailController.improveEmail);
 crmRoutes.post('/emails/suggest-subject', emailController.suggestSubjects);

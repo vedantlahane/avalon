@@ -98,5 +98,39 @@ export const contactService = {
                 });
             }
         }
+    },
+    getSentimentBreakdown: async () => {
+        const contacts = await prisma.contact.findMany({
+            where: { isDeleted: false },
+            include: {
+                company: true,
+                emails: {
+                    where: { isDeleted: false },
+                    orderBy: { timestamp: 'desc' },
+                    take: 5
+                }
+            }
+        });
+        return contacts.map(c => {
+            const lastEmail = c.emails[0];
+            const sentiment = lastEmail?.sentiment || 'Neutral';
+            let trend = 'stable';
+            if (c.emails.length >= 2) {
+                const current = c.emails[0].sentiment;
+                const previous = c.emails[1].sentiment;
+                if (current === 'Positive' && previous !== 'Positive')
+                    trend = 'up';
+                if (current === 'Negative' && previous !== 'Negative')
+                    trend = 'down';
+            }
+            return {
+                id: c.id,
+                contact: `${c.firstName} ${c.lastName}`,
+                company: c.company?.name || 'Independent',
+                sentiment,
+                trend,
+                lastEmail: lastEmail ? 'Recent' : 'N/A'
+            };
+        });
     }
 };

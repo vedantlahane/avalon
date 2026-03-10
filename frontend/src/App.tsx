@@ -7,13 +7,14 @@ import { Dashboard } from './pages/Dashboard';
 import { Deals } from './pages/Deals';
 import { DealDetail } from './pages/DealDetail';
 import { Contacts } from './pages/Contacts';
+import { ContactDetail } from './pages/ContactDetail';
 import { Companies } from './pages/Companies';
 import { Inbox } from './pages/Inbox';
 import { Tasks } from './pages/Tasks';
 import { Reports } from './pages/Reports';
-import { Settings } from './pages/Settings';
-import { ContactDetail } from './pages/ContactDetail';
 import EmailTemplates from './pages/EmailTemplates';
+import { SentimentAnalysis } from './pages/SentimentAnalysis';
+import { Settings } from './pages/Settings';
 import { Toaster } from 'react-hot-toast';
 import { EmailComposerModal } from './components/layout/EmailComposerModal';
 
@@ -41,9 +42,9 @@ const App: React.FC = () => {
               <Route path="/contacts/:id" element={<ContactDetail />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/inbox" element={<Inbox />} />
-              <Route path="/templates" element={<EmailTemplates />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/reports" element={<Reports />} />
+                        <Route path="/templates" element={<EmailTemplates />} />
+                        <Route path="/sentiment" element={<SentimentAnalysis />} />
+                        <Route path="/tasks" element={<Tasks />} />              <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/ai" element={<div className="p-8 text-center"><BotIcon size={48} className="mx-auto text-indigo-500 mb-4" />Open the side panel for the full AI experience</div>} />
             </Routes>

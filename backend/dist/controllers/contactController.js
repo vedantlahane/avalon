@@ -37,5 +37,9 @@ export const contactController = {
         const { contactIds } = await c.req.json();
         await contactService.bulkEnrichContacts(contactIds);
         return c.json({ message: 'Bulk enrichment started' });
+    }),
+    getSentimentBreakdown: catchAsync(async (c) => {
+        const breakdown = await contactService.getSentimentBreakdown();
+        return c.json(breakdown);
     })
 };

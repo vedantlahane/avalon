@@ -85,4 +85,24 @@ export const emailController = {
     await emailService.deleteEmail(id);
     return c.json({ message: 'Email deleted successfully' });
   }),
+
+  getSentimentSummary: catchAsync(async (c: Context) => {
+    const summary = await emailService.getSentimentSummary();
+    return c.json(summary);
+  }),
+
+  getSentimentTrend: catchAsync(async (c: Context) => {
+    const trend = await emailService.getSentimentTrend();
+    return c.json(trend);
+  }),
+
+  getFlaggedEmails: catchAsync(async (c: Context) => {
+    const emails = await emailService.getFlaggedEmails();
+    return c.json(emails);
+  }),
+
+  getSentimentInsights: catchAsync(async (c: Context) => {
+    const insights = await emailService.getSentimentInsights();
+    return c.json({ insights });
+  }),
 };

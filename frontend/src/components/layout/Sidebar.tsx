@@ -24,6 +24,7 @@ const navItems = [
   { icon: BadgeDollarSign, label: 'Deals', path: '/deals' },
   { icon: Inbox, label: 'Inbox', path: '/inbox' },
   { icon: Mail, label: 'Templates', path: '/templates' },
+  { icon: BarChart3, label: 'Sentiment', path: '/sentiment' },
   { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
   { icon: BarChart3, label: 'Reports', path: '/reports' },
   { icon: Bot, label: 'AI Assistant', path: '/ai' },
