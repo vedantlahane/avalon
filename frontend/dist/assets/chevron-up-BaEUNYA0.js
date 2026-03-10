@@ -1,0 +1,1 @@
+import{wt as e}from"./index-Vs6CrLtR.js";var t=e(`chevron-up`,[[`path`,{d:`m18 15-6-6-6 6`,key:`153udz`}]]);export{t};

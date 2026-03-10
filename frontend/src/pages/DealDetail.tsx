@@ -51,6 +51,8 @@ import { composerStore } from '../lib/composer-store';
 
 type Tab = 'Activity' | 'Emails' | 'Tasks' | 'Notes' | 'Files';
 
+import confetti from 'canvas-confetti';
+
 export const DealDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -60,6 +62,26 @@ export const DealDetail: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('Activity');
+
+  const triggerConfetti = () => {
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
+  };
   
   useEffect(() => {
     if (id) {
@@ -96,6 +118,9 @@ export const DealDetail: React.FC = () => {
     try {
       const updated = await dealService.updateDealStage(deal.id, stage);
       setDeal(updated);
+      if (stage === 'Closed Won') {
+        triggerConfetti();
+      }
     } catch (error) {
       console.error('Error updating stage:', error);
     }
@@ -228,7 +253,11 @@ export const DealDetail: React.FC = () => {
                   const status = getStageStatus(stage);
                   return (
                     <div key={stage} className="flex items-center group">
-                      <div className="flex flex-col items-center gap-2 relative min-w-[100px]">
+                      <button 
+                        onClick={() => handleUpdateStage(stage)}
+                        disabled={status === 'current'}
+                        className="flex flex-col items-center gap-2 relative min-w-[100px] hover:scale-105 active:scale-95 transition-transform disabled:scale-100"
+                      >
                         <div className={cn(
                           "w-8 h-8 rounded-full flex items-center justify-center transition-all border-2 z-10",
                           status === 'completed' ? "bg-emerald-500 border-emerald-500 text-white" :
@@ -245,7 +274,7 @@ export const DealDetail: React.FC = () => {
                         )}>
                           {stage}
                         </span>
-                      </div>
+                      </button>
                       {idx < stages.length - 1 && (
                         <div className={cn(
                           "w-12 h-[2px] -mt-6",

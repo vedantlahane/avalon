@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   DndContext, 
@@ -24,33 +24,29 @@ import { CSS } from '@dnd-kit/utilities';
 import { dealService } from '../services/deal.service';
 import { Deal, DealStage } from '../types';
 import { 
-  MoreHorizontal, 
   Plus, 
   Search, 
   Filter, 
   TrendingUp,
   Building2,
-  User,
-  Calendar,
   AlertCircle,
-  Mail,
-  Phone,
-  FileText,
   Zap,
-  ChevronRight,
   LayoutGrid,
-  List,
+  List as ListIcon,
   BarChart3,
-  Brain
+  Brain,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { cn, formatCurrency } from '../lib/utils';
-import { format } from 'date-fns';
 import { DealModal } from '../components/deals/DealModal';
 import { DealForecast } from '../components/deals/DealForecast';
 import { DealListView } from '../components/deals/DealListView';
 import { EmptyState } from '../components/common/EmptyState';
 import { ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
+import { useDebounce } from '../hooks/useDebounce';
+import confetti from 'canvas-confetti';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
   { id: 'Lead', label: 'Lead', borderColor: 'border-t-[#9CA3AF]', color: 'text-[#9CA3AF]' },
@@ -72,6 +68,8 @@ const STAGE_PROBABILITIES: Record<DealStage, number> = {
   'Closed Lost': 0
 };
 
+const ITEMS_PER_PAGE = 25;
+
 const dropAnimation: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
     styles: {
@@ -82,6 +80,108 @@ const dropAnimation: DropAnimation = {
   }),
 };
 
+const DealCard: React.FC<{ deal: Deal, isOverlay?: boolean, onClick?: () => void, onMouseEnter?: () => void }> = ({ deal, isOverlay, onClick, onMouseEnter }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: deal.id });
+
+  const style = { transform: CSS.Translate.toString(transform), transition };
+
+  if (isDragging) {
+    return <div ref={setNodeRef} style={style} className="w-full h-32 bg-primary/5 border-2 border-dashed border-primary/20 rounded-2xl" />;
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      className={cn(
+        "bg-card border border-border rounded-2xl p-4 shadow-sm card-hover cursor-grab active:cursor-grabbing hover:bg-accent/50 active:scale-[0.98] transition-all",
+        isOverlay && "shadow-2xl border-primary scale-105 z-50 ring-4 ring-primary/10"
+      )}
+    >
+      <div className="flex justify-between items-start mb-2">
+        <h4 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
+          {deal.name}
+        </h4>
+        <div className="flex items-center gap-1">
+          {deal.priority === 'High' && <AlertCircle size={14} className="text-destructive" />}
+          {deal.probability && deal.probability > 70 && <Zap size={14} className="text-amber-400 fill-amber-400" />}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-4">
+        <Building2 size={12} />
+        <span className="truncate max-w-[120px] font-medium">{deal.company?.name}</span>
+      </div>
+
+      <div className="flex items-center justify-between mt-auto">
+        <div className="text-base font-bold text-foreground tracking-tight">{formatCurrency(deal.value)}</div>
+        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 rounded-full text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+          <TrendingUp size={10} />
+          {deal.probability}%
+        </div>
+      </div>
+
+      {deal.id % 4 === 0 && (
+        <div className="mt-4 pt-3 border-t border-border/50 flex items-center gap-2">
+          <div className="p-1 bg-primary/10 rounded">
+            <Brain size={12} className="text-primary" />
+          </div>
+          <p className="text-[10px] text-primary/80 font-bold uppercase tracking-widest">Stalled for 5 days</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Column: React.FC<{ stage: any, deals: Deal[], onAddDeal: () => void, onCardClick: (id: number) => void, onMouseEnterCard: (id: number) => void }> = ({ stage, deals, onAddDeal, onCardClick, onMouseEnterCard }) => {
+  const totalValue = deals.reduce((sum, d) => sum + d.value, 0);
+
+  return (
+    <div className="flex flex-col w-80 h-full">
+      <div className={cn(
+        "flex flex-col mb-3 p-3 bg-card rounded-2xl border border-border shadow-sm border-t-4 transition-all",
+        stage.borderColor
+      )}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h3 className="font-black text-[10px] text-foreground uppercase tracking-widest">{stage.label}</h3>
+            <span className="bg-muted text-muted-foreground text-[10px] font-black px-2 py-0.5 rounded-full">
+              {deals.length}
+            </span>
+          </div>
+          <div className="text-[10px] font-black text-muted-foreground tracking-wider">
+            {formatCurrency(totalValue)}
+          </div>
+        </div>
+      </div>
+
+      <SortableContext
+        id={stage.id}
+        items={deals.map(d => d.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="flex-1 bg-muted/20 border border-border/30 rounded-2xl p-2 space-y-3 min-h-[500px] overflow-y-auto max-h-[calc(100vh-320px)] custom-scrollbar">
+          {deals.map(deal => (
+            <DealCard key={deal.id} deal={deal} onClick={() => onCardClick(deal.id)} onMouseEnter={() => onMouseEnterCard(deal.id)} />
+          ))}
+          
+          <button 
+            onClick={onAddDeal}
+            className="w-full py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-card rounded-xl border-2 border-dashed border-border/50 hover:border-primary/30 transition-all ripple"
+          >
+            <Plus size={14} />
+            <span>Add Deal</span>
+          </button>
+        </div>
+      </SortableContext>
+    </div>
+  );
+};
+
 export const Deals: React.FC = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -90,6 +190,8 @@ export const Deals: React.FC = () => {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [view, setView] = useState<'Kanban' | 'List' | 'Forecast'>('Kanban');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const [filters, setFilters] = useState({
     owner: 'All',
     priority: 'All',
@@ -121,12 +223,27 @@ export const Deals: React.FC = () => {
 
   const filteredDeals = useMemo(() => {
     return deals.filter(deal => {
-      const matchesSearch = deal.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           deal.company?.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = deal.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) || 
+                           deal.company?.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
       const matchesPriority = filters.priority === 'All' || deal.priority === filters.priority;
       return matchesSearch && matchesPriority;
     });
-  }, [deals, searchQuery, filters]);
+  }, [deals, debouncedSearchQuery, filters]);
+
+  const totalPages = Math.ceil(filteredDeals.length / ITEMS_PER_PAGE);
+  const paginatedDeals = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredDeals.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredDeals, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery, filters]);
+
+  const prefetchDeal = useCallback((id: number) => {
+    console.log(`Preloading deal ${id}...`);
+    dealService.getDealById(id).catch(() => {});
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -202,32 +319,23 @@ export const Deals: React.FC = () => {
   };
 
   const triggerConfetti = () => {
-    const container = document.createElement('div');
-    container.className = 'fixed inset-0 pointer-events-none z-[200] overflow-hidden';
-    document.body.appendChild(container);
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    for (let i = 0; i < 50; i++) {
-      const confetti = document.createElement('div');
-      confetti.className = 'absolute w-3 h-3 rounded-sm';
-      const colors = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#7C3AED'];
-      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      confetti.style.left = Math.random() * 100 + 'vw';
-      confetti.style.top = '-10px';
-      confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-      
-      const animation = confetti.animate([
-        { transform: `translate3d(0, 0, 0) rotate(0deg)`, opacity: 1 },
-        { transform: `translate3d(${(Math.random() - 0.5) * 200}px, 100vh, 0) rotate(${Math.random() * 1000}deg)`, opacity: 0 }
-      ], {
-        duration: 2000 + Math.random() * 2000,
-        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-      });
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-      container.appendChild(confetti);
-      animation.onfinish = () => confetti.remove();
-    }
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
 
-    setTimeout(() => container.remove(), 5000);
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
   };
 
   if (isLoading) return <ListSkeleton />;
@@ -262,7 +370,7 @@ export const Deals: React.FC = () => {
                 view === 'List' ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <List size={14} />
+              <ListIcon size={14} />
               <span>List</span>
             </button>
             <button 
@@ -318,7 +426,7 @@ export const Deals: React.FC = () => {
 
       {/* Main Pipeline View */}
       <div className={cn(
-        "flex-1 overflow-x-auto pb-4",
+        "flex-1 overflow-x-auto pb-4 overflow-y-auto custom-scrollbar",
         view === 'Kanban' ? "-mx-2 px-2" : ""
       )}>
         {filteredDeals.length === 0 ? (
@@ -346,6 +454,7 @@ export const Deals: React.FC = () => {
                       deals={filteredDeals.filter(d => d.stage === stage.id)} 
                       onAddDeal={() => { setInitialStage(stage.id); setIsModalOpen(true); }}
                       onCardClick={(id) => navigate(`/deals/${id}`)}
+                      onMouseEnterCard={prefetchDeal}
                     />
                   ))}
                 </div>
@@ -359,13 +468,57 @@ export const Deals: React.FC = () => {
             )}
 
             {view === 'List' && (
-              <DealListView 
-                deals={filteredDeals}
-                onDealClick={(id) => navigate(`/deals/${id}`)}
-                onUpdateDeal={async (id, data) => { await dealService.updateDeal(id, data); fetchData(); }}
-                onDeleteDeals={async (ids) => { await dealService.bulkDeleteDeals(ids); fetchData(); }}
-                onBulkUpdateDeals={async (ids, data) => { await dealService.bulkUpdateDeals(ids, data); fetchData(); }}
-              />
+              <div className="space-y-4">
+                <DealListView 
+                  deals={paginatedDeals}
+                  onDealClick={(id) => navigate(`/deals/${id}`)}
+                  onUpdateDeal={async (id, data) => { await dealService.updateDeal(id, data); fetchData(); }}
+                  onDeleteDeals={async (ids) => { await dealService.bulkDeleteDeals(ids); fetchData(); }}
+                  onBulkUpdateDeals={async (ids, data) => { await dealService.bulkUpdateDeals(ids, data); fetchData(); }}
+                  onMouseEnterRow={prefetchDeal}
+                />
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between px-2 pt-4">
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredDeals.length)} of {filteredDeals.length} deals
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="p-2 bg-card border border-border rounded-xl text-muted-foreground hover:text-primary hover:bg-muted transition-all disabled:opacity-50"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <div className="flex items-center gap-1">
+                        {[...Array(totalPages)].map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentPage(i + 1)}
+                            className={cn(
+                              "w-8 h-8 rounded-xl text-xs font-bold transition-all",
+                              currentPage === i + 1 
+                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                                : "text-muted-foreground hover:bg-muted"
+                            )}
+                          >
+                            {i + 1}
+                          </button>
+                        ))}
+                      </div>
+                      <button 
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="p-2 bg-card border border-border rounded-xl text-muted-foreground hover:text-primary hover:bg-muted transition-all disabled:opacity-50"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             {view === 'Forecast' && (
@@ -381,107 +534,6 @@ export const Deals: React.FC = () => {
         onSuccess={fetchData}
         initialStage={initialStage}
       />
-    </div>
-  );
-};
-
-const Column: React.FC<{ stage: any, deals: Deal[], onAddDeal: () => void, onCardClick: (id: number) => void }> = ({ stage, deals, onAddDeal, onCardClick }) => {
-  const totalValue = deals.reduce((sum, d) => sum + d.value, 0);
-
-  return (
-    <div className="flex flex-col w-80 h-full">
-      <div className={cn(
-        "flex flex-col mb-3 p-3 bg-card rounded-2xl border border-border shadow-sm border-t-4 transition-all",
-        stage.borderColor
-      )}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h3 className="font-black text-[10px] text-foreground uppercase tracking-widest">{stage.label}</h3>
-            <span className="bg-muted text-muted-foreground text-[10px] font-black px-2 py-0.5 rounded-full">
-              {deals.length}
-            </span>
-          </div>
-          <div className="text-[10px] font-black text-muted-foreground tracking-wider">
-            {formatCurrency(totalValue)}
-          </div>
-        </div>
-      </div>
-
-      <SortableContext
-        id={stage.id}
-        items={deals.map(d => d.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="flex-1 bg-muted/20 border border-border/30 rounded-2xl p-2 space-y-3 min-h-[500px] overflow-y-auto max-h-[calc(100vh-320px)] custom-scrollbar">
-          {deals.map(deal => (
-            <DealCard key={deal.id} deal={deal} onClick={() => onCardClick(deal.id)} />
-          ))}
-          
-          <button 
-            onClick={onAddDeal}
-            className="w-full py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-card rounded-xl border-2 border-dashed border-border/50 hover:border-primary/30 transition-all ripple"
-          >
-            <Plus size={14} />
-            <span>Add Deal</span>
-          </button>
-        </div>
-      </SortableContext>
-    </div>
-  );
-};
-
-const DealCard: React.FC<{ deal: Deal, isOverlay?: boolean, onClick?: () => void }> = ({ deal, isOverlay, onClick }) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: deal.id });
-
-  const style = { transform: CSS.Translate.toString(transform), transition };
-
-  if (isDragging) {
-    return <div ref={setNodeRef} style={style} className="w-full h-32 bg-primary/5 border-2 border-dashed border-primary/20 rounded-2xl" />;
-  }
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      onClick={onClick}
-      className={cn(
-        "bg-card border border-border rounded-2xl p-4 shadow-sm card-hover cursor-grab active:cursor-grabbing hover:bg-accent/50",
-        isOverlay && "shadow-2xl border-primary scale-105 z-50 ring-4 ring-primary/10"
-      )}
-    >
-      <div className="flex justify-between items-start mb-2">
-        <h4 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
-          {deal.name}
-        </h4>
-        <div className="flex items-center gap-1">
-          {deal.priority === 'High' && <AlertCircle size={14} className="text-destructive" />}
-          {deal.probability && deal.probability > 70 && <Zap size={14} className="text-amber-400 fill-amber-400" />}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-4">
-        <Building2 size={12} />
-        <span className="truncate max-w-[120px] font-medium">{deal.company?.name}</span>
-      </div>
-
-      <div className="flex items-center justify-between mt-auto">
-        <div className="text-base font-bold text-foreground tracking-tight">{formatCurrency(deal.value)}</div>
-        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 rounded-full text-[10px] font-black text-emerald-500 uppercase tracking-widest">
-          <TrendingUp size={10} />
-          {deal.probability}%
-        </div>
-      </div>
-
-      {deal.id % 4 === 0 && (
-        <div className="mt-4 pt-3 border-t border-border/50 flex items-center gap-2">
-          <div className="p-1 bg-primary/10 rounded">
-            <Brain size={12} className="text-primary" />
-          </div>
-          <p className="text-[10px] text-primary/80 font-bold uppercase tracking-widest">Stalled for 5 days</p>
-        </div>
-      )}
     </div>
   );
 };

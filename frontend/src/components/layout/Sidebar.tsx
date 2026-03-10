@@ -81,7 +81,7 @@ export const Sidebar: React.FC = () => {
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full" />
               )}
               <item.icon className={cn(
-                "h-5 w-5 shrink-0 transition-colors",
+                "h-6 w-6 shrink-0 transition-colors",
                 isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
                 !isCollapsed && "mr-3"
               )} />
@@ -118,7 +118,7 @@ export const Sidebar: React.FC = () => {
               isActive ? "text-primary" : "text-muted-foreground"
             )}
           >
-            <item.icon className="h-5 w-5" />
+            <item.icon className="h-6 w-6" />
             <span>{item.label.split(' ')[0]}</span>
           </NavLink>
         ))}

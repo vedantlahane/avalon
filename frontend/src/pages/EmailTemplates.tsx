@@ -21,7 +21,7 @@ import AIGenerateModal from '../components/emailTemplates/AIGenerateModal';
 import { toast } from 'react-hot-toast';
 import { EmptyState } from '../components/common/EmptyState';
 
-const EmailTemplates: React.FC = () => {
+export const EmailTemplates: React.FC = () => {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -327,5 +327,3 @@ const EmailTemplates: React.FC = () => {
     </div>
   );
 };
-
-export default EmailTemplates;

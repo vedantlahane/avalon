@@ -1,0 +1,1 @@
+import{A as e}from"./index-Vs6CrLtR.js";const t={getActivities:async()=>(await e.get(`/activities`)).data,createActivity:async t=>(await e.post(`/activities`,t)).data,updateActivity:async(t,n)=>(await e.patch(`/activities/${t}`,n)).data,deleteActivity:async t=>{await e.delete(`/activities/${t}`)}};export{t};

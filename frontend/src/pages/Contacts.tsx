@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   Plus, 
   Search, 
@@ -13,7 +13,8 @@ import {
   LayoutGrid,
   List,
   Building2,
-  Users
+  Users,
+  ChevronLeft
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { contactService } from '../services/contact.service';
@@ -23,6 +24,9 @@ import { cn } from '../lib/utils';
 import { CardGridSkeleton, ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
 import { EmptyState } from '../components/common/EmptyState';
+import { useDebounce } from '../hooks/useDebounce';
+
+const ITEMS_PER_PAGE = 25;
 
 export const Contacts = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -31,6 +35,8 @@ export const Contacts = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -52,11 +58,27 @@ export const Contacts = () => {
 
   const filteredContacts = useMemo(() => {
     return contacts.filter(contact => 
-      `${contact.firstName} ${contact.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      contact.company?.name.toLowerCase().includes(searchQuery.toLowerCase())
+      `${contact.firstName} ${contact.lastName}`.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      contact.email.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      contact.company?.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
-  }, [contacts, searchQuery]);
+  }, [contacts, debouncedSearchQuery]);
+
+  const totalPages = Math.ceil(filteredContacts.length / ITEMS_PER_PAGE);
+  const paginatedContacts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredContacts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredContacts, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
+
+  const prefetchContact = useCallback((id: number) => {
+    // Simulate preloading data
+    console.log(`Preloading contact ${id}...`);
+    contactService.getContactById(id).catch(() => {});
+  }, []);
 
   if (isLoading) return view === 'grid' ? <CardGridSkeleton /> : <ListSkeleton />;
   if (error) return <ErrorState onRetry={fetchData} />;
@@ -123,7 +145,7 @@ export const Contacts = () => {
         </div>
       </div>
 
-      {filteredContacts.length === 0 ? (
+      {paginatedContacts.length === 0 ? (
         <EmptyState
           icon={Users}
           title="No contacts yet"
@@ -135,137 +157,180 @@ export const Contacts = () => {
           aiTip="Enter just an email and AI will enrich the rest!"
         />
       ) : (
-        <div className={cn(
-          view === 'grid' 
-            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
-            : "bg-card border border-border rounded-2xl overflow-hidden shadow-sm overflow-x-auto"
-        )}>
-          {view === 'grid' ? (
-            filteredContacts.map((contact) => (
-              <div 
-                key={contact.id} 
-                className="bg-card p-6 rounded-2xl border border-border shadow-sm card-hover cursor-pointer group flex flex-col h-full"
-                onClick={() => navigate(`/contacts/${contact.id}`)}
-              >
-                <div className="flex items-start justify-between mb-6">
-                  <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-lg border border-primary/10">
-                    {contact.firstName[0]}{contact.lastName[0]}
+        <>
+          <div className={cn(
+            view === 'grid' 
+              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+              : "bg-card border border-border rounded-2xl overflow-hidden shadow-sm overflow-x-auto"
+          )}>
+            {view === 'grid' ? (
+              paginatedContacts.map((contact) => (
+                <div 
+                  key={contact.id} 
+                  className="bg-card p-6 rounded-2xl border border-border shadow-sm card-hover cursor-pointer group flex flex-col h-full active:scale-[0.98] transition-transform"
+                  onClick={() => navigate(`/contacts/${contact.id}`)}
+                  onMouseEnter={() => prefetchContact(contact.id)}
+                >
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-lg border border-primary/10">
+                      {contact.firstName[0]}{contact.lastName[0]}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {contact.leadScore && (
+                        <div className={cn(
+                          "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest",
+                          contact.leadScore > 70 ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                        )}>
+                          Score: {contact.leadScore}
+                        </div>
+                      )}
+                      <button className="p-1 text-muted-foreground hover:text-foreground rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <MoreVertical size={16} />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    {contact.leadScore && (
-                      <div className={cn(
-                        "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest",
-                        contact.leadScore > 70 ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                      )}>
-                        Score: {contact.leadScore}
-                      </div>
-                    )}
-                    <button className="p-1 text-muted-foreground hover:text-foreground rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                      <MoreVertical size={16} />
-                    </button>
+                  
+                  <div className="flex-1">
+                    <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+                      {contact.firstName} {contact.lastName}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <Building2 size={14} className="text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground font-medium truncate">{contact.jobTitle} at {contact.company?.name}</p>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                    {contact.firstName} {contact.lastName}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <Building2 size={14} className="text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground font-medium truncate">{contact.jobTitle} at {contact.company?.name}</p>
-                  </div>
-                </div>
 
-                <div className="mt-8 flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex gap-2">
-                    <button className="p-2 bg-muted text-muted-foreground rounded-xl hover:text-primary hover:bg-primary/10 transition-all ripple" onClick={(e) => e.stopPropagation()}>
-                      <Mail size={16} />
-                    </button>
-                    <button className="p-2 bg-muted text-muted-foreground rounded-xl hover:text-primary hover:bg-primary/10 transition-all ripple" onClick={(e) => e.stopPropagation()}>
-                      <Phone size={16} />
+                  <div className="mt-8 flex items-center justify-between pt-4 border-t border-border">
+                    <div className="flex gap-2">
+                      <button className="p-2 bg-muted text-muted-foreground rounded-xl hover:text-primary hover:bg-primary/10 transition-all ripple" onClick={(e) => e.stopPropagation()}>
+                        <Mail size={16} />
+                      </button>
+                      <button className="p-2 bg-muted text-muted-foreground rounded-xl hover:text-primary hover:bg-primary/10 transition-all ripple" onClick={(e) => e.stopPropagation()}>
+                        <Phone size={16} />
+                      </button>
+                    </div>
+                    <button className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1 hover:underline">
+                      View Profile <ChevronRight size={14} />
                     </button>
                   </div>
-                  <button className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1 hover:underline">
-                    View Profile <ChevronRight size={14} />
-                  </button>
                 </div>
-              </div>
-            ))
-          ) : (
-            <table className="w-full text-left min-w-[800px]">
-              <thead className="bg-muted/50 border-b border-border">
-                <tr>
-                  <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Contact</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Company</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Lead Score</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Last Activity</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filteredContacts.map((contact) => (
-                  <tr 
-                    key={contact.id} 
-                    className="hover:bg-muted/30 transition-all cursor-pointer group"
-                    onClick={() => navigate(`/contacts/${contact.id}`)}
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xs border border-primary/10">
-                          {contact.firstName[0]}{contact.lastName[0]}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
-                            {contact.firstName} {contact.lastName}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{contact.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-foreground/80 font-medium">
-                      {contact.company?.name}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden shadow-inner">
-                          <div 
-                            className={cn(
-                              "h-full rounded-full transition-all duration-1000",
-                              contact.leadScore && contact.leadScore > 70 ? "bg-emerald-500" : "bg-amber-500"
-                            )}
-                            style={{ width: `${contact.leadScore || 50}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-bold text-foreground/80">{contact.leadScore || 50}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                      2 days ago
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all ripple" onClick={(e) => e.stopPropagation()}>
-                          <Mail size={16} />
-                        </button>
-                        <button className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all ripple" onClick={(e) => e.stopPropagation()}>
-                          <MoreVertical size={16} />
-                        </button>
-                      </div>
-                    </td>
+              ))
+            ) : (
+              <table className="w-full text-left min-w-[800px]">
+                <thead className="bg-muted/50 border-b border-border">
+                  <tr>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Contact</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Company</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Lead Score</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Last Activity</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-
-            <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={fetchData} />
-
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {paginatedContacts.map((contact) => (
+                    <tr 
+                      key={contact.id} 
+                      className="hover:bg-muted/30 transition-all cursor-pointer group"
+                      onClick={() => navigate(`/contacts/${contact.id}`)}
+                      onMouseEnter={() => prefetchContact(contact.id)}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xs border border-primary/10">
+                            {contact.firstName[0]}{contact.lastName[0]}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                              {contact.firstName} {contact.lastName}
+                            </p>
+                            <p className="text-xs text-muted-foreground">{contact.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-foreground/80 font-medium">
+                        {contact.company?.name}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden shadow-inner">
+                            <div 
+                              className={cn(
+                                "h-full rounded-full transition-all duration-1000",
+                                contact.leadScore && contact.leadScore > 70 ? "bg-emerald-500" : "bg-amber-500"
+                              )}
+                              style={{ width: `${contact.leadScore || 50}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-bold text-foreground/80">{contact.leadScore || 50}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                        2 days ago
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all ripple" onClick={(e) => e.stopPropagation()}>
+                            <Mail size={16} />
+                          </button>
+                          <button className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all ripple" onClick={(e) => e.stopPropagation()}>
+                            <MoreVertical size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
 
-        );
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-2 pt-4">
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredContacts.length)} of {filteredContacts.length} contacts
+              </p>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 bg-card border border-border rounded-xl text-muted-foreground hover:text-primary hover:bg-muted transition-all disabled:opacity-50"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <div className="flex items-center gap-1">
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={cn(
+                        "w-8 h-8 rounded-xl text-xs font-bold transition-all",
+                        currentPage === i + 1 
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                          : "text-muted-foreground hover:bg-muted"
+                      )}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-2 bg-card border border-border rounded-xl text-muted-foreground hover:text-primary hover:bg-muted transition-all disabled:opacity-50"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
-      };
+      <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={fetchData} />
+    </div>
+  );
+};
+
 
       
