@@ -6,6 +6,7 @@ import { errorHandler } from './middlewares/error.js';
 // import authRoutes from './routes/auth.routes.js';
 import crmRoutes from './routes/crm.routes.js';
 import ApiError from './utils/ApiError.js';
+import aiRoutes from './routes/ai.routes.js';
 
 const app = new Hono();
 
@@ -18,8 +19,10 @@ if (process.env.NODE_ENV === 'production') app.use(secureHeaders());
 // enable cors
 app.use(cors());
 
-// removing this route will result in error in server startup so its strictly prohibited to remove this route
-app.get('/', c => {
+// AI Routes
+app.route('/ai', aiRoutes);
+
+app.get('/', (c) => {
     return c.text('Server is up and running');
 });
 

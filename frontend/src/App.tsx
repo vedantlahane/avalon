@@ -17,9 +17,26 @@ import { SentimentAnalysis } from './pages/SentimentAnalysis';
 import { Settings } from './pages/Settings';
 import { Toaster } from 'react-hot-toast';
 import { EmailComposerModal } from './components/layout/EmailComposerModal';
+import { cn } from './lib/utils';
 
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsAIPanelOpen(prev => !prev);
+      }
+    };
+    const handleToggleAI = () => setIsAIPanelOpen(prev => !prev);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('toggle-ai-panel', handleToggleAI);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('toggle-ai-panel', handleToggleAI);
+    };
+  }, []);
 
   return (
     <Router>
@@ -46,48 +63,28 @@ const App: React.FC = () => {
                         <Route path="/sentiment" element={<SentimentAnalysis />} />
                         <Route path="/tasks" element={<Tasks />} />              <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/ai" element={<div className="p-8 text-center"><BotIcon size={48} className="mx-auto text-indigo-500 mb-4" />Open the side panel for the full AI experience</div>} />
             </Routes>
           </main>
           
           {/* AI Toggle Button (Floating) */}
-          {!isAIPanelOpen && (
-            <button 
-              onClick={() => setIsAIPanelOpen(true)}
-              className="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 z-40 group"
-            >
-              <div className="absolute inset-0 bg-indigo-400 rounded-full animate-ping opacity-20 group-hover:opacity-40"></div>
-              <SparklesIcon size={24} />
-            </button>
-          )}
+          <button 
+            onClick={() => setIsAIPanelOpen(!isAIPanelOpen)}
+            className={cn(
+                "fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 z-40 group overflow-hidden",
+                isAIPanelOpen && "right-[366px] sm:right-[366px]" // Adjust based on panel width
+            )}
+          >
+            <div className="absolute inset-0 bg-indigo-400 rounded-full animate-ping opacity-20 group-hover:opacity-40"></div>
+            <span className="text-2xl relative z-10">🤖</span>
+          </button>
         </div>
 
         <AIPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <EmailComposerModal />
       </div>
     </Router>
-  );
-};
-
-const BotIcon = ({ size, className }: { size: number, className: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M12 8V4H8" />
-    <rect width="16" height="12" x="4" y="8" rx="2" />
-    <path d="M2 14h2" />
-    <path d="M20 14h2" />
-    <path d="M15 13v2" />
-    <path d="M9 13v2" />
-  </svg>
-);
-
-const SparklesIcon = ({ size }: { size: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-    <path d="M5 3v4" />
-    <path d="M19 17v4" />
-    <path d="M3 5h4" />
-    <path d="M17 19h4" />
-  </svg>
-);
-
-export default App;
+    );
+  };
+  
+  export default App;
+  

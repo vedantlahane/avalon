@@ -1,12 +1,13 @@
 # API Specification
 
-## Email Templates
-- `GET /email-templates`: Get all email templates
-- `POST /email-templates`: Create a new email template
-  - Body: `{ name: string, subject: string, body: string, category: string, aiGenerated: boolean, variablesCount: number, usedCount: number, avgOpenRate: number }`
-- `PATCH /email-templates/:id`: Update an existing email template
-  - Body: Partial of create body
-- `DELETE /email-templates/:id`: Delete an email template
+### Email Template Management
+- `GET /email-templates` - Get all email templates
+- `POST /email-templates` - Create a new email template
+- `PATCH /email-templates/:id` - Update an email template
+- `DELETE /email-templates/:id` - Delete an email template (soft delete)
+
+### AI Integration
+- `POST /ai/chat` - AI Chat Assistant endpoint for CRM queries and insights. Returns a stream of messages.
 
 ## Sentiment Analysis
 - `GET /emails/sentiment/summary`: Get overall sentiment summary cards data

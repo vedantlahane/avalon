@@ -61,20 +61,35 @@ export const Sidebar: React.FC = () => {
 
       <nav className="flex-1 mt-4 px-2 space-y-1">
         {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => cn(
-              "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
-              "hover:bg-white/5",
-              isActive ? "bg-indigo-600 text-white" : "text-gray-400 hover:text-white",
-              isCollapsed && "justify-center px-0"
-            )}
-            title={isCollapsed ? item.label : ''}
-          >
-            <item.icon size={20} />
-            {!isCollapsed && <span className="font-medium">{item.label}</span>}
-          </NavLink>
+          item.path === '/ai' ? (
+            <button
+              key={item.path}
+              onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-panel'))}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-gray-400 hover:text-white hover:bg-white/5",
+                isCollapsed && "justify-center px-0"
+              )}
+              title={isCollapsed ? item.label : ''}
+            >
+              <item.icon size={20} />
+              {!isCollapsed && <span className="font-medium">{item.label}</span>}
+            </button>
+          ) : (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => cn(
+                "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                "hover:bg-white/5",
+                isActive ? "bg-indigo-600 text-white" : "text-gray-400 hover:text-white",
+                isCollapsed && "justify-center px-0"
+              )}
+              title={isCollapsed ? item.label : ''}
+            >
+              <item.icon size={20} />
+              {!isCollapsed && <span className="font-medium">{item.label}</span>}
+            </NavLink>
+          )
         ))}
       </nav>
 
