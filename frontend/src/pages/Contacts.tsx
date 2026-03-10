@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { contactService } from '../services/contact.service';
 import { Contact, LeadStatus, LeadSource } from '../types';
 import { 
@@ -37,6 +38,7 @@ type ViewMode = 'list' | 'grid';
 type SortOption = 'name-az' | 'name-za' | 'score-high' | 'score-low' | 'recently-added' | 'last-contacted';
 
 export const Contacts: React.FC = () => {
+  const navigate = useNavigate();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -47,7 +49,6 @@ export const Contacts: React.FC = () => {
   const [scoreRange, setScoreRange] = useState<[number, number]>([0, 100]);
   const [sortBy, setSortBy] = useState<SortOption>('name-az');
   const [selectedContactIds, setSelectedContactIds] = useState<number[]>([]);
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   
   // UI States
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -76,13 +77,18 @@ export const Contacts: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditContact = (contact: Contact) => {
+  const handleEditContact = (e: React.MouseEvent, contact: Contact) => {
+    e.stopPropagation();
     setContactToEdit(contact);
     setIsModalOpen(true);
   };
 
   const handleModalSuccess = () => {
     loadContacts();
+  };
+
+  const handleContactClick = (id: number) => {
+    navigate(`/contacts/${id}`);
   };
 
   const allTags = useMemo(() => {
@@ -498,7 +504,7 @@ export const Contacts: React.FC = () => {
                   {filteredContacts.map((contact) => (
                     <tr 
                       key={contact.id} 
-                      onClick={() => setSelectedContact(contact)}
+                      onClick={() => handleContactClick(contact.id)}
                       className="hover:bg-gray-50/80 transition-all group cursor-pointer"
                     >
                       <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
@@ -569,7 +575,7 @@ export const Contacts: React.FC = () => {
                       <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
-                            onClick={() => handleEditContact(contact)}
+                            onClick={(e) => handleEditContact(e, contact)}
                             className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Edit Contact"
                           >
                             <Edit2 size={16} />
@@ -590,12 +596,12 @@ export const Contacts: React.FC = () => {
                 <motion.div 
                   layout
                   key={contact.id}
-                  onClick={() => setSelectedContact(contact)}
+                  onClick={() => handleContactClick(contact.id)}
                   className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all group relative cursor-pointer"
                 >
                   <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
                     <button 
-                      onClick={() => handleEditContact(contact)}
+                      onClick={(e) => handleEditContact(e, contact)}
                       className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
                     >
                       <Edit2 size={18} />
@@ -715,133 +721,6 @@ export const Contacts: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Contact Detail Panel (Slide-over) */}
-      <AnimatePresence>
-        {selectedContact && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedContact(null)}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100]"
-            />
-            <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[101] overflow-y-auto"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-bold text-gray-900">Contact Details</h2>
-                  <button 
-                    onClick={() => setSelectedContact(null)}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  >
-                    <X size={20} className="text-gray-500" />
-                  </button>
-                </div>
-
-                <div className="flex flex-col items-center text-center space-y-4 mb-8">
-                  <div className={cn(
-                    "w-24 h-24 rounded-full flex items-center justify-center font-bold text-3xl border-4 border-white shadow-lg",
-                    getRandomColor(`${selectedContact.firstName}${selectedContact.lastName}`)
-                  )}>
-                    {getInitials(selectedContact.firstName, selectedContact.lastName)}
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      {selectedContact.firstName} {selectedContact.lastName}
-                    </h3>
-                    <p className="text-gray-500 font-medium">{selectedContact.jobTitle}</p>
-                    <div className="flex items-center justify-center gap-2 mt-2">
-                      <span className={cn(
-                        "text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border",
-                        getStatusColor(selectedContact.leadStatus)
-                      )}>
-                        {selectedContact.leadStatus}
-                      </span>
-                      <span className="bg-gray-50 border border-gray-100 px-3 py-1 rounded-full text-xs font-mono font-bold">
-                        Score: {selectedContact.leadScore}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="bg-gray-50 rounded-2xl p-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                          <Mail size={16} className="text-gray-400" />
-                        </div>
-                        <div className="text-sm">
-                          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Email</p>
-                          <p className="font-bold text-gray-900">{selectedContact.email}</p>
-                        </div>
-                      </div>
-                      <button className="text-indigo-600 font-bold text-xs hover:underline">Copy</button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                          <Phone size={16} className="text-gray-400" />
-                        </div>
-                        <div className="text-sm">
-                          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Phone</p>
-                          <p className="font-bold text-gray-900">{selectedContact.phone || 'Not provided'}</p>
-                        </div>
-                      </div>
-                      <button className="text-indigo-600 font-bold text-xs hover:underline">Call</button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                          <Building2 size={16} className="text-gray-400" />
-                        </div>
-                        <div className="text-sm">
-                          <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Company</p>
-                          <p className="font-bold text-gray-900">{selectedContact.company?.name || 'Not provided'}</p>
-                        </div>
-                      </div>
-                      <button className="text-indigo-600 font-bold text-xs hover:underline">View</button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Tags</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedContact.tags.map(tag => (
-                        <span key={tag} className="bg-white border border-gray-100 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600 shadow-sm">
-                          {tag}
-                        </span>
-                      ))}
-                      <button className="bg-gray-50 border border-dashed border-gray-200 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-400 hover:border-indigo-300 hover:text-indigo-600 transition-all">
-                        + Add Tag
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="pt-6 border-t border-gray-100 flex gap-3">
-                    <button 
-                      onClick={() => handleEditContact(selectedContact)}
-                      className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-indigo-700 transition-all active:scale-95"
-                    >
-                      Edit Contact
-                    </button>
-                    <button className="flex-1 bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all active:scale-95">
-                      Log Activity
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
 
       <ContactModal 
         isOpen={isModalOpen}

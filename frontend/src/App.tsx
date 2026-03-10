@@ -11,6 +11,7 @@ import { Inbox } from './pages/Inbox';
 import { Tasks } from './pages/Tasks';
 import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
+import { ContactDetail } from './pages/ContactDetail';
 
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
@@ -31,6 +32,7 @@ const App: React.FC = () => {
               <Route path="/" element={<Dashboard />} />
               <Route path="/deals" element={<Deals />} />
               <Route path="/contacts" element={<Contacts />} />
+              <Route path="/contacts/:id" element={<ContactDetail />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/inbox" element={<Inbox />} />
               <Route path="/tasks" element={<Tasks />} />
