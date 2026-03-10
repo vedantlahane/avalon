@@ -7,11 +7,20 @@ import { taskController } from '../controllers/taskController.js';
 import { emailTemplateController } from '../controllers/emailTemplateController.js';
 import { dashboardController } from '../controllers/dashboardController.js';
 import { emailController } from '../controllers/emailController.js';
+import { reportController } from '../controllers/reportController.js';
 
 const crmRoutes = new Hono();
 
 // Dashboard
 crmRoutes.get('/dashboard/stats', dashboardController.getStats);
+
+// Reports
+crmRoutes.get('/reports/sales-performance', reportController.getSalesPerformance);
+crmRoutes.get('/reports/pipeline-analysis', reportController.getPipelineAnalysis);
+crmRoutes.get('/reports/activity-reports', reportController.getActivityReports);
+crmRoutes.get('/reports/contact-analytics', reportController.getContactAnalytics);
+crmRoutes.get('/reports/ai-insights', reportController.getAiInsights);
+crmRoutes.post('/reports/ai-query', reportController.queryAi);
 
 // Contacts
 crmRoutes.get('/contacts', contactController.getContacts);
