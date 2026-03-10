@@ -1,4 +1,4 @@
-# NexusCRM AI API Specification
+# Avalon API Specification
 
 ## Contacts
 - `GET /contacts` - List all contacts

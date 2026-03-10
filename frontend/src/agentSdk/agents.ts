@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const AGENT_CONFIGS: AgentConfig[] = [
   {
     "id": "42113c8f-b26e-4cce-b179-94074aa9c13a",
-    "name": "NexusCRM AI Assistant",
+    "name": "Avalon AI Assistant",
     "description": "An expert sales strategist and data analyst to help manage customer relationships effectively through intelligent automation and insights.",
     "triggerEvents": [
       {

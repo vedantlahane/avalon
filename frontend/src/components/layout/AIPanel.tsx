@@ -21,8 +21,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({ isOpen, onClose }) => {
             <Bot size={18} className="text-white" />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900 leading-none">NexusAI Assistant</h3>
-            <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Online</span>
+                                        <h3 className="font-bold text-gray-900 leading-none">Avalon AI Assistant</h3>            <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Online</span>
           </div>
         </div>
         <button onClick={onClose} className="p-1 hover:bg-gray-200 rounded-md text-gray-400">

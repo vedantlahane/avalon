@@ -40,12 +40,14 @@ export const Sidebar: React.FC = () => {
     >
       <div className="p-4 flex items-center justify-between">
         {!isCollapsed && (
-          <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-              <Sparkles size={18} className="text-white" />
-            </div>
-            <span>NexusCRM AI</span>
-          </div>
+                            <div className="flex items-center space-x-2">
+                                <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">
+                                    A
+                                </div>
+                                <span className="text-xl font-bold tracking-tight text-white group-hover:text-indigo-400 transition-colors">
+                                    Avalon
+                                </span>
+                            </div>
         )}
         {isCollapsed && (
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mx-auto">

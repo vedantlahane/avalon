@@ -672,8 +672,8 @@ export const MOCK_EMAIL_TEMPLATES: EmailTemplate[] = [
   {
     id: 1,
     name: 'Initial Outreach',
-    subject: 'Connecting regarding NexusCRM',
-    body: 'Hello {{firstName}}, I would like to introduce you to NexusCRM.',
+    subject: 'Connecting regarding Avalon',
+    body: 'Hello {{firstName}}, I would like to introduce you to Avalon.',
     category: 'Introduction',
     aiGenerated: true,
     createdAt: new Date().toISOString(),

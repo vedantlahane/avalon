@@ -1,7 +1,7 @@
-# NexusCRM AI - Application Plan
+# Avalon - Application Plan
 
 ## Overview
-NexusCRM AI is an AI-First CRM designed for high-growth teams. It features a modern, minimal UI inspired by Linear and Notion, with deep AI integration for lead scoring, deal analysis, and inbox management.
+Avalon is an AI-First CRM designed for high-growth teams. It features a modern, minimal UI inspired by Linear and Notion, with deep AI integration for lead scoring, deal analysis, and inbox management.
 
 ## Core Features
 1. **Intelligent Lead Scoring**: Automatically prioritize contacts based on interaction frequency and deal potential.
