@@ -17,6 +17,8 @@ import { SentimentAnalysis } from './pages/SentimentAnalysis';
 import { Settings } from './pages/Settings';
 import { Toaster } from 'react-hot-toast';
 import { EmailComposerModal } from './components/layout/EmailComposerModal';
+import { CommandPalette } from './components/layout/CommandPalette';
+import { commandPaletteStore } from './lib/command-palette-store';
 import { cn } from './lib/utils';
 
 const App: React.FC = () => {
@@ -26,7 +28,7 @@ const App: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        setIsAIPanelOpen(prev => !prev);
+        commandPaletteStore.toggle();
       }
     };
     const handleToggleAI = () => setIsAIPanelOpen(prev => !prev);
@@ -81,6 +83,7 @@ const App: React.FC = () => {
 
         <AIPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <EmailComposerModal />
+        <CommandPalette />
       </div>
     </Router>
     );

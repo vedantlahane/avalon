@@ -1,17 +1,22 @@
 import React from 'react';
 import { Search, Bell, User, Plus, Mail } from 'lucide-react';
 import { composerStore } from '../../lib/composer-store';
+import { commandPaletteStore } from '../../lib/command-palette-store';
 
 export const Header: React.FC = () => {
   return (
     <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 sticky top-0 z-10">
       <div className="flex items-center flex-1 max-w-xl">
-        <div className="relative w-full">
+        <div 
+          className="relative w-full cursor-pointer"
+          onClick={() => commandPaletteStore.open()}
+        >
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
             type="text" 
             placeholder="Search contacts, deals, or tasks... (⌘K)"
-            className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer"
+            readOnly
           />
         </div>
       </div>
