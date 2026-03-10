@@ -32,5 +32,17 @@ export const contactController = {
     const id = parseInt(c.req.param('id'));
     await contactService.deleteContact(id);
     return c.json({ message: 'Contact deleted successfully' });
+  }),
+
+  enrichContact: catchAsync(async (c: Context) => {
+    const { email } = await c.req.json();
+    const result = await contactService.enrichContact(email);
+    return c.json(result);
+  }),
+
+  bulkEnrichContacts: catchAsync(async (c: Context) => {
+    const { contactIds } = await c.req.json();
+    await contactService.bulkEnrichContacts(contactIds);
+    return c.json({ message: 'Bulk enrichment started' });
   })
 };

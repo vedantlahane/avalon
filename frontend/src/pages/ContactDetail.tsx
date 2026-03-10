@@ -39,12 +39,15 @@ import {
   Users,
   Tag,
   Search,
-  Check
+  Check,
+  Sparkles,
+  Loader2
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContactModal } from '../components/contacts/ContactModal';
+import { EnrichmentResult } from '../types';
 
 type Tab = 'Activity Timeline' | 'Emails' | 'Deals' | 'Tasks' | 'Notes';
 
@@ -60,12 +63,72 @@ export const ContactDetail: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('Activity Timeline');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activityFilter, setActivityFilter] = useState<ActivityType | 'All'>('All');
+  
+  const [isEnriching, setIsEnriching] = useState(false);
+  const [enrichmentResult, setEnrichmentResult] = useState<EnrichmentResult | null>(null);
+  const [currentEnrichmentStep, setCurrentEnrichmentStep] = useState(-1);
+  const [showEnrichToast, setShowEnrichToast] = useState(false);
+
+  const enrichmentSteps = [
+    "Verifying email...",
+    "Finding contact information...",
+    "Looking up company data...",
+    "Analyzing social profiles...",
+    "Generating lead score..."
+  ];
 
   useEffect(() => {
     if (id) {
       loadContactData(parseInt(id));
     }
   }, [id]);
+
+  const handleEnrich = async () => {
+    if (!contact) return;
+    
+    setIsEnriching(true);
+    setEnrichmentResult(null);
+    
+    // Animate progress steps
+    for (let i = 0; i < enrichmentSteps.length; i++) {
+      setCurrentEnrichmentStep(i);
+      await new Promise(resolve => setTimeout(resolve, 400));
+    }
+
+    try {
+      const result = await contactService.enrichContact(contact.email);
+      setEnrichmentResult(result);
+    } catch (error) {
+      console.error('Enrichment failed:', error);
+    } finally {
+      setIsEnriching(false);
+      setCurrentEnrichmentStep(-1);
+    }
+  };
+
+  const acceptEnrichment = async () => {
+    if (!contact || !enrichmentResult) return;
+
+    try {
+      const updatedData: Partial<Contact> = {
+        firstName: enrichmentResult.firstName || contact.firstName,
+        lastName: enrichmentResult.lastName || contact.lastName,
+        jobTitle: enrichmentResult.jobTitle || contact.jobTitle,
+        phone: enrichmentResult.phone || contact.phone,
+        linkedinUrl: enrichmentResult.linkedinUrl || contact.linkedinUrl,
+        leadScore: enrichmentResult.suggestedLeadScore || contact.leadScore,
+        tags: [...new Set([...contact.tags, ...(enrichmentResult.suggestedTags || [])])]
+      };
+
+      const updated = await contactService.updateContact(contact.id, updatedData);
+      setContact(updated);
+      setEnrichmentResult(null);
+      setShowEnrichToast(true);
+      setTimeout(() => setShowEnrichToast(false), 3000);
+    } catch (error) {
+      console.error('Failed to apply enrichment:', error);
+    }
+  };
 
   const loadContactData = async (contactId: number) => {
     setIsLoading(true);
@@ -281,6 +344,14 @@ export const ContactDetail: React.FC = () => {
                     <span>Note</span>
                   </button>
                   <button 
+                    onClick={handleEnrich}
+                    disabled={isEnriching}
+                    className="flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-100 transition-all shadow-sm active:scale-95"
+                  >
+                    {isEnriching ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+                    <span>Enrich</span>
+                  </button>
+                  <button 
                     onClick={() => setIsModalOpen(true)}
                     className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-gray-50 transition-all shadow-sm active:scale-95 ml-auto"
                   >
@@ -291,6 +362,143 @@ export const ContactDetail: React.FC = () => {
               </div>
             </div>
           </div>
+
+          <AnimatePresence>
+            {isEnriching && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="bg-indigo-600 text-white p-6 rounded-3xl shadow-xl flex items-center justify-between gap-6"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-white/20 p-3 rounded-2xl">
+                    <Loader2 size={24} className="animate-spin" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-black tracking-tight">AI Contact Enrichment in progress...</h4>
+                    <p className="text-sm text-indigo-100 font-bold">{enrichmentSteps[currentEnrichmentStep]}</p>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  {enrichmentSteps.map((_, i) => (
+                    <div 
+                      key={i} 
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-all duration-300",
+                        currentEnrichmentStep >= i ? "bg-white scale-125" : "bg-white/30"
+                      )} 
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {enrichmentResult && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white border-2 border-indigo-600 rounded-3xl shadow-2xl p-8 space-y-6 relative overflow-hidden"
+              >
+                <button 
+                  onClick={() => setEnrichmentResult(null)}
+                  className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all"
+                >
+                  <X size={20} />
+                </button>
+                
+                <div className="flex items-center gap-4">
+                  <div className="bg-indigo-600 p-3 rounded-2xl text-white shadow-lg shadow-indigo-200">
+                    <Sparkles size={28} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-gray-900 tracking-tight">AI Enrichment Successful</h3>
+                    <p className="text-sm text-indigo-600 font-bold">Found 8 new data points for {contact.firstName}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { label: 'Job Title', value: enrichmentResult.jobTitle },
+                    { label: 'Company', value: enrichmentResult.companyName },
+                    { label: 'Phone', value: enrichmentResult.phone },
+                    { label: 'LinkedIn', value: enrichmentResult.linkedinUrl },
+                    { label: 'Location', value: enrichmentResult.location },
+                    { label: 'Lead Score', value: enrichmentResult.suggestedLeadScore },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                      <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{item.label}</p>
+                        <p className="text-sm font-bold text-gray-900">{item.value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {enrichmentResult.suggestedTags?.map(tag => (
+                    <span key={tag} className="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest border border-indigo-100">
+                      + {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {enrichmentResult.recentNews && (
+                    <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-1">Recent News / Funding</p>
+                      <p className="text-xs font-bold text-gray-900 leading-relaxed">{enrichmentResult.recentNews}</p>
+                    </div>
+                  )}
+                  {enrichmentResult.technologies && (
+                    <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Technologies Used</p>
+                      <div className="flex flex-wrap gap-2">
+                        {enrichmentResult.technologies.map(tech => (
+                          <span key={tech} className="bg-white text-gray-700 px-2 py-1 rounded-lg text-[10px] font-bold border border-gray-200">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 pt-4">
+                  <button 
+                    onClick={acceptEnrichment}
+                    className="flex-1 bg-indigo-600 text-white py-4 rounded-2xl text-sm font-black hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95"
+                  >
+                    Accept and Apply Changes
+                  </button>
+                  <button 
+                    onClick={() => setEnrichmentResult(null)}
+                    className="flex-1 bg-white border border-gray-200 text-gray-700 py-4 rounded-2xl text-sm font-black hover:bg-gray-50 transition-all active:scale-95"
+                  >
+                    Discard Results
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {showEnrichToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fixed bottom-8 right-8 bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-50 border border-gray-800"
+            >
+              <div className="bg-emerald-500 p-1 rounded-full">
+                <Check size={16} strokeWidth={4} />
+              </div>
+              <span className="font-bold">✨ Contact enriched with 8 new data points</span>
+            </motion.div>
+          )}
 
           {/* Tab Navigation */}
           <div className="space-y-6">

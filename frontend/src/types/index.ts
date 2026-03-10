@@ -133,3 +133,23 @@ export interface DashboardStats {
   conversionRate: number;
   pipelineValue: number;
 }
+
+export interface EnrichmentResult {
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  phone?: string;
+  linkedinUrl?: string;
+  location?: string;
+  companyName?: string;
+  companyDomain?: string;
+  companyIndustry?: Industry;
+  companySize?: CompanySize;
+  companyDescription?: string;
+  leadScore?: number;
+  tags?: string[];
+  suggestedLeadScore?: number;
+  suggestedTags?: string[];
+  recentNews?: string;
+  technologies?: string[];
+}

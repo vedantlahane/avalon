@@ -16,6 +16,8 @@ crmRoutes.get('/contacts/:id', contactController.getContactById);
 crmRoutes.post('/contacts', contactController.createContact);
 crmRoutes.patch('/contacts/:id', contactController.updateContact);
 crmRoutes.delete('/contacts/:id', contactController.deleteContact);
+crmRoutes.post('/contacts/enrich', contactController.enrichContact);
+crmRoutes.post('/contacts/bulk-enrich', contactController.bulkEnrichContacts);
 // Companies
 crmRoutes.get('/companies', companyController.getCompanies);
 crmRoutes.get('/companies/:id', companyController.getCompanyById);

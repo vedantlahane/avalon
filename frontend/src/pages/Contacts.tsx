@@ -27,7 +27,10 @@ import {
   Cloud,
   CheckCircle2,
   X,
-  Edit2
+  Edit2,
+  Sparkles,
+  Loader2,
+  Check
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -55,10 +58,30 @@ export const Contacts: React.FC = () => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
+  
+  const [isBulkEnriching, setIsBulkEnriching] = useState(false);
+  const [showEnrichToast, setShowEnrichToast] = useState(false);
 
   useEffect(() => {
     loadContacts();
   }, []);
+
+  const handleBulkEnrich = async () => {
+    if (selectedContactIds.length === 0) return;
+    
+    setIsBulkEnriching(true);
+    try {
+      await contactService.bulkEnrichContacts(selectedContactIds);
+      setShowEnrichToast(true);
+      setTimeout(() => setShowEnrichToast(false), 3000);
+      loadContacts();
+      setSelectedContactIds([]);
+    } catch (error) {
+      console.error('Bulk enrichment failed:', error);
+    } finally {
+      setIsBulkEnriching(false);
+    }
+  };
 
   const loadContacts = async () => {
     setIsLoading(true);
@@ -415,7 +438,6 @@ export const Contacts: React.FC = () => {
           </div>
         </div>
 
-        {/* Bulk Actions Bar */}
         <AnimatePresence>
           {selectedContactIds.length > 0 && (
             <motion.div 
@@ -429,6 +451,14 @@ export const Contacts: React.FC = () => {
               </span>
               <div className="h-4 w-[1px] bg-white/20"></div>
               <div className="flex items-center gap-4">
+                <button 
+                  onClick={handleBulkEnrich}
+                  disabled={isBulkEnriching}
+                  className="flex items-center gap-2 text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-50"
+                >
+                  {isBulkEnriching ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                  <span>AI Enrich</span>
+                </button>
                 <button className="flex items-center gap-2 text-sm font-bold hover:text-indigo-400 transition-colors">
                   <Tag size={16} />
                   <span>Add Tag</span>
@@ -453,6 +483,22 @@ export const Contacts: React.FC = () => {
               >
                 Cancel
               </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showEnrichToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fixed bottom-8 right-8 bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-50 border border-gray-800"
+            >
+              <div className="bg-emerald-500 p-1 rounded-full">
+                <Check size={16} strokeWidth={4} />
+              </div>
+              <span className="font-bold">✨ Contacts enriched with new data points</span>
             </motion.div>
           )}
         </AnimatePresence>

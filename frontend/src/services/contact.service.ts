@@ -1,5 +1,5 @@
 import { api } from '../lib/api';
-import { Contact } from '../types';
+import { Contact, EnrichmentResult } from '../types';
 import { MOCK_CONTACTS } from '../data/mockData';
 import { emitter } from '../agentSdk';
 
@@ -12,6 +12,42 @@ export const contactService = {
     }
     const response = await api.get('/contacts');
     return response.data;
+  },
+
+  enrichContact: async (email: string): Promise<EnrichmentResult> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const domain = email.split('@')[1];
+      
+      // Basic mock enrichment based on domain
+      const result: EnrichmentResult = {
+        firstName: 'John',
+        lastName: 'Smith',
+        jobTitle: 'VP of Engineering',
+        companyName: domain ? domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1) + ' Technologies' : 'Acme Technologies',
+        companyDomain: domain || 'acme.com',
+        phone: '+1 (555) 234-5678',
+        linkedinUrl: `linkedin.com/in/john-smith-${Math.floor(Math.random() * 1000)}`,
+        location: 'San Francisco, CA',
+        companyIndustry: 'Technology',
+        companySize: '201-500',
+        suggestedLeadScore: 72,
+        suggestedTags: ['Decision Maker', 'Technical', 'Enterprise'],
+        recentNews: 'Recently raised $50M in Series C funding led by Sequoia.',
+        technologies: ['React', 'Node.js', 'PostgreSQL', 'AWS', 'Salesforce']
+      };
+      return result;
+    }
+    const response = await api.post('/contacts/enrich', { email });
+    return response.data;
+  },
+
+  bulkEnrichContacts: async (contactIds: number[]): Promise<void> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return;
+    }
+    await api.post('/contacts/bulk-enrich', { contactIds });
   },
 
   createContact: async (contactData: Partial<Contact>): Promise<Contact> => {

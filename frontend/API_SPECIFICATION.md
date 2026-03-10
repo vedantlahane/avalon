@@ -6,6 +6,8 @@
 - `GET /contacts/:id` - Get a contact by id
 - `PATCH /contacts/:id` - Update a contact
 - `DELETE /contacts/:id` - Soft delete a contact
+- `POST /contacts/enrich` - Enrich contact data based on email
+- `POST /contacts/bulk-enrich` - Enrich multiple contacts by IDs
 
 ## Companies
 - `GET /companies` - List all companies
