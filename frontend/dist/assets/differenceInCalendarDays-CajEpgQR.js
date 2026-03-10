@@ -1,1 +1,0 @@
-import{T as e,b as t,v as n,y as r}from"./index-Vs6CrLtR.js";function i(i,a,o){let[s,c]=r(o?.in,i,a),l=n(s),u=n(c),d=+l-t(l),f=+u-t(u);return Math.round((d-f)/e)}export{i as t};

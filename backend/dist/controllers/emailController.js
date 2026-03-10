@@ -1,4 +1,5 @@
 import { emailService } from '../services/emailService.js';
+import { leadScoringService } from '../services/leadScoringService.js';
 import catchAsync from '../utils/catchAsync.js';
 import ApiError from '../utils/ApiError.js';
 export const emailController = {
@@ -23,6 +24,10 @@ export const emailController = {
     markAsRead: catchAsync(async (c) => {
         const id = parseInt(c.req.param('id'));
         const email = await emailService.markAsRead(id);
+        // Trigger lead score recalculation if we have the contactId
+        if (email.contactId) {
+            await leadScoringService.calculateScore(email.contactId);
+        }
         return c.json(email);
     }),
     generateAiReply: catchAsync(async (c) => {

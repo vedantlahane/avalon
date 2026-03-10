@@ -169,6 +169,12 @@ exports.Prisma.ContactScalarFieldEnum = {
   leadSource: 'leadSource',
   leadStatus: 'leadStatus',
   leadScore: 'leadScore',
+  leadCategory: 'leadCategory',
+  demographicScore: 'demographicScore',
+  behavioralScore: 'behavioralScore',
+  scoreBreakdown: 'scoreBreakdown',
+  scoreTrend: 'scoreTrend',
+  aiNote: 'aiNote',
   tags: 'tags',
   address: 'address',
   linkedinUrl: 'linkedinUrl',
@@ -323,6 +329,18 @@ exports.Prisma.NotificationScalarFieldEnum = {
   isDeleted: 'isDeleted'
 };
 
+exports.Prisma.LeadScoreHistoryScalarFieldEnum = {
+  id: 'id',
+  contactId: 'contactId',
+  score: 'score',
+  change: 'change',
+  reason: 'reason',
+  timestamp: 'timestamp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -362,7 +380,8 @@ exports.Prisma.ModelName = {
   Activity: 'Activity',
   Task: 'Task',
   EmailTemplate: 'EmailTemplate',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  LeadScoreHistory: 'LeadScoreHistory'
 };
 
 /**

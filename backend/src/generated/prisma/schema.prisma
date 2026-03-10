@@ -100,6 +100,20 @@ model Contact {
 
   leadScore Int @default(0)
 
+  leadCategory String? // Hot, Warm, Cool, Cold, Unqualified
+
+  demographicScore Int @default(0)
+
+  behavioralScore Int @default(0)
+
+  scoreBreakdown Json? // Detailed points breakdown
+
+  scoreTrend Int @default(0)
+
+  aiNote String?
+
+  scoreHistory LeadScoreHistory[]
+
   tags String[] @default([])
 
   address String?
@@ -384,4 +398,19 @@ model Notification {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   isDeleted            Boolean  @default(false)
+}
+
+model LeadScoreHistory {
+  id        Int      @id @default(autoincrement())
+  contactId Int
+  contact   Contact  @relation(fields: [contactId], references: [id])
+  score     Int
+  change    Int
+  reason    String
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  @@index([contactId])
 }

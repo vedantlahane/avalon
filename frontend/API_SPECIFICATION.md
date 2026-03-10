@@ -55,6 +55,10 @@
   - Body: `{ description: string, tone: string, length: string }`
   - Response: `{ variations: [{ subject: string, body: string }] }`
 
+### Lead Scoring
+- `POST /crm/contacts/:id/lead-score/refresh` - Force recalculate lead score for a contact
+- `GET /crm/contacts/:id/lead-score/history` - Get score history for a contact
+
 ### Notification Management
 - `GET /notifications` - Get all notifications
 - `PATCH /notifications/:id/read` - Mark a notification as read

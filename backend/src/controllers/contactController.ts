@@ -1,5 +1,6 @@
 import { Context } from 'hono';
 import { contactService } from '../services/contactService.js';
+import { leadScoringService } from '../services/leadScoringService.js';
 import catchAsync from '../utils/catchAsync.js';
 
 export const contactController = {
@@ -12,20 +13,34 @@ export const contactController = {
     const id = parseInt(c.req.param('id'));
     const contact = await contactService.getContactById(id);
     if (!contact) return c.json({ message: 'Contact not found' }, 404);
+    
+    // Auto-refresh score if it's been a while or if it's 0 (new contact)
+    if (contact.leadScore === 0) {
+      await leadScoringService.calculateScore(id);
+      const updatedContact = await contactService.getContactById(id);
+      return c.json(updatedContact);
+    }
+    
     return c.json(contact);
   }),
 
   createContact: catchAsync(async (c: Context) => {
     const data = await c.req.json();
     const contact = await contactService.createContact(data);
-    return c.json(contact, 201);
+    // Calculate initial lead score
+    await leadScoringService.calculateScore(contact.id);
+    const enrichedContact = await contactService.getContactById(contact.id);
+    return c.json(enrichedContact, 201);
   }),
 
   updateContact: catchAsync(async (c: Context) => {
     const id = parseInt(c.req.param('id'));
     const data = await c.req.json();
-    const contact = await contactService.updateContact(id, data);
-    return c.json(contact);
+    await contactService.updateContact(id, data);
+    // Recalculate score after update
+    await leadScoringService.calculateScore(id);
+    const updatedContact = await contactService.getContactById(id);
+    return c.json(updatedContact);
   }),
 
   deleteContact: catchAsync(async (c: Context) => {
@@ -43,11 +58,28 @@ export const contactController = {
   bulkEnrichContacts: catchAsync(async (c: Context) => {
     const { contactIds } = await c.req.json();
     await contactService.bulkEnrichContacts(contactIds);
-    return c.json({ message: 'Bulk enrichment started' });
+    // Recalculate scores for all enriched contacts
+    for (const id of contactIds) {
+      await leadScoringService.calculateScore(id);
+    }
+    return c.json({ message: 'Bulk enrichment and scoring completed' });
   }),
 
   getSentimentBreakdown: catchAsync(async (c: Context) => {
     const breakdown = await contactService.getSentimentBreakdown();
     return c.json(breakdown);
+  }),
+
+  refreshLeadScore: catchAsync(async (c: Context) => {
+    const id = parseInt(c.req.param('id'));
+    const result = await leadScoringService.calculateScore(id);
+    if (!result) return c.json({ message: 'Contact not found' }, 404);
+    return c.json(result);
+  }),
+
+  getLeadScoreHistory: catchAsync(async (c: Context) => {
+    const id = parseInt(c.req.param('id'));
+    const history = await leadScoringService.getScoreHistory(id);
+    return c.json(history);
   })
 };

@@ -55,6 +55,26 @@ export interface Contact {
   leadSource?: LeadSource;
   leadStatus?: LeadStatus;
   leadScore: number;
+  leadCategory?: string;
+  demographicScore: number;
+  behavioralScore: number;
+  scoreBreakdown?: {
+    demographic: {
+      jobTitle: number;
+      companySize: number;
+      industry: number;
+      location: number;
+    };
+    behavioral: {
+      emailEngagement: number;
+      meetingAttendance: number;
+      responseTime: number;
+      recency: number;
+    };
+    negative: number;
+  };
+  scoreTrend: number;
+  aiNote?: string;
   tags: string[];
   address?: string;
   linkedinUrl?: string;
@@ -66,6 +86,15 @@ export interface Contact {
   avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface LeadScoreHistory {
+  id: number;
+  contactId: number;
+  score: number;
+  change: number;
+  reason: string;
+  timestamp: string;
 }
 
 export interface Deal {

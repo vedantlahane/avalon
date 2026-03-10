@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { contactService } from '../services/contact.service';
 import { Contact } from '../types';
 import { ContactModal } from '../components/contacts/ContactModal';
+import { LeadScoreBadge } from '../components/contacts/LeadScoreBadge';
 import { cn } from '../lib/utils';
 import { CardGridSkeleton, ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
@@ -176,14 +177,7 @@ export const Contacts = () => {
                       {contact.firstName[0]}{contact.lastName[0]}
                     </div>
                     <div className="flex items-center gap-1.5">
-                      {contact.leadScore && (
-                        <div className={cn(
-                          "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest",
-                          contact.leadScore > 70 ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
-                        )}>
-                          Score: {contact.leadScore}
-                        </div>
-                      )}
+                      <LeadScoreBadge score={contact.leadScore} size="sm" showLabel={false} />
                       <button className="p-1 text-muted-foreground hover:text-foreground rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
                         <MoreVertical size={16} />
                       </button>
@@ -251,18 +245,7 @@ export const Contacts = () => {
                         {contact.company?.name}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden shadow-inner">
-                            <div 
-                              className={cn(
-                                "h-full rounded-full transition-all duration-1000",
-                                contact.leadScore && contact.leadScore > 70 ? "bg-emerald-500" : "bg-amber-500"
-                              )}
-                              style={{ width: `${contact.leadScore || 50}%` }}
-                            />
-                          </div>
-                          <span className="text-xs font-bold text-foreground/80">{contact.leadScore || 50}</span>
-                        </div>
+                        <LeadScoreBadge score={contact.leadScore || 0} size="sm" />
                       </td>
                       <td className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                         2 days ago

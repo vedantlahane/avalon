@@ -107,6 +107,32 @@ export const contactService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-    await api.delete(`/contacts/${id}`);
-  }
-};
+        await api.delete(`/contacts/${id}`);
+      },
+    
+      refreshLeadScore: async (id: number): Promise<Partial<Contact>> => {
+        if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          return {
+            leadScore: 78,
+            leadCategory: 'Hot Lead',
+            scoreTrend: 8,
+          };
+        }
+        const response = await api.post(`/contacts/${id}/lead-score/refresh`);
+        return response.data;
+      },
+    
+      getLeadScoreHistory: async (id: number): Promise<any[]> => {
+        if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+          return [
+            { id: 1, score: 78, change: 8, reason: 'Attended demo', timestamp: new Date(Date.now() - 86400000 * 2).toISOString() },
+            { id: 2, score: 70, change: 10, reason: 'Opened proposal email', timestamp: new Date(Date.now() - 86400000 * 4).toISOString() },
+            { id: 3, score: 60, change: -2, reason: 'Inactivity decay', timestamp: new Date(Date.now() - 86400000 * 7).toISOString() },
+          ];
+        }
+        const response = await api.get(`/contacts/${id}/lead-score/history`);
+        return response.data;
+      }
+    };
+    

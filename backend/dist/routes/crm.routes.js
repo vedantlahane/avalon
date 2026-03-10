@@ -27,6 +27,8 @@ crmRoutes.delete('/contacts/:id', contactController.deleteContact);
 crmRoutes.post('/contacts/enrich', contactController.enrichContact);
 crmRoutes.post('/contacts/bulk-enrich', contactController.bulkEnrichContacts);
 crmRoutes.get('/contacts/sentiment/breakdown', contactController.getSentimentBreakdown);
+crmRoutes.post('/contacts/:id/lead-score/refresh', contactController.refreshLeadScore);
+crmRoutes.get('/contacts/:id/lead-score/history', contactController.getLeadScoreHistory);
 // Companies
 crmRoutes.get('/companies', companyController.getCompanies);
 crmRoutes.get('/companies/:id', companyController.getCompanyById);

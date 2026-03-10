@@ -8,6 +8,11 @@ export const activityService = {
             }
         });
     },
+    getActivityById: async (id) => {
+        return await prisma.activity.findUnique({
+            where: { id }
+        });
+    },
     createActivity: async (data) => {
         return await prisma.activity.create({
             data

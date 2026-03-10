@@ -73,6 +73,11 @@ export type EmailTemplate = $Result.DefaultSelection<Prisma.$EmailTemplatePayloa
  * 
  */
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
+/**
+ * Model LeadScoreHistory
+ * 
+ */
+export type LeadScoreHistory = $Result.DefaultSelection<Prisma.$LeadScoreHistoryPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -311,6 +316,16 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.leadScoreHistory`: Exposes CRUD operations for the **LeadScoreHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LeadScoreHistories
+    * const leadScoreHistories = await prisma.leadScoreHistory.findMany()
+    * ```
+    */
+  get leadScoreHistory(): Prisma.LeadScoreHistoryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -763,7 +778,8 @@ export namespace Prisma {
     Activity: 'Activity',
     Task: 'Task',
     EmailTemplate: 'EmailTemplate',
-    Notification: 'Notification'
+    Notification: 'Notification',
+    LeadScoreHistory: 'LeadScoreHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -782,7 +798,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userIdentity" | "otp" | "contact" | "email" | "company" | "deal" | "lineItem" | "activity" | "task" | "emailTemplate" | "notification"
+      modelProps: "user" | "userIdentity" | "otp" | "contact" | "email" | "company" | "deal" | "lineItem" | "activity" | "task" | "emailTemplate" | "notification" | "leadScoreHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1674,6 +1690,80 @@ export namespace Prisma {
           }
         }
       }
+      LeadScoreHistory: {
+        payload: Prisma.$LeadScoreHistoryPayload<ExtArgs>
+        fields: Prisma.LeadScoreHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LeadScoreHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LeadScoreHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.LeadScoreHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LeadScoreHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.LeadScoreHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.LeadScoreHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.LeadScoreHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LeadScoreHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.LeadScoreHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>
+          }
+          update: {
+            args: Prisma.LeadScoreHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.LeadScoreHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LeadScoreHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LeadScoreHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.LeadScoreHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadScoreHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.LeadScoreHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLeadScoreHistory>
+          }
+          groupBy: {
+            args: Prisma.LeadScoreHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LeadScoreHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LeadScoreHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<LeadScoreHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1782,6 +1872,7 @@ export namespace Prisma {
     task?: TaskOmit
     emailTemplate?: EmailTemplateOmit
     notification?: NotificationOmit
+    leadScoreHistory?: LeadScoreHistoryOmit
   }
 
   /* Types for Logging */
@@ -1893,6 +1984,7 @@ export namespace Prisma {
    */
 
   export type ContactCountOutputType = {
+    scoreHistory: number
     activities: number
     tasks: number
     deals: number
@@ -1900,6 +1992,7 @@ export namespace Prisma {
   }
 
   export type ContactCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    scoreHistory?: boolean | ContactCountOutputTypeCountScoreHistoryArgs
     activities?: boolean | ContactCountOutputTypeCountActivitiesArgs
     tasks?: boolean | ContactCountOutputTypeCountTasksArgs
     deals?: boolean | ContactCountOutputTypeCountDealsArgs
@@ -1915,6 +2008,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the ContactCountOutputType
      */
     select?: ContactCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ContactCountOutputType without action
+   */
+  export type ContactCountOutputTypeCountScoreHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadScoreHistoryWhereInput
   }
 
   /**
@@ -5420,12 +5520,18 @@ export namespace Prisma {
     id: number | null
     companyId: number | null
     leadScore: number | null
+    demographicScore: number | null
+    behavioralScore: number | null
+    scoreTrend: number | null
   }
 
   export type ContactSumAggregateOutputType = {
     id: number | null
     companyId: number | null
     leadScore: number | null
+    demographicScore: number | null
+    behavioralScore: number | null
+    scoreTrend: number | null
   }
 
   export type ContactMinAggregateOutputType = {
@@ -5439,6 +5545,11 @@ export namespace Prisma {
     leadSource: string | null
     leadStatus: string | null
     leadScore: number | null
+    leadCategory: string | null
+    demographicScore: number | null
+    behavioralScore: number | null
+    scoreTrend: number | null
+    aiNote: string | null
     address: string | null
     linkedinUrl: string | null
     twitterUrl: string | null
@@ -5463,6 +5574,11 @@ export namespace Prisma {
     leadSource: string | null
     leadStatus: string | null
     leadScore: number | null
+    leadCategory: string | null
+    demographicScore: number | null
+    behavioralScore: number | null
+    scoreTrend: number | null
+    aiNote: string | null
     address: string | null
     linkedinUrl: string | null
     twitterUrl: string | null
@@ -5487,6 +5603,12 @@ export namespace Prisma {
     leadSource: number
     leadStatus: number
     leadScore: number
+    leadCategory: number
+    demographicScore: number
+    behavioralScore: number
+    scoreBreakdown: number
+    scoreTrend: number
+    aiNote: number
     tags: number
     address: number
     linkedinUrl: number
@@ -5507,12 +5629,18 @@ export namespace Prisma {
     id?: true
     companyId?: true
     leadScore?: true
+    demographicScore?: true
+    behavioralScore?: true
+    scoreTrend?: true
   }
 
   export type ContactSumAggregateInputType = {
     id?: true
     companyId?: true
     leadScore?: true
+    demographicScore?: true
+    behavioralScore?: true
+    scoreTrend?: true
   }
 
   export type ContactMinAggregateInputType = {
@@ -5526,6 +5654,11 @@ export namespace Prisma {
     leadSource?: true
     leadStatus?: true
     leadScore?: true
+    leadCategory?: true
+    demographicScore?: true
+    behavioralScore?: true
+    scoreTrend?: true
+    aiNote?: true
     address?: true
     linkedinUrl?: true
     twitterUrl?: true
@@ -5550,6 +5683,11 @@ export namespace Prisma {
     leadSource?: true
     leadStatus?: true
     leadScore?: true
+    leadCategory?: true
+    demographicScore?: true
+    behavioralScore?: true
+    scoreTrend?: true
+    aiNote?: true
     address?: true
     linkedinUrl?: true
     twitterUrl?: true
@@ -5574,6 +5712,12 @@ export namespace Prisma {
     leadSource?: true
     leadStatus?: true
     leadScore?: true
+    leadCategory?: true
+    demographicScore?: true
+    behavioralScore?: true
+    scoreBreakdown?: true
+    scoreTrend?: true
+    aiNote?: true
     tags?: true
     address?: true
     linkedinUrl?: true
@@ -5686,6 +5830,12 @@ export namespace Prisma {
     leadSource: string | null
     leadStatus: string | null
     leadScore: number
+    leadCategory: string | null
+    demographicScore: number
+    behavioralScore: number
+    scoreBreakdown: JsonValue | null
+    scoreTrend: number
+    aiNote: string | null
     tags: string[]
     address: string | null
     linkedinUrl: string | null
@@ -5730,6 +5880,12 @@ export namespace Prisma {
     leadSource?: boolean
     leadStatus?: boolean
     leadScore?: boolean
+    leadCategory?: boolean
+    demographicScore?: boolean
+    behavioralScore?: boolean
+    scoreBreakdown?: boolean
+    scoreTrend?: boolean
+    aiNote?: boolean
     tags?: boolean
     address?: boolean
     linkedinUrl?: boolean
@@ -5743,6 +5899,7 @@ export namespace Prisma {
     updatedAt?: boolean
     isDeleted?: boolean
     company?: boolean | Contact$companyArgs<ExtArgs>
+    scoreHistory?: boolean | Contact$scoreHistoryArgs<ExtArgs>
     activities?: boolean | Contact$activitiesArgs<ExtArgs>
     tasks?: boolean | Contact$tasksArgs<ExtArgs>
     deals?: boolean | Contact$dealsArgs<ExtArgs>
@@ -5761,6 +5918,12 @@ export namespace Prisma {
     leadSource?: boolean
     leadStatus?: boolean
     leadScore?: boolean
+    leadCategory?: boolean
+    demographicScore?: boolean
+    behavioralScore?: boolean
+    scoreBreakdown?: boolean
+    scoreTrend?: boolean
+    aiNote?: boolean
     tags?: boolean
     address?: boolean
     linkedinUrl?: boolean
@@ -5787,6 +5950,12 @@ export namespace Prisma {
     leadSource?: boolean
     leadStatus?: boolean
     leadScore?: boolean
+    leadCategory?: boolean
+    demographicScore?: boolean
+    behavioralScore?: boolean
+    scoreBreakdown?: boolean
+    scoreTrend?: boolean
+    aiNote?: boolean
     tags?: boolean
     address?: boolean
     linkedinUrl?: boolean
@@ -5813,6 +5982,12 @@ export namespace Prisma {
     leadSource?: boolean
     leadStatus?: boolean
     leadScore?: boolean
+    leadCategory?: boolean
+    demographicScore?: boolean
+    behavioralScore?: boolean
+    scoreBreakdown?: boolean
+    scoreTrend?: boolean
+    aiNote?: boolean
     tags?: boolean
     address?: boolean
     linkedinUrl?: boolean
@@ -5827,9 +6002,10 @@ export namespace Prisma {
     isDeleted?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "jobTitle" | "companyId" | "leadSource" | "leadStatus" | "leadScore" | "tags" | "address" | "linkedinUrl" | "twitterUrl" | "website" | "notes" | "lastContacted" | "owner" | "avatarUrl" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "jobTitle" | "companyId" | "leadSource" | "leadStatus" | "leadScore" | "leadCategory" | "demographicScore" | "behavioralScore" | "scoreBreakdown" | "scoreTrend" | "aiNote" | "tags" | "address" | "linkedinUrl" | "twitterUrl" | "website" | "notes" | "lastContacted" | "owner" | "avatarUrl" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | Contact$companyArgs<ExtArgs>
+    scoreHistory?: boolean | Contact$scoreHistoryArgs<ExtArgs>
     activities?: boolean | Contact$activitiesArgs<ExtArgs>
     tasks?: boolean | Contact$tasksArgs<ExtArgs>
     deals?: boolean | Contact$dealsArgs<ExtArgs>
@@ -5847,6 +6023,7 @@ export namespace Prisma {
     name: "Contact"
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs> | null
+      scoreHistory: Prisma.$LeadScoreHistoryPayload<ExtArgs>[]
       activities: Prisma.$ActivityPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       deals: Prisma.$DealPayload<ExtArgs>[]
@@ -5863,6 +6040,12 @@ export namespace Prisma {
       leadSource: string | null
       leadStatus: string | null
       leadScore: number
+      leadCategory: string | null
+      demographicScore: number
+      behavioralScore: number
+      scoreBreakdown: Prisma.JsonValue | null
+      scoreTrend: number
+      aiNote: string | null
       tags: string[]
       address: string | null
       linkedinUrl: string | null
@@ -6270,6 +6453,7 @@ export namespace Prisma {
   export interface Prisma__ContactClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends Contact$companyArgs<ExtArgs> = {}>(args?: Subset<T, Contact$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    scoreHistory<T extends Contact$scoreHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Contact$scoreHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activities<T extends Contact$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, Contact$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tasks<T extends Contact$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Contact$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     deals<T extends Contact$dealsArgs<ExtArgs> = {}>(args?: Subset<T, Contact$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6313,6 +6497,12 @@ export namespace Prisma {
     readonly leadSource: FieldRef<"Contact", 'String'>
     readonly leadStatus: FieldRef<"Contact", 'String'>
     readonly leadScore: FieldRef<"Contact", 'Int'>
+    readonly leadCategory: FieldRef<"Contact", 'String'>
+    readonly demographicScore: FieldRef<"Contact", 'Int'>
+    readonly behavioralScore: FieldRef<"Contact", 'Int'>
+    readonly scoreBreakdown: FieldRef<"Contact", 'Json'>
+    readonly scoreTrend: FieldRef<"Contact", 'Int'>
+    readonly aiNote: FieldRef<"Contact", 'String'>
     readonly tags: FieldRef<"Contact", 'String[]'>
     readonly address: FieldRef<"Contact", 'String'>
     readonly linkedinUrl: FieldRef<"Contact", 'String'>
@@ -6737,6 +6927,30 @@ export namespace Prisma {
      */
     include?: CompanyInclude<ExtArgs> | null
     where?: CompanyWhereInput
+  }
+
+  /**
+   * Contact.scoreHistory
+   */
+  export type Contact$scoreHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    where?: LeadScoreHistoryWhereInput
+    orderBy?: LeadScoreHistoryOrderByWithRelationInput | LeadScoreHistoryOrderByWithRelationInput[]
+    cursor?: LeadScoreHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadScoreHistoryScalarFieldEnum | LeadScoreHistoryScalarFieldEnum[]
   }
 
   /**
@@ -16851,6 +17065,1162 @@ export namespace Prisma {
 
 
   /**
+   * Model LeadScoreHistory
+   */
+
+  export type AggregateLeadScoreHistory = {
+    _count: LeadScoreHistoryCountAggregateOutputType | null
+    _avg: LeadScoreHistoryAvgAggregateOutputType | null
+    _sum: LeadScoreHistorySumAggregateOutputType | null
+    _min: LeadScoreHistoryMinAggregateOutputType | null
+    _max: LeadScoreHistoryMaxAggregateOutputType | null
+  }
+
+  export type LeadScoreHistoryAvgAggregateOutputType = {
+    id: number | null
+    contactId: number | null
+    score: number | null
+    change: number | null
+  }
+
+  export type LeadScoreHistorySumAggregateOutputType = {
+    id: number | null
+    contactId: number | null
+    score: number | null
+    change: number | null
+  }
+
+  export type LeadScoreHistoryMinAggregateOutputType = {
+    id: number | null
+    contactId: number | null
+    score: number | null
+    change: number | null
+    reason: string | null
+    timestamp: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    isDeleted: boolean | null
+  }
+
+  export type LeadScoreHistoryMaxAggregateOutputType = {
+    id: number | null
+    contactId: number | null
+    score: number | null
+    change: number | null
+    reason: string | null
+    timestamp: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    isDeleted: boolean | null
+  }
+
+  export type LeadScoreHistoryCountAggregateOutputType = {
+    id: number
+    contactId: number
+    score: number
+    change: number
+    reason: number
+    timestamp: number
+    createdAt: number
+    updatedAt: number
+    isDeleted: number
+    _all: number
+  }
+
+
+  export type LeadScoreHistoryAvgAggregateInputType = {
+    id?: true
+    contactId?: true
+    score?: true
+    change?: true
+  }
+
+  export type LeadScoreHistorySumAggregateInputType = {
+    id?: true
+    contactId?: true
+    score?: true
+    change?: true
+  }
+
+  export type LeadScoreHistoryMinAggregateInputType = {
+    id?: true
+    contactId?: true
+    score?: true
+    change?: true
+    reason?: true
+    timestamp?: true
+    createdAt?: true
+    updatedAt?: true
+    isDeleted?: true
+  }
+
+  export type LeadScoreHistoryMaxAggregateInputType = {
+    id?: true
+    contactId?: true
+    score?: true
+    change?: true
+    reason?: true
+    timestamp?: true
+    createdAt?: true
+    updatedAt?: true
+    isDeleted?: true
+  }
+
+  export type LeadScoreHistoryCountAggregateInputType = {
+    id?: true
+    contactId?: true
+    score?: true
+    change?: true
+    reason?: true
+    timestamp?: true
+    createdAt?: true
+    updatedAt?: true
+    isDeleted?: true
+    _all?: true
+  }
+
+  export type LeadScoreHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LeadScoreHistory to aggregate.
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadScoreHistories to fetch.
+     */
+    orderBy?: LeadScoreHistoryOrderByWithRelationInput | LeadScoreHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LeadScoreHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadScoreHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadScoreHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LeadScoreHistories
+    **/
+    _count?: true | LeadScoreHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LeadScoreHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LeadScoreHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LeadScoreHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LeadScoreHistoryMaxAggregateInputType
+  }
+
+  export type GetLeadScoreHistoryAggregateType<T extends LeadScoreHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateLeadScoreHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLeadScoreHistory[P]>
+      : GetScalarType<T[P], AggregateLeadScoreHistory[P]>
+  }
+
+
+
+
+  export type LeadScoreHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadScoreHistoryWhereInput
+    orderBy?: LeadScoreHistoryOrderByWithAggregationInput | LeadScoreHistoryOrderByWithAggregationInput[]
+    by: LeadScoreHistoryScalarFieldEnum[] | LeadScoreHistoryScalarFieldEnum
+    having?: LeadScoreHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LeadScoreHistoryCountAggregateInputType | true
+    _avg?: LeadScoreHistoryAvgAggregateInputType
+    _sum?: LeadScoreHistorySumAggregateInputType
+    _min?: LeadScoreHistoryMinAggregateInputType
+    _max?: LeadScoreHistoryMaxAggregateInputType
+  }
+
+  export type LeadScoreHistoryGroupByOutputType = {
+    id: number
+    contactId: number
+    score: number
+    change: number
+    reason: string
+    timestamp: Date
+    createdAt: Date
+    updatedAt: Date
+    isDeleted: boolean
+    _count: LeadScoreHistoryCountAggregateOutputType | null
+    _avg: LeadScoreHistoryAvgAggregateOutputType | null
+    _sum: LeadScoreHistorySumAggregateOutputType | null
+    _min: LeadScoreHistoryMinAggregateOutputType | null
+    _max: LeadScoreHistoryMaxAggregateOutputType | null
+  }
+
+  type GetLeadScoreHistoryGroupByPayload<T extends LeadScoreHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LeadScoreHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LeadScoreHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LeadScoreHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], LeadScoreHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LeadScoreHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contactId?: boolean
+    score?: boolean
+    change?: boolean
+    reason?: boolean
+    timestamp?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadScoreHistory"]>
+
+  export type LeadScoreHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contactId?: boolean
+    score?: boolean
+    change?: boolean
+    reason?: boolean
+    timestamp?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadScoreHistory"]>
+
+  export type LeadScoreHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contactId?: boolean
+    score?: boolean
+    change?: boolean
+    reason?: boolean
+    timestamp?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadScoreHistory"]>
+
+  export type LeadScoreHistorySelectScalar = {
+    id?: boolean
+    contactId?: boolean
+    score?: boolean
+    change?: boolean
+    reason?: boolean
+    timestamp?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+  }
+
+  export type LeadScoreHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "contactId" | "score" | "change" | "reason" | "timestamp" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["leadScoreHistory"]>
+  export type LeadScoreHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+  export type LeadScoreHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+  export type LeadScoreHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contact?: boolean | ContactDefaultArgs<ExtArgs>
+  }
+
+  export type $LeadScoreHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LeadScoreHistory"
+    objects: {
+      contact: Prisma.$ContactPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      contactId: number
+      score: number
+      change: number
+      reason: string
+      timestamp: Date
+      createdAt: Date
+      updatedAt: Date
+      isDeleted: boolean
+    }, ExtArgs["result"]["leadScoreHistory"]>
+    composites: {}
+  }
+
+  type LeadScoreHistoryGetPayload<S extends boolean | null | undefined | LeadScoreHistoryDefaultArgs> = $Result.GetResult<Prisma.$LeadScoreHistoryPayload, S>
+
+  type LeadScoreHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LeadScoreHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LeadScoreHistoryCountAggregateInputType | true
+    }
+
+  export interface LeadScoreHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LeadScoreHistory'], meta: { name: 'LeadScoreHistory' } }
+    /**
+     * Find zero or one LeadScoreHistory that matches the filter.
+     * @param {LeadScoreHistoryFindUniqueArgs} args - Arguments to find a LeadScoreHistory
+     * @example
+     * // Get one LeadScoreHistory
+     * const leadScoreHistory = await prisma.leadScoreHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LeadScoreHistoryFindUniqueArgs>(args: SelectSubset<T, LeadScoreHistoryFindUniqueArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LeadScoreHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LeadScoreHistoryFindUniqueOrThrowArgs} args - Arguments to find a LeadScoreHistory
+     * @example
+     * // Get one LeadScoreHistory
+     * const leadScoreHistory = await prisma.leadScoreHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LeadScoreHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, LeadScoreHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LeadScoreHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryFindFirstArgs} args - Arguments to find a LeadScoreHistory
+     * @example
+     * // Get one LeadScoreHistory
+     * const leadScoreHistory = await prisma.leadScoreHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LeadScoreHistoryFindFirstArgs>(args?: SelectSubset<T, LeadScoreHistoryFindFirstArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LeadScoreHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryFindFirstOrThrowArgs} args - Arguments to find a LeadScoreHistory
+     * @example
+     * // Get one LeadScoreHistory
+     * const leadScoreHistory = await prisma.leadScoreHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LeadScoreHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, LeadScoreHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LeadScoreHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LeadScoreHistories
+     * const leadScoreHistories = await prisma.leadScoreHistory.findMany()
+     * 
+     * // Get first 10 LeadScoreHistories
+     * const leadScoreHistories = await prisma.leadScoreHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const leadScoreHistoryWithIdOnly = await prisma.leadScoreHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LeadScoreHistoryFindManyArgs>(args?: SelectSubset<T, LeadScoreHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LeadScoreHistory.
+     * @param {LeadScoreHistoryCreateArgs} args - Arguments to create a LeadScoreHistory.
+     * @example
+     * // Create one LeadScoreHistory
+     * const LeadScoreHistory = await prisma.leadScoreHistory.create({
+     *   data: {
+     *     // ... data to create a LeadScoreHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends LeadScoreHistoryCreateArgs>(args: SelectSubset<T, LeadScoreHistoryCreateArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LeadScoreHistories.
+     * @param {LeadScoreHistoryCreateManyArgs} args - Arguments to create many LeadScoreHistories.
+     * @example
+     * // Create many LeadScoreHistories
+     * const leadScoreHistory = await prisma.leadScoreHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LeadScoreHistoryCreateManyArgs>(args?: SelectSubset<T, LeadScoreHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LeadScoreHistories and returns the data saved in the database.
+     * @param {LeadScoreHistoryCreateManyAndReturnArgs} args - Arguments to create many LeadScoreHistories.
+     * @example
+     * // Create many LeadScoreHistories
+     * const leadScoreHistory = await prisma.leadScoreHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LeadScoreHistories and only return the `id`
+     * const leadScoreHistoryWithIdOnly = await prisma.leadScoreHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LeadScoreHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, LeadScoreHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LeadScoreHistory.
+     * @param {LeadScoreHistoryDeleteArgs} args - Arguments to delete one LeadScoreHistory.
+     * @example
+     * // Delete one LeadScoreHistory
+     * const LeadScoreHistory = await prisma.leadScoreHistory.delete({
+     *   where: {
+     *     // ... filter to delete one LeadScoreHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LeadScoreHistoryDeleteArgs>(args: SelectSubset<T, LeadScoreHistoryDeleteArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LeadScoreHistory.
+     * @param {LeadScoreHistoryUpdateArgs} args - Arguments to update one LeadScoreHistory.
+     * @example
+     * // Update one LeadScoreHistory
+     * const leadScoreHistory = await prisma.leadScoreHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LeadScoreHistoryUpdateArgs>(args: SelectSubset<T, LeadScoreHistoryUpdateArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LeadScoreHistories.
+     * @param {LeadScoreHistoryDeleteManyArgs} args - Arguments to filter LeadScoreHistories to delete.
+     * @example
+     * // Delete a few LeadScoreHistories
+     * const { count } = await prisma.leadScoreHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LeadScoreHistoryDeleteManyArgs>(args?: SelectSubset<T, LeadScoreHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LeadScoreHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LeadScoreHistories
+     * const leadScoreHistory = await prisma.leadScoreHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LeadScoreHistoryUpdateManyArgs>(args: SelectSubset<T, LeadScoreHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LeadScoreHistories and returns the data updated in the database.
+     * @param {LeadScoreHistoryUpdateManyAndReturnArgs} args - Arguments to update many LeadScoreHistories.
+     * @example
+     * // Update many LeadScoreHistories
+     * const leadScoreHistory = await prisma.leadScoreHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LeadScoreHistories and only return the `id`
+     * const leadScoreHistoryWithIdOnly = await prisma.leadScoreHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LeadScoreHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, LeadScoreHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LeadScoreHistory.
+     * @param {LeadScoreHistoryUpsertArgs} args - Arguments to update or create a LeadScoreHistory.
+     * @example
+     * // Update or create a LeadScoreHistory
+     * const leadScoreHistory = await prisma.leadScoreHistory.upsert({
+     *   create: {
+     *     // ... data to create a LeadScoreHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LeadScoreHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LeadScoreHistoryUpsertArgs>(args: SelectSubset<T, LeadScoreHistoryUpsertArgs<ExtArgs>>): Prisma__LeadScoreHistoryClient<$Result.GetResult<Prisma.$LeadScoreHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LeadScoreHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryCountArgs} args - Arguments to filter LeadScoreHistories to count.
+     * @example
+     * // Count the number of LeadScoreHistories
+     * const count = await prisma.leadScoreHistory.count({
+     *   where: {
+     *     // ... the filter for the LeadScoreHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends LeadScoreHistoryCountArgs>(
+      args?: Subset<T, LeadScoreHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LeadScoreHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LeadScoreHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LeadScoreHistoryAggregateArgs>(args: Subset<T, LeadScoreHistoryAggregateArgs>): Prisma.PrismaPromise<GetLeadScoreHistoryAggregateType<T>>
+
+    /**
+     * Group by LeadScoreHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadScoreHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LeadScoreHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LeadScoreHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: LeadScoreHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LeadScoreHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLeadScoreHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LeadScoreHistory model
+   */
+  readonly fields: LeadScoreHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LeadScoreHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LeadScoreHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    contact<T extends ContactDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactDefaultArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LeadScoreHistory model
+   */
+  interface LeadScoreHistoryFieldRefs {
+    readonly id: FieldRef<"LeadScoreHistory", 'Int'>
+    readonly contactId: FieldRef<"LeadScoreHistory", 'Int'>
+    readonly score: FieldRef<"LeadScoreHistory", 'Int'>
+    readonly change: FieldRef<"LeadScoreHistory", 'Int'>
+    readonly reason: FieldRef<"LeadScoreHistory", 'String'>
+    readonly timestamp: FieldRef<"LeadScoreHistory", 'DateTime'>
+    readonly createdAt: FieldRef<"LeadScoreHistory", 'DateTime'>
+    readonly updatedAt: FieldRef<"LeadScoreHistory", 'DateTime'>
+    readonly isDeleted: FieldRef<"LeadScoreHistory", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LeadScoreHistory findUnique
+   */
+  export type LeadScoreHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadScoreHistory to fetch.
+     */
+    where: LeadScoreHistoryWhereUniqueInput
+  }
+
+  /**
+   * LeadScoreHistory findUniqueOrThrow
+   */
+  export type LeadScoreHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadScoreHistory to fetch.
+     */
+    where: LeadScoreHistoryWhereUniqueInput
+  }
+
+  /**
+   * LeadScoreHistory findFirst
+   */
+  export type LeadScoreHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadScoreHistory to fetch.
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadScoreHistories to fetch.
+     */
+    orderBy?: LeadScoreHistoryOrderByWithRelationInput | LeadScoreHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LeadScoreHistories.
+     */
+    cursor?: LeadScoreHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadScoreHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadScoreHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeadScoreHistories.
+     */
+    distinct?: LeadScoreHistoryScalarFieldEnum | LeadScoreHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * LeadScoreHistory findFirstOrThrow
+   */
+  export type LeadScoreHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadScoreHistory to fetch.
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadScoreHistories to fetch.
+     */
+    orderBy?: LeadScoreHistoryOrderByWithRelationInput | LeadScoreHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LeadScoreHistories.
+     */
+    cursor?: LeadScoreHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadScoreHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadScoreHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeadScoreHistories.
+     */
+    distinct?: LeadScoreHistoryScalarFieldEnum | LeadScoreHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * LeadScoreHistory findMany
+   */
+  export type LeadScoreHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadScoreHistories to fetch.
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadScoreHistories to fetch.
+     */
+    orderBy?: LeadScoreHistoryOrderByWithRelationInput | LeadScoreHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LeadScoreHistories.
+     */
+    cursor?: LeadScoreHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadScoreHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadScoreHistories.
+     */
+    skip?: number
+    distinct?: LeadScoreHistoryScalarFieldEnum | LeadScoreHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * LeadScoreHistory create
+   */
+  export type LeadScoreHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LeadScoreHistory.
+     */
+    data: XOR<LeadScoreHistoryCreateInput, LeadScoreHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * LeadScoreHistory createMany
+   */
+  export type LeadScoreHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LeadScoreHistories.
+     */
+    data: LeadScoreHistoryCreateManyInput | LeadScoreHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LeadScoreHistory createManyAndReturn
+   */
+  export type LeadScoreHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many LeadScoreHistories.
+     */
+    data: LeadScoreHistoryCreateManyInput | LeadScoreHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LeadScoreHistory update
+   */
+  export type LeadScoreHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LeadScoreHistory.
+     */
+    data: XOR<LeadScoreHistoryUpdateInput, LeadScoreHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which LeadScoreHistory to update.
+     */
+    where: LeadScoreHistoryWhereUniqueInput
+  }
+
+  /**
+   * LeadScoreHistory updateMany
+   */
+  export type LeadScoreHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LeadScoreHistories.
+     */
+    data: XOR<LeadScoreHistoryUpdateManyMutationInput, LeadScoreHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which LeadScoreHistories to update
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * Limit how many LeadScoreHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LeadScoreHistory updateManyAndReturn
+   */
+  export type LeadScoreHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update LeadScoreHistories.
+     */
+    data: XOR<LeadScoreHistoryUpdateManyMutationInput, LeadScoreHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which LeadScoreHistories to update
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * Limit how many LeadScoreHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LeadScoreHistory upsert
+   */
+  export type LeadScoreHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LeadScoreHistory to update in case it exists.
+     */
+    where: LeadScoreHistoryWhereUniqueInput
+    /**
+     * In case the LeadScoreHistory found by the `where` argument doesn't exist, create a new LeadScoreHistory with this data.
+     */
+    create: XOR<LeadScoreHistoryCreateInput, LeadScoreHistoryUncheckedCreateInput>
+    /**
+     * In case the LeadScoreHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LeadScoreHistoryUpdateInput, LeadScoreHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * LeadScoreHistory delete
+   */
+  export type LeadScoreHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which LeadScoreHistory to delete.
+     */
+    where: LeadScoreHistoryWhereUniqueInput
+  }
+
+  /**
+   * LeadScoreHistory deleteMany
+   */
+  export type LeadScoreHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LeadScoreHistories to delete
+     */
+    where?: LeadScoreHistoryWhereInput
+    /**
+     * Limit how many LeadScoreHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LeadScoreHistory without action
+   */
+  export type LeadScoreHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadScoreHistory
+     */
+    select?: LeadScoreHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadScoreHistory
+     */
+    omit?: LeadScoreHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadScoreHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16921,6 +18291,12 @@ export namespace Prisma {
     leadSource: 'leadSource',
     leadStatus: 'leadStatus',
     leadScore: 'leadScore',
+    leadCategory: 'leadCategory',
+    demographicScore: 'demographicScore',
+    behavioralScore: 'behavioralScore',
+    scoreBreakdown: 'scoreBreakdown',
+    scoreTrend: 'scoreTrend',
+    aiNote: 'aiNote',
     tags: 'tags',
     address: 'address',
     linkedinUrl: 'linkedinUrl',
@@ -17100,6 +18476,21 @@ export namespace Prisma {
   };
 
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+  export const LeadScoreHistoryScalarFieldEnum: {
+    id: 'id',
+    contactId: 'contactId',
+    score: 'score',
+    change: 'change',
+    reason: 'reason',
+    timestamp: 'timestamp',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    isDeleted: 'isDeleted'
+  };
+
+  export type LeadScoreHistoryScalarFieldEnum = (typeof LeadScoreHistoryScalarFieldEnum)[keyof typeof LeadScoreHistoryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -17474,6 +18865,12 @@ export namespace Prisma {
     leadSource?: StringNullableFilter<"Contact"> | string | null
     leadStatus?: StringNullableFilter<"Contact"> | string | null
     leadScore?: IntFilter<"Contact"> | number
+    leadCategory?: StringNullableFilter<"Contact"> | string | null
+    demographicScore?: IntFilter<"Contact"> | number
+    behavioralScore?: IntFilter<"Contact"> | number
+    scoreBreakdown?: JsonNullableFilter<"Contact">
+    scoreTrend?: IntFilter<"Contact"> | number
+    aiNote?: StringNullableFilter<"Contact"> | string | null
     tags?: StringNullableListFilter<"Contact">
     address?: StringNullableFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableFilter<"Contact"> | string | null
@@ -17487,6 +18884,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     isDeleted?: BoolFilter<"Contact"> | boolean
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    scoreHistory?: LeadScoreHistoryListRelationFilter
     activities?: ActivityListRelationFilter
     tasks?: TaskListRelationFilter
     deals?: DealListRelationFilter
@@ -17504,6 +18902,12 @@ export namespace Prisma {
     leadSource?: SortOrderInput | SortOrder
     leadStatus?: SortOrderInput | SortOrder
     leadScore?: SortOrder
+    leadCategory?: SortOrderInput | SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreBreakdown?: SortOrderInput | SortOrder
+    scoreTrend?: SortOrder
+    aiNote?: SortOrderInput | SortOrder
     tags?: SortOrder
     address?: SortOrderInput | SortOrder
     linkedinUrl?: SortOrderInput | SortOrder
@@ -17517,6 +18921,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     isDeleted?: SortOrder
     company?: CompanyOrderByWithRelationInput
+    scoreHistory?: LeadScoreHistoryOrderByRelationAggregateInput
     activities?: ActivityOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
     deals?: DealOrderByRelationAggregateInput
@@ -17537,6 +18942,12 @@ export namespace Prisma {
     leadSource?: StringNullableFilter<"Contact"> | string | null
     leadStatus?: StringNullableFilter<"Contact"> | string | null
     leadScore?: IntFilter<"Contact"> | number
+    leadCategory?: StringNullableFilter<"Contact"> | string | null
+    demographicScore?: IntFilter<"Contact"> | number
+    behavioralScore?: IntFilter<"Contact"> | number
+    scoreBreakdown?: JsonNullableFilter<"Contact">
+    scoreTrend?: IntFilter<"Contact"> | number
+    aiNote?: StringNullableFilter<"Contact"> | string | null
     tags?: StringNullableListFilter<"Contact">
     address?: StringNullableFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableFilter<"Contact"> | string | null
@@ -17550,6 +18961,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Contact"> | Date | string
     isDeleted?: BoolFilter<"Contact"> | boolean
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    scoreHistory?: LeadScoreHistoryListRelationFilter
     activities?: ActivityListRelationFilter
     tasks?: TaskListRelationFilter
     deals?: DealListRelationFilter
@@ -17567,6 +18979,12 @@ export namespace Prisma {
     leadSource?: SortOrderInput | SortOrder
     leadStatus?: SortOrderInput | SortOrder
     leadScore?: SortOrder
+    leadCategory?: SortOrderInput | SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreBreakdown?: SortOrderInput | SortOrder
+    scoreTrend?: SortOrder
+    aiNote?: SortOrderInput | SortOrder
     tags?: SortOrder
     address?: SortOrderInput | SortOrder
     linkedinUrl?: SortOrderInput | SortOrder
@@ -17600,6 +19018,12 @@ export namespace Prisma {
     leadSource?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     leadStatus?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     leadScore?: IntWithAggregatesFilter<"Contact"> | number
+    leadCategory?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    demographicScore?: IntWithAggregatesFilter<"Contact"> | number
+    behavioralScore?: IntWithAggregatesFilter<"Contact"> | number
+    scoreBreakdown?: JsonNullableWithAggregatesFilter<"Contact">
+    scoreTrend?: IntWithAggregatesFilter<"Contact"> | number
+    aiNote?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     tags?: StringNullableListFilter<"Contact">
     address?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableWithAggregatesFilter<"Contact"> | string | null
@@ -18471,6 +19895,83 @@ export namespace Prisma {
     isDeleted?: BoolWithAggregatesFilter<"Notification"> | boolean
   }
 
+  export type LeadScoreHistoryWhereInput = {
+    AND?: LeadScoreHistoryWhereInput | LeadScoreHistoryWhereInput[]
+    OR?: LeadScoreHistoryWhereInput[]
+    NOT?: LeadScoreHistoryWhereInput | LeadScoreHistoryWhereInput[]
+    id?: IntFilter<"LeadScoreHistory"> | number
+    contactId?: IntFilter<"LeadScoreHistory"> | number
+    score?: IntFilter<"LeadScoreHistory"> | number
+    change?: IntFilter<"LeadScoreHistory"> | number
+    reason?: StringFilter<"LeadScoreHistory"> | string
+    timestamp?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    createdAt?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    updatedAt?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    isDeleted?: BoolFilter<"LeadScoreHistory"> | boolean
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+  }
+
+  export type LeadScoreHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+    reason?: SortOrder
+    timestamp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+    contact?: ContactOrderByWithRelationInput
+  }
+
+  export type LeadScoreHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: LeadScoreHistoryWhereInput | LeadScoreHistoryWhereInput[]
+    OR?: LeadScoreHistoryWhereInput[]
+    NOT?: LeadScoreHistoryWhereInput | LeadScoreHistoryWhereInput[]
+    contactId?: IntFilter<"LeadScoreHistory"> | number
+    score?: IntFilter<"LeadScoreHistory"> | number
+    change?: IntFilter<"LeadScoreHistory"> | number
+    reason?: StringFilter<"LeadScoreHistory"> | string
+    timestamp?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    createdAt?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    updatedAt?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    isDeleted?: BoolFilter<"LeadScoreHistory"> | boolean
+    contact?: XOR<ContactScalarRelationFilter, ContactWhereInput>
+  }, "id">
+
+  export type LeadScoreHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+    reason?: SortOrder
+    timestamp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+    _count?: LeadScoreHistoryCountOrderByAggregateInput
+    _avg?: LeadScoreHistoryAvgOrderByAggregateInput
+    _max?: LeadScoreHistoryMaxOrderByAggregateInput
+    _min?: LeadScoreHistoryMinOrderByAggregateInput
+    _sum?: LeadScoreHistorySumOrderByAggregateInput
+  }
+
+  export type LeadScoreHistoryScalarWhereWithAggregatesInput = {
+    AND?: LeadScoreHistoryScalarWhereWithAggregatesInput | LeadScoreHistoryScalarWhereWithAggregatesInput[]
+    OR?: LeadScoreHistoryScalarWhereWithAggregatesInput[]
+    NOT?: LeadScoreHistoryScalarWhereWithAggregatesInput | LeadScoreHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LeadScoreHistory"> | number
+    contactId?: IntWithAggregatesFilter<"LeadScoreHistory"> | number
+    score?: IntWithAggregatesFilter<"LeadScoreHistory"> | number
+    change?: IntWithAggregatesFilter<"LeadScoreHistory"> | number
+    reason?: StringWithAggregatesFilter<"LeadScoreHistory"> | string
+    timestamp?: DateTimeWithAggregatesFilter<"LeadScoreHistory"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"LeadScoreHistory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LeadScoreHistory"> | Date | string
+    isDeleted?: BoolWithAggregatesFilter<"LeadScoreHistory"> | boolean
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -18742,6 +20243,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -18755,6 +20262,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isDeleted?: boolean
     company?: CompanyCreateNestedOneWithoutContactsInput
+    scoreHistory?: LeadScoreHistoryCreateNestedManyWithoutContactInput
     activities?: ActivityCreateNestedManyWithoutContactInput
     tasks?: TaskCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
@@ -18772,6 +20280,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -18784,6 +20298,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput
     activities?: ActivityUncheckedCreateNestedManyWithoutContactInput
     tasks?: TaskUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
@@ -18799,6 +20314,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18812,6 +20333,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneWithoutContactsNestedInput
+    scoreHistory?: LeadScoreHistoryUpdateManyWithoutContactNestedInput
     activities?: ActivityUpdateManyWithoutContactNestedInput
     tasks?: TaskUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
@@ -18829,6 +20351,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18841,6 +20369,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
@@ -18858,6 +20387,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -18881,6 +20416,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18906,6 +20447,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19891,6 +21438,86 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type LeadScoreHistoryCreateInput = {
+    score: number
+    change: number
+    reason: string
+    timestamp?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    contact: ContactCreateNestedOneWithoutScoreHistoryInput
+  }
+
+  export type LeadScoreHistoryUncheckedCreateInput = {
+    id?: number
+    contactId: number
+    score: number
+    change: number
+    reason: string
+    timestamp?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LeadScoreHistoryUpdateInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    contact?: ContactUpdateOneRequiredWithoutScoreHistoryNestedInput
+  }
+
+  export type LeadScoreHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    contactId?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LeadScoreHistoryCreateManyInput = {
+    id?: number
+    contactId: number
+    score: number
+    change: number
+    reason: string
+    timestamp?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LeadScoreHistoryUpdateManyMutationInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LeadScoreHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    contactId?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20296,6 +21923,12 @@ export namespace Prisma {
     isNot?: CompanyWhereInput | null
   }
 
+  export type LeadScoreHistoryListRelationFilter = {
+    every?: LeadScoreHistoryWhereInput
+    some?: LeadScoreHistoryWhereInput
+    none?: LeadScoreHistoryWhereInput
+  }
+
   export type ActivityListRelationFilter = {
     every?: ActivityWhereInput
     some?: ActivityWhereInput
@@ -20318,6 +21951,10 @@ export namespace Prisma {
     every?: EmailWhereInput
     some?: EmailWhereInput
     none?: EmailWhereInput
+  }
+
+  export type LeadScoreHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ActivityOrderByRelationAggregateInput = {
@@ -20347,6 +21984,12 @@ export namespace Prisma {
     leadSource?: SortOrder
     leadStatus?: SortOrder
     leadScore?: SortOrder
+    leadCategory?: SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreBreakdown?: SortOrder
+    scoreTrend?: SortOrder
+    aiNote?: SortOrder
     tags?: SortOrder
     address?: SortOrder
     linkedinUrl?: SortOrder
@@ -20365,6 +22008,9 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     leadScore?: SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreTrend?: SortOrder
   }
 
   export type ContactMaxOrderByAggregateInput = {
@@ -20378,6 +22024,11 @@ export namespace Prisma {
     leadSource?: SortOrder
     leadStatus?: SortOrder
     leadScore?: SortOrder
+    leadCategory?: SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreTrend?: SortOrder
+    aiNote?: SortOrder
     address?: SortOrder
     linkedinUrl?: SortOrder
     twitterUrl?: SortOrder
@@ -20402,6 +22053,11 @@ export namespace Prisma {
     leadSource?: SortOrder
     leadStatus?: SortOrder
     leadScore?: SortOrder
+    leadCategory?: SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreTrend?: SortOrder
+    aiNote?: SortOrder
     address?: SortOrder
     linkedinUrl?: SortOrder
     twitterUrl?: SortOrder
@@ -20419,6 +22075,9 @@ export namespace Prisma {
     id?: SortOrder
     companyId?: SortOrder
     leadScore?: SortOrder
+    demographicScore?: SortOrder
+    behavioralScore?: SortOrder
+    scoreTrend?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -21027,6 +22686,61 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type ContactScalarRelationFilter = {
+    is?: ContactWhereInput
+    isNot?: ContactWhereInput
+  }
+
+  export type LeadScoreHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+    reason?: SortOrder
+    timestamp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+  }
+
+  export type LeadScoreHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+  }
+
+  export type LeadScoreHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+    reason?: SortOrder
+    timestamp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+  }
+
+  export type LeadScoreHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+    reason?: SortOrder
+    timestamp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+  }
+
+  export type LeadScoreHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    contactId?: SortOrder
+    score?: SortOrder
+    change?: SortOrder
+  }
+
   export type UserIdentityCreateNestedManyWithoutUserInput = {
     create?: XOR<UserIdentityCreateWithoutUserInput, UserIdentityUncheckedCreateWithoutUserInput> | UserIdentityCreateWithoutUserInput[] | UserIdentityUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserIdentityCreateOrConnectWithoutUserInput | UserIdentityCreateOrConnectWithoutUserInput[]
@@ -21129,6 +22843,13 @@ export namespace Prisma {
     connect?: CompanyWhereUniqueInput
   }
 
+  export type LeadScoreHistoryCreateNestedManyWithoutContactInput = {
+    create?: XOR<LeadScoreHistoryCreateWithoutContactInput, LeadScoreHistoryUncheckedCreateWithoutContactInput> | LeadScoreHistoryCreateWithoutContactInput[] | LeadScoreHistoryUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: LeadScoreHistoryCreateOrConnectWithoutContactInput | LeadScoreHistoryCreateOrConnectWithoutContactInput[]
+    createMany?: LeadScoreHistoryCreateManyContactInputEnvelope
+    connect?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+  }
+
   export type ActivityCreateNestedManyWithoutContactInput = {
     create?: XOR<ActivityCreateWithoutContactInput, ActivityUncheckedCreateWithoutContactInput> | ActivityCreateWithoutContactInput[] | ActivityUncheckedCreateWithoutContactInput[]
     connectOrCreate?: ActivityCreateOrConnectWithoutContactInput | ActivityCreateOrConnectWithoutContactInput[]
@@ -21155,6 +22876,13 @@ export namespace Prisma {
     connectOrCreate?: EmailCreateOrConnectWithoutContactInput | EmailCreateOrConnectWithoutContactInput[]
     createMany?: EmailCreateManyContactInputEnvelope
     connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+  }
+
+  export type LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput = {
+    create?: XOR<LeadScoreHistoryCreateWithoutContactInput, LeadScoreHistoryUncheckedCreateWithoutContactInput> | LeadScoreHistoryCreateWithoutContactInput[] | LeadScoreHistoryUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: LeadScoreHistoryCreateOrConnectWithoutContactInput | LeadScoreHistoryCreateOrConnectWithoutContactInput[]
+    createMany?: LeadScoreHistoryCreateManyContactInputEnvelope
+    connect?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
   }
 
   export type ActivityUncheckedCreateNestedManyWithoutContactInput = {
@@ -21202,6 +22930,20 @@ export namespace Prisma {
     delete?: CompanyWhereInput | boolean
     connect?: CompanyWhereUniqueInput
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutContactsInput, CompanyUpdateWithoutContactsInput>, CompanyUncheckedUpdateWithoutContactsInput>
+  }
+
+  export type LeadScoreHistoryUpdateManyWithoutContactNestedInput = {
+    create?: XOR<LeadScoreHistoryCreateWithoutContactInput, LeadScoreHistoryUncheckedCreateWithoutContactInput> | LeadScoreHistoryCreateWithoutContactInput[] | LeadScoreHistoryUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: LeadScoreHistoryCreateOrConnectWithoutContactInput | LeadScoreHistoryCreateOrConnectWithoutContactInput[]
+    upsert?: LeadScoreHistoryUpsertWithWhereUniqueWithoutContactInput | LeadScoreHistoryUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: LeadScoreHistoryCreateManyContactInputEnvelope
+    set?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    disconnect?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    delete?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    connect?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    update?: LeadScoreHistoryUpdateWithWhereUniqueWithoutContactInput | LeadScoreHistoryUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: LeadScoreHistoryUpdateManyWithWhereWithoutContactInput | LeadScoreHistoryUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: LeadScoreHistoryScalarWhereInput | LeadScoreHistoryScalarWhereInput[]
   }
 
   export type ActivityUpdateManyWithoutContactNestedInput = {
@@ -21266,6 +23008,20 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput = {
+    create?: XOR<LeadScoreHistoryCreateWithoutContactInput, LeadScoreHistoryUncheckedCreateWithoutContactInput> | LeadScoreHistoryCreateWithoutContactInput[] | LeadScoreHistoryUncheckedCreateWithoutContactInput[]
+    connectOrCreate?: LeadScoreHistoryCreateOrConnectWithoutContactInput | LeadScoreHistoryCreateOrConnectWithoutContactInput[]
+    upsert?: LeadScoreHistoryUpsertWithWhereUniqueWithoutContactInput | LeadScoreHistoryUpsertWithWhereUniqueWithoutContactInput[]
+    createMany?: LeadScoreHistoryCreateManyContactInputEnvelope
+    set?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    disconnect?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    delete?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    connect?: LeadScoreHistoryWhereUniqueInput | LeadScoreHistoryWhereUniqueInput[]
+    update?: LeadScoreHistoryUpdateWithWhereUniqueWithoutContactInput | LeadScoreHistoryUpdateWithWhereUniqueWithoutContactInput[]
+    updateMany?: LeadScoreHistoryUpdateManyWithWhereWithoutContactInput | LeadScoreHistoryUpdateManyWithWhereWithoutContactInput[]
+    deleteMany?: LeadScoreHistoryScalarWhereInput | LeadScoreHistoryScalarWhereInput[]
   }
 
   export type ActivityUncheckedUpdateManyWithoutContactNestedInput = {
@@ -21753,6 +23509,20 @@ export namespace Prisma {
     update?: XOR<XOR<DealUpdateToOneWithWhereWithoutTasksInput, DealUpdateWithoutTasksInput>, DealUncheckedUpdateWithoutTasksInput>
   }
 
+  export type ContactCreateNestedOneWithoutScoreHistoryInput = {
+    create?: XOR<ContactCreateWithoutScoreHistoryInput, ContactUncheckedCreateWithoutScoreHistoryInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutScoreHistoryInput
+    connect?: ContactWhereUniqueInput
+  }
+
+  export type ContactUpdateOneRequiredWithoutScoreHistoryNestedInput = {
+    create?: XOR<ContactCreateWithoutScoreHistoryInput, ContactUncheckedCreateWithoutScoreHistoryInput>
+    connectOrCreate?: ContactCreateOrConnectWithoutScoreHistoryInput
+    upsert?: ContactUpsertWithoutScoreHistoryInput
+    connect?: ContactWhereUniqueInput
+    update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutScoreHistoryInput, ContactUpdateWithoutScoreHistoryInput>, ContactUncheckedUpdateWithoutScoreHistoryInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -22186,6 +23956,37 @@ export namespace Prisma {
     create: XOR<CompanyCreateWithoutContactsInput, CompanyUncheckedCreateWithoutContactsInput>
   }
 
+  export type LeadScoreHistoryCreateWithoutContactInput = {
+    score: number
+    change: number
+    reason: string
+    timestamp?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LeadScoreHistoryUncheckedCreateWithoutContactInput = {
+    id?: number
+    score: number
+    change: number
+    reason: string
+    timestamp?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LeadScoreHistoryCreateOrConnectWithoutContactInput = {
+    where: LeadScoreHistoryWhereUniqueInput
+    create: XOR<LeadScoreHistoryCreateWithoutContactInput, LeadScoreHistoryUncheckedCreateWithoutContactInput>
+  }
+
+  export type LeadScoreHistoryCreateManyContactInputEnvelope = {
+    data: LeadScoreHistoryCreateManyContactInput | LeadScoreHistoryCreateManyContactInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ActivityCreateWithoutContactInput = {
     type: string
     title: string
@@ -22424,6 +24225,37 @@ export namespace Prisma {
     deals?: DealUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
+  export type LeadScoreHistoryUpsertWithWhereUniqueWithoutContactInput = {
+    where: LeadScoreHistoryWhereUniqueInput
+    update: XOR<LeadScoreHistoryUpdateWithoutContactInput, LeadScoreHistoryUncheckedUpdateWithoutContactInput>
+    create: XOR<LeadScoreHistoryCreateWithoutContactInput, LeadScoreHistoryUncheckedCreateWithoutContactInput>
+  }
+
+  export type LeadScoreHistoryUpdateWithWhereUniqueWithoutContactInput = {
+    where: LeadScoreHistoryWhereUniqueInput
+    data: XOR<LeadScoreHistoryUpdateWithoutContactInput, LeadScoreHistoryUncheckedUpdateWithoutContactInput>
+  }
+
+  export type LeadScoreHistoryUpdateManyWithWhereWithoutContactInput = {
+    where: LeadScoreHistoryScalarWhereInput
+    data: XOR<LeadScoreHistoryUpdateManyMutationInput, LeadScoreHistoryUncheckedUpdateManyWithoutContactInput>
+  }
+
+  export type LeadScoreHistoryScalarWhereInput = {
+    AND?: LeadScoreHistoryScalarWhereInput | LeadScoreHistoryScalarWhereInput[]
+    OR?: LeadScoreHistoryScalarWhereInput[]
+    NOT?: LeadScoreHistoryScalarWhereInput | LeadScoreHistoryScalarWhereInput[]
+    id?: IntFilter<"LeadScoreHistory"> | number
+    contactId?: IntFilter<"LeadScoreHistory"> | number
+    score?: IntFilter<"LeadScoreHistory"> | number
+    change?: IntFilter<"LeadScoreHistory"> | number
+    reason?: StringFilter<"LeadScoreHistory"> | string
+    timestamp?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    createdAt?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    updatedAt?: DateTimeFilter<"LeadScoreHistory"> | Date | string
+    isDeleted?: BoolFilter<"LeadScoreHistory"> | boolean
+  }
+
   export type ActivityUpsertWithWhereUniqueWithoutContactInput = {
     where: ActivityWhereUniqueInput
     update: XOR<ActivityUpdateWithoutContactInput, ActivityUncheckedUpdateWithoutContactInput>
@@ -22587,6 +24419,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -22600,6 +24438,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isDeleted?: boolean
     company?: CompanyCreateNestedOneWithoutContactsInput
+    scoreHistory?: LeadScoreHistoryCreateNestedManyWithoutContactInput
     activities?: ActivityCreateNestedManyWithoutContactInput
     tasks?: TaskCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
@@ -22616,6 +24455,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -22628,6 +24473,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput
     activities?: ActivityUncheckedCreateNestedManyWithoutContactInput
     tasks?: TaskUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
@@ -22710,6 +24556,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22723,6 +24575,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneWithoutContactsNestedInput
+    scoreHistory?: LeadScoreHistoryUpdateManyWithoutContactNestedInput
     activities?: ActivityUpdateManyWithoutContactNestedInput
     tasks?: TaskUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
@@ -22739,6 +24592,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22751,6 +24610,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
@@ -22823,6 +24683,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -22835,6 +24701,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryCreateNestedManyWithoutContactInput
     activities?: ActivityCreateNestedManyWithoutContactInput
     tasks?: TaskCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
@@ -22851,6 +24718,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -22863,6 +24736,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput
     activities?: ActivityUncheckedCreateNestedManyWithoutContactInput
     tasks?: TaskUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
@@ -22966,6 +24840,12 @@ export namespace Prisma {
     leadSource?: StringNullableFilter<"Contact"> | string | null
     leadStatus?: StringNullableFilter<"Contact"> | string | null
     leadScore?: IntFilter<"Contact"> | number
+    leadCategory?: StringNullableFilter<"Contact"> | string | null
+    demographicScore?: IntFilter<"Contact"> | number
+    behavioralScore?: IntFilter<"Contact"> | number
+    scoreBreakdown?: JsonNullableFilter<"Contact">
+    scoreTrend?: IntFilter<"Contact"> | number
+    aiNote?: StringNullableFilter<"Contact"> | string | null
     tags?: StringNullableListFilter<"Contact">
     address?: StringNullableFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableFilter<"Contact"> | string | null
@@ -23005,6 +24885,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -23018,6 +24904,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isDeleted?: boolean
     company?: CompanyCreateNestedOneWithoutContactsInput
+    scoreHistory?: LeadScoreHistoryCreateNestedManyWithoutContactInput
     activities?: ActivityCreateNestedManyWithoutContactInput
     tasks?: TaskCreateNestedManyWithoutContactInput
     emails?: EmailCreateNestedManyWithoutContactInput
@@ -23034,6 +24921,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -23046,6 +24939,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput
     activities?: ActivityUncheckedCreateNestedManyWithoutContactInput
     tasks?: TaskUncheckedCreateNestedManyWithoutContactInput
     emails?: EmailUncheckedCreateNestedManyWithoutContactInput
@@ -23282,6 +25176,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23295,6 +25195,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneWithoutContactsNestedInput
+    scoreHistory?: LeadScoreHistoryUpdateManyWithoutContactNestedInput
     activities?: ActivityUpdateManyWithoutContactNestedInput
     tasks?: TaskUpdateManyWithoutContactNestedInput
     emails?: EmailUpdateManyWithoutContactNestedInput
@@ -23311,6 +25212,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23323,6 +25230,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
     emails?: EmailUncheckedUpdateManyWithoutContactNestedInput
@@ -23572,6 +25480,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -23585,6 +25499,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isDeleted?: boolean
     company?: CompanyCreateNestedOneWithoutContactsInput
+    scoreHistory?: LeadScoreHistoryCreateNestedManyWithoutContactInput
     tasks?: TaskCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     emails?: EmailCreateNestedManyWithoutContactInput
@@ -23601,6 +25516,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -23613,6 +25534,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput
     tasks?: TaskUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     emails?: EmailUncheckedCreateNestedManyWithoutContactInput
@@ -23695,6 +25617,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23708,6 +25636,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneWithoutContactsNestedInput
+    scoreHistory?: LeadScoreHistoryUpdateManyWithoutContactNestedInput
     tasks?: TaskUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     emails?: EmailUpdateManyWithoutContactNestedInput
@@ -23724,6 +25653,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23736,6 +25671,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     emails?: EmailUncheckedUpdateManyWithoutContactNestedInput
@@ -23808,6 +25744,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -23821,6 +25763,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     isDeleted?: boolean
     company?: CompanyCreateNestedOneWithoutContactsInput
+    scoreHistory?: LeadScoreHistoryCreateNestedManyWithoutContactInput
     activities?: ActivityCreateNestedManyWithoutContactInput
     deals?: DealCreateNestedManyWithoutContactInput
     emails?: EmailCreateNestedManyWithoutContactInput
@@ -23837,6 +25780,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -23849,6 +25798,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    scoreHistory?: LeadScoreHistoryUncheckedCreateNestedManyWithoutContactInput
     activities?: ActivityUncheckedCreateNestedManyWithoutContactInput
     deals?: DealUncheckedCreateNestedManyWithoutContactInput
     emails?: EmailUncheckedCreateNestedManyWithoutContactInput
@@ -23931,6 +25881,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23944,6 +25900,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneWithoutContactsNestedInput
+    scoreHistory?: LeadScoreHistoryUpdateManyWithoutContactNestedInput
     activities?: ActivityUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
     emails?: EmailUpdateManyWithoutContactNestedInput
@@ -23960,6 +25917,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23972,6 +25935,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
     emails?: EmailUncheckedUpdateManyWithoutContactNestedInput
@@ -24035,6 +25999,160 @@ export namespace Prisma {
     emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
+  export type ContactCreateWithoutScoreHistoryInput = {
+    firstName: string
+    lastName: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    leadSource?: string | null
+    leadStatus?: string | null
+    leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
+    tags?: ContactCreatetagsInput | string[]
+    address?: string | null
+    linkedinUrl?: string | null
+    twitterUrl?: string | null
+    website?: string | null
+    notes?: string | null
+    lastContacted?: Date | string | null
+    owner?: string
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    company?: CompanyCreateNestedOneWithoutContactsInput
+    activities?: ActivityCreateNestedManyWithoutContactInput
+    tasks?: TaskCreateNestedManyWithoutContactInput
+    deals?: DealCreateNestedManyWithoutContactInput
+    emails?: EmailCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactUncheckedCreateWithoutScoreHistoryInput = {
+    id?: number
+    firstName: string
+    lastName: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    companyId?: number | null
+    leadSource?: string | null
+    leadStatus?: string | null
+    leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
+    tags?: ContactCreatetagsInput | string[]
+    address?: string | null
+    linkedinUrl?: string | null
+    twitterUrl?: string | null
+    website?: string | null
+    notes?: string | null
+    lastContacted?: Date | string | null
+    owner?: string
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    activities?: ActivityUncheckedCreateNestedManyWithoutContactInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutContactInput
+    deals?: DealUncheckedCreateNestedManyWithoutContactInput
+    emails?: EmailUncheckedCreateNestedManyWithoutContactInput
+  }
+
+  export type ContactCreateOrConnectWithoutScoreHistoryInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutScoreHistoryInput, ContactUncheckedCreateWithoutScoreHistoryInput>
+  }
+
+  export type ContactUpsertWithoutScoreHistoryInput = {
+    update: XOR<ContactUpdateWithoutScoreHistoryInput, ContactUncheckedUpdateWithoutScoreHistoryInput>
+    create: XOR<ContactCreateWithoutScoreHistoryInput, ContactUncheckedCreateWithoutScoreHistoryInput>
+    where?: ContactWhereInput
+  }
+
+  export type ContactUpdateToOneWithWhereWithoutScoreHistoryInput = {
+    where?: ContactWhereInput
+    data: XOR<ContactUpdateWithoutScoreHistoryInput, ContactUncheckedUpdateWithoutScoreHistoryInput>
+  }
+
+  export type ContactUpdateWithoutScoreHistoryInput = {
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContactUpdatetagsInput | string[]
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    company?: CompanyUpdateOneWithoutContactsNestedInput
+    activities?: ActivityUpdateManyWithoutContactNestedInput
+    tasks?: TaskUpdateManyWithoutContactNestedInput
+    deals?: DealUpdateManyWithoutContactNestedInput
+    emails?: EmailUpdateManyWithoutContactNestedInput
+  }
+
+  export type ContactUncheckedUpdateWithoutScoreHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    jobTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableIntFieldUpdateOperationsInput | number | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContactUpdatetagsInput | string[]
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
+    deals?: DealUncheckedUpdateManyWithoutContactNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutContactNestedInput
+  }
+
   export type UserIdentityCreateManyUserInput = {
     id?: string
     provider: string
@@ -24073,6 +26191,17 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  }
+
+  export type LeadScoreHistoryCreateManyContactInput = {
+    id?: number
+    score: number
+    change: number
+    reason: string
+    timestamp?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
   }
 
   export type ActivityCreateManyContactInput = {
@@ -24147,6 +26276,38 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+  }
+
+  export type LeadScoreHistoryUpdateWithoutContactInput = {
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LeadScoreHistoryUncheckedUpdateWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LeadScoreHistoryUncheckedUpdateManyWithoutContactInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    score?: IntFieldUpdateOperationsInput | number
+    change?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ActivityUpdateWithoutContactInput = {
@@ -24385,6 +26546,12 @@ export namespace Prisma {
     leadSource?: string | null
     leadStatus?: string | null
     leadScore?: number
+    leadCategory?: string | null
+    demographicScore?: number
+    behavioralScore?: number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: number
+    aiNote?: string | null
     tags?: ContactCreatetagsInput | string[]
     address?: string | null
     linkedinUrl?: string | null
@@ -24428,6 +26595,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24440,6 +26613,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUpdateManyWithoutContactNestedInput
     activities?: ActivityUpdateManyWithoutContactNestedInput
     tasks?: TaskUpdateManyWithoutContactNestedInput
     deals?: DealUpdateManyWithoutContactNestedInput
@@ -24456,6 +26630,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24468,6 +26648,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    scoreHistory?: LeadScoreHistoryUncheckedUpdateManyWithoutContactNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
@@ -24484,6 +26665,12 @@ export namespace Prisma {
     leadSource?: NullableStringFieldUpdateOperationsInput | string | null
     leadStatus?: NullableStringFieldUpdateOperationsInput | string | null
     leadScore?: IntFieldUpdateOperationsInput | number
+    leadCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    demographicScore?: IntFieldUpdateOperationsInput | number
+    behavioralScore?: IntFieldUpdateOperationsInput | number
+    scoreBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    scoreTrend?: IntFieldUpdateOperationsInput | number
+    aiNote?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: ContactUpdatetagsInput | string[]
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null

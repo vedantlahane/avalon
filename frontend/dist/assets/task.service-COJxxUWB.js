@@ -1,1 +1,0 @@
-import{A as e}from"./index-Vs6CrLtR.js";const t={getTasks:async()=>(await e.get(`/tasks`)).data,createTask:async t=>(await e.post(`/tasks`,t)).data,updateTask:async(t,n)=>(await e.patch(`/tasks/${t}`,n)).data,deleteTask:async t=>{await e.delete(`/tasks/${t}`)},getSuggestions:async()=>(await e.get(`/tasks/suggestions`)).data};export{t};

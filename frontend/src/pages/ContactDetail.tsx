@@ -47,6 +47,8 @@ import { cn } from '../lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContactModal } from '../components/contacts/ContactModal';
+import { LeadScoreBadge } from '../components/contacts/LeadScoreBadge';
+import { LeadScoreDetails } from '../components/contacts/LeadScoreDetails';
 import { EnrichmentResult } from '../types';
 import { composerStore } from '../lib/composer-store';
 
@@ -236,44 +238,15 @@ export const ContactDetail: React.FC = () => {
             
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="relative">
-                {/* Score Ring */}
-                <div className="relative w-28 h-28">
-                  <svg className="w-full h-full -rotate-90">
-                    <circle
-                      cx="56"
-                      cy="56"
-                      r="52"
-                      fill="transparent"
-                      stroke="currentColor"
-                      strokeWidth="6"
-                      className="text-gray-100"
-                    />
-                    <circle
-                      cx="56"
-                      cy="56"
-                      r="52"
-                      fill="transparent"
-                      stroke="currentColor"
-                      strokeWidth="6"
-                      strokeDasharray={52 * 2 * Math.PI}
-                      strokeDashoffset={52 * 2 * Math.PI * (1 - contact.leadScore / 100)}
-                      strokeLinecap="round"
-                      className={cn(
-                        "transition-all duration-1000",
-                        contact.leadScore >= 80 ? "text-red-500" : contact.leadScore >= 60 ? "text-orange-500" : contact.leadScore >= 40 ? "text-blue-500" : "text-gray-400"
-                      )}
-                    />
-                  </svg>
-                  <div className={cn(
-                    "absolute top-2 left-2 w-24 h-24 rounded-full flex items-center justify-center font-bold text-3xl border-4 border-white shadow-xl",
-                    getRandomColor(`${contact.firstName}${contact.lastName}`)
-                  )}>
-                    {getInitials(contact.firstName, contact.lastName)}
+                <div className={cn(
+                  "w-28 h-28 rounded-3xl flex items-center justify-center font-black text-4xl border-4 border-white shadow-2xl relative z-10",
+                  getRandomColor(`${contact.firstName}${contact.lastName}`)
+                )}>
+                  {getInitials(contact.firstName, contact.lastName)}
+                  
+                  <div className="absolute -bottom-2 -right-2 z-20">
+                    <LeadScoreBadge score={contact.leadScore} size="lg" />
                   </div>
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-white rounded-2xl shadow-lg border border-gray-100 px-3 py-1 flex items-center gap-1.5 scale-110">
-                  <TrendingUp size={12} className="text-indigo-600" />
-                  <span className="text-xs font-black text-gray-900">{contact.leadScore}</span>
                 </div>
               </div>
 
@@ -802,73 +775,10 @@ export const ContactDetail: React.FC = () => {
 
         {/* RIGHT COLUMN - 35% (4/12) */}
         <div className="lg:col-span-4 space-y-8">
-          {/* AI Insights Card */}
-          <div className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-violet-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700" />
-            
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-                  <Brain size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-black text-gray-900 tracking-tight">AI Insights</h3>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Powered by Avalon AI</p>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                    <TrendingUp size={12} className="text-indigo-600" /> Lead Score Analysis
-                  </label>
-                  <p className="text-sm text-gray-600 font-medium leading-relaxed bg-indigo-50/50 p-3 rounded-xl border border-indigo-100/50">
-                    "Score: {contact.leadScore}/100 - This lead shows high engagement. They opened 4 emails and attended a demo last week."
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                      <Clock size={12} className="text-indigo-600" /> Best Time
-                    </label>
-                    <p className="text-xs font-bold text-gray-900">Tue & Thu, 10-11 AM EST</p>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                      <Users size={12} className="text-indigo-600" /> Personality
-                    </label>
-                    <p className="text-xs font-bold text-gray-900">Analytical Buyer</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2 text-rose-500">
-                    <AlertCircle size={12} /> Risk Factors
-                  </label>
-                  <p className="text-xs text-rose-600 font-medium bg-rose-50/50 p-3 rounded-xl border border-rose-100/50">
-                    Has been evaluating competitor (Competitor X) based on email mentions
-                  </p>
-                </div>
-
-                <div className="space-y-4 pt-4 border-t border-gray-100">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Recommended Actions</label>
-                  <div className="space-y-2">
-                    {[
-                      "Send ROI case study from similar industry",
-                      "Schedule technical deep-dive with their CTO",
-                      "Offer pilot program to reduce risk"
-                    ].map((action, i) => (
-                      <button key={i} className="w-full flex items-center justify-between gap-3 p-3 bg-white border border-gray-100 rounded-xl hover:border-indigo-200 hover:bg-indigo-50/30 transition-all text-left group/btn shadow-sm">
-                        <span className="text-xs font-bold text-gray-700 group-hover/btn:text-indigo-700">{action}</span>
-                        <ChevronLeft size={14} className="rotate-180 text-gray-300 group-hover/btn:text-indigo-400" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <LeadScoreDetails 
+            contact={contact} 
+            onRefresh={(updated) => setContact(prev => prev ? { ...prev, ...updated } : null)} 
+          />
 
           {/* Contact Information Card */}
           <div className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm space-y-6">
