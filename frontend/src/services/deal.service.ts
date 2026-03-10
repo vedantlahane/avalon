@@ -88,6 +88,20 @@ export const dealService = {
     await api.delete(`/deals/${id}`);
   },
 
+  bulkUpdateDeals: async (ids: number[], data: Partial<Deal>): Promise<void> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return;
+    }
+    await api.post('/deals/bulk-update', { ids, data });
+  },
+
+  bulkDeleteDeals: async (ids: number[]): Promise<void> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      return;
+    }
+    await api.post('/deals/bulk-delete', { ids });
+  },
+
   getForecastData: async (timePeriod: string, category: string, aiConfidence: boolean): Promise<any> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       // Return mock forecast data

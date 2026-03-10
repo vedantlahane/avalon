@@ -22,6 +22,8 @@
 - `GET /deals/:id` - Get a deal by id
 - `PATCH /deals/:id` - Update a deal
 - `DELETE /deals/:id` - Soft delete a deal
+- `POST /deals/bulk-update` - Update multiple deals (ids, data)
+- `POST /deals/bulk-delete` - Soft delete multiple deals (ids)
 - `GET /deals/forecast` - Get deal forecast data based on time period (this_month, this_quarter, this_year) and category (stage, owner, month)
 
 ## Activities

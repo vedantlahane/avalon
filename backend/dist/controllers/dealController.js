@@ -28,6 +28,16 @@ export const dealController = {
         await dealService.deleteDeal(id);
         return c.json({ message: 'Deal deleted successfully' });
     }),
+    bulkUpdateDeals: catchAsync(async (c) => {
+        const { ids, data } = await c.req.json();
+        await dealService.bulkUpdateDeals(ids, data);
+        return c.json({ message: 'Deals updated successfully' });
+    }),
+    bulkDeleteDeals: catchAsync(async (c) => {
+        const { ids } = await c.req.json();
+        await dealService.bulkDeleteDeals(ids);
+        return c.json({ message: 'Deals deleted successfully' });
+    }),
     getForecast: catchAsync(async (c) => {
         const timePeriod = c.req.query('timePeriod') || 'this_quarter';
         const category = c.req.query('category') || 'stage';

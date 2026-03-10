@@ -94,6 +94,20 @@ export const dealService = {
     });
   },
 
+  bulkUpdateDeals: async (ids: number[], data: any) => {
+    return await prisma.deal.updateMany({
+      where: { id: { in: ids } },
+      data: data
+    });
+  },
+
+  bulkDeleteDeals: async (ids: number[]) => {
+    return await prisma.deal.updateMany({
+      where: { id: { in: ids } },
+      data: { isDeleted: true }
+    });
+  },
+
   getForecast: async (timePeriod: string, category: string, aiConfidence: boolean) => {
     // In a real application, we would use timePeriod and category to filter and group deals
     // For this prototype, we return realistic data matching the UI requirements

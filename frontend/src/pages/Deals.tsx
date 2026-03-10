@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   DndContext, 
   DragOverlay, 
@@ -44,8 +45,8 @@ import {
 import { cn } from '../lib/utils';
 import { format } from 'date-fns';
 import { DealModal } from '../components/deals/DealModal';
-import { DealDetailDrawer } from '../components/deals/DealDetailDrawer';
 import { DealForecast } from '../components/deals/DealForecast';
+import { DealListView } from '../components/deals/DealListView';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
   { id: 'Lead', label: 'Lead', borderColor: 'border-t-[#9CA3AF]', color: 'text-[#9CA3AF]' },
@@ -78,6 +79,7 @@ const dropAnimation: DropAnimation = {
 };
 
 export const Deals: React.FC = () => {
+  const navigate = useNavigate();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [view, setView] = useState<'Kanban' | 'List' | 'Forecast'>('Kanban');
@@ -88,12 +90,10 @@ export const Deals: React.FC = () => {
     priority: 'All',
   });
 
-  // Modal/Drawer state
+  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [initialStage, setInitialStage] = useState<DealStage | undefined>(undefined);
-  const [drawerDealId, setDrawerDealId] = useState<number | null>(null);
 
   const fetchDeals = () => {
     dealService.getDeals().then(setDeals);
@@ -202,20 +202,29 @@ export const Deals: React.FC = () => {
     setActiveId(null);
   };
 
+  const handleUpdateDeal = async (id: number, data: Partial<Deal>) => {
+    await dealService.updateDeal(id, data);
+    fetchDeals();
+  };
+
+  const handleDeleteDeals = async (ids: number[]) => {
+    await dealService.bulkDeleteDeals(ids);
+    fetchDeals();
+  };
+
+  const handleBulkUpdateDeals = async (ids: number[], data: Partial<Deal>) => {
+    await dealService.bulkUpdateDeals(ids, data);
+    fetchDeals();
+  };
+
   const openAddModal = (stage?: DealStage) => {
     setSelectedDeal(null);
     setInitialStage(stage);
     setIsModalOpen(true);
   };
 
-  const openEditModal = (deal: Deal) => {
-    setSelectedDeal(deal);
-    setIsModalOpen(true);
-  };
-
-  const openDrawer = (dealId: number) => {
-    setDrawerDealId(dealId);
-    setIsDrawerOpen(true);
+  const goToDealDetail = (dealId: number) => {
+    navigate(`/deals/${dealId}`);
   };
 
   return (
@@ -337,7 +346,7 @@ export const Deals: React.FC = () => {
                   stage={stage} 
                   deals={filteredDeals.filter(d => d.stage === stage.id)} 
                   onAddDeal={() => openAddModal(stage.id)}
-                  onCardClick={openDrawer}
+                  onCardClick={goToDealDetail}
                 />
               ))}
             </div>
@@ -351,93 +360,27 @@ export const Deals: React.FC = () => {
         )}
 
         {view === 'List' && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Deal Name</th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Company</th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Stage</th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Value</th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Owner</th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Close Date</th>
-                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {filteredDeals.map((deal) => (
-                  <tr 
-                    key={deal.id} 
-                    className="hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => openDrawer(deal.id)}
-                  >
-                    <td className="px-6 py-4">
-                      <div className="font-bold text-gray-900">{deal.name}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <Building2 size={14} className="text-gray-400" />
-                        <span className="text-sm text-gray-600">{deal.company?.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className={cn(
-                          "w-2 h-2 rounded-full",
-                          STAGES.find(s => s.id === deal.stage)?.color.replace('text', 'bg')
-                        )} />
-                        <span className="text-sm font-medium text-gray-700">{deal.stage}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="font-bold text-gray-900">${deal.value.toLocaleString()}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600 uppercase">
-                          {deal.owner?.charAt(0) || 'U'}
-                        </div>
-                        <span className="text-sm text-gray-600">{deal.owner || 'Unassigned'}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500">
-                        {deal.expectedCloseDate ? format(new Date(deal.expectedCloseDate), 'MMM d, yyyy') : 'TBD'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="p-1 text-gray-400 hover:text-gray-600" onClick={(e) => { e.stopPropagation(); /* handle actions */ }}>
-                        <MoreHorizontal size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DealListView 
+            deals={filteredDeals}
+            onDealClick={goToDealDetail}
+            onUpdateDeal={handleUpdateDeal}
+            onDeleteDeals={handleDeleteDeals}
+            onBulkUpdateDeals={handleBulkUpdateDeals}
+          />
         )}
 
         {view === 'Forecast' && (
-          <DealForecast onDealClick={openDrawer} />
+          <DealForecast onDealClick={goToDealDetail} />
         )}
       </div>
 
-      {/* Modal & Drawer */}
+      {/* Modal */}
       <DealModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchDeals}
         deal={selectedDeal}
         initialStage={initialStage}
-      />
-      <DealDetailDrawer 
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        dealId={drawerDealId}
-        onEdit={(deal) => {
-          setIsDrawerOpen(false);
-          openEditModal(deal);
-        }}
       />
     </div>
   );

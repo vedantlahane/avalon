@@ -31,6 +31,8 @@ crmRoutes.get('/deals/:id', dealController.getDealById);
 crmRoutes.post('/deals', dealController.createDeal);
 crmRoutes.patch('/deals/:id', dealController.updateDeal);
 crmRoutes.delete('/deals/:id', dealController.deleteDeal);
+crmRoutes.post('/deals/bulk-update', dealController.bulkUpdateDeals);
+crmRoutes.post('/deals/bulk-delete', dealController.bulkDeleteDeals);
 // Activities
 crmRoutes.get('/activities', activityController.getActivities);
 crmRoutes.post('/activities', activityController.createActivity);
