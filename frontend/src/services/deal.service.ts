@@ -51,6 +51,8 @@ export const dealService = {
       const newDeal = {
         id: Math.floor(Math.random() * 1000) + 100,
         ...dealData,
+        competitors: dealData.competitors || [],
+        lineItems: dealData.lineItems || [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       } as Deal;

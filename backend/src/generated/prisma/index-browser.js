@@ -224,7 +224,20 @@ exports.Prisma.DealScalarFieldEnum = {
   lossReason: 'lossReason',
   priority: 'priority',
   notes: 'notes',
+  competitors: 'competitors',
   owner: 'owner',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted'
+};
+
+exports.Prisma.LineItemScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  productName: 'productName',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  total: 'total',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isDeleted: 'isDeleted'
@@ -308,6 +321,7 @@ exports.Prisma.ModelName = {
   Email: 'Email',
   Company: 'Company',
   Deal: 'Deal',
+  LineItem: 'LineItem',
   Activity: 'Activity',
   Task: 'Task',
   EmailTemplate: 'EmailTemplate'

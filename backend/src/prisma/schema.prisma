@@ -246,25 +246,57 @@ model Deal {
 
   actualCloseDate   DateTime?
 
-  lossReason        String?
+    lossReason        String?
 
-  priority          String     // Low, Medium, High, Critical
+    priority          String     // Low, Medium, High, Critical
 
-  notes             String?
+    notes             String?
 
-  owner             String     @default("Me")
+    competitors       String[]   @default([])
 
-  activities        Activity[]
+    lineItems         LineItem[]
 
-  tasks             Task[]
+    owner             String     @default("Me")
 
-  createdAt         DateTime   @default(now())
+    activities        Activity[]
 
-  updatedAt         DateTime   @updatedAt
+    tasks             Task[]
 
-  isDeleted         Boolean    @default(false)
+    createdAt         DateTime   @default(now())
 
-}
+    updatedAt         DateTime   @updatedAt
+
+    isDeleted         Boolean    @default(false)
+
+  }
+
+  
+
+  model LineItem {
+
+    id          Int      @id @default(autoincrement())
+
+    dealId      Int
+
+    deal        Deal     @relation(fields: [dealId], references: [id])
+
+    productName String
+
+    quantity    Int
+
+    unitPrice   Float
+
+    total       Float
+
+    createdAt   DateTime @default(now())
+
+    updatedAt   DateTime @updatedAt
+
+    isDeleted   Boolean  @default(false)
+
+  }
+
+  
 
 
 

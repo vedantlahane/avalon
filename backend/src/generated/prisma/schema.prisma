@@ -220,11 +220,37 @@ model Deal {
 
   notes String?
 
+  competitors String[] @default([])
+
+  lineItems LineItem[]
+
   owner String @default("Me")
 
   activities Activity[]
 
   tasks Task[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  isDeleted Boolean @default(false)
+}
+
+model LineItem {
+  id Int @id @default(autoincrement())
+
+  dealId Int
+
+  deal Deal @relation(fields: [dealId], references: [id])
+
+  productName String
+
+  quantity Int
+
+  unitPrice Float
+
+  total Float
 
   createdAt DateTime @default(now())
 

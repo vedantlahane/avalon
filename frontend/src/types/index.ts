@@ -66,7 +66,20 @@ export interface Deal {
   lossReason?: string;
   priority: DealPriority;
   notes?: string;
+  competitors: string[];
+  lineItems?: LineItem[];
   owner: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LineItem {
+  id: number;
+  dealId: number;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
   createdAt: string;
   updatedAt: string;
 }

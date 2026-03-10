@@ -49,6 +49,11 @@ export type Company = $Result.DefaultSelection<Prisma.$CompanyPayload>
  */
 export type Deal = $Result.DefaultSelection<Prisma.$DealPayload>
 /**
+ * Model LineItem
+ * 
+ */
+export type LineItem = $Result.DefaultSelection<Prisma.$LineItemPayload>
+/**
  * Model Activity
  * 
  */
@@ -251,6 +256,16 @@ export class PrismaClient<
     * ```
     */
   get deal(): Prisma.DealDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.lineItem`: Exposes CRUD operations for the **LineItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LineItems
+    * const lineItems = await prisma.lineItem.findMany()
+    * ```
+    */
+  get lineItem(): Prisma.LineItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.activity`: Exposes CRUD operations for the **Activity** model.
@@ -729,6 +744,7 @@ export namespace Prisma {
     Email: 'Email',
     Company: 'Company',
     Deal: 'Deal',
+    LineItem: 'LineItem',
     Activity: 'Activity',
     Task: 'Task',
     EmailTemplate: 'EmailTemplate'
@@ -750,7 +766,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userIdentity" | "otp" | "contact" | "email" | "company" | "deal" | "activity" | "task" | "emailTemplate"
+      modelProps: "user" | "userIdentity" | "otp" | "contact" | "email" | "company" | "deal" | "lineItem" | "activity" | "task" | "emailTemplate"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1272,6 +1288,80 @@ export namespace Prisma {
           }
         }
       }
+      LineItem: {
+        payload: Prisma.$LineItemPayload<ExtArgs>
+        fields: Prisma.LineItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LineItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LineItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>
+          }
+          findFirst: {
+            args: Prisma.LineItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LineItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>
+          }
+          findMany: {
+            args: Prisma.LineItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>[]
+          }
+          create: {
+            args: Prisma.LineItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>
+          }
+          createMany: {
+            args: Prisma.LineItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LineItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>[]
+          }
+          delete: {
+            args: Prisma.LineItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>
+          }
+          update: {
+            args: Prisma.LineItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.LineItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LineItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LineItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.LineItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LineItemPayload>
+          }
+          aggregate: {
+            args: Prisma.LineItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLineItem>
+          }
+          groupBy: {
+            args: Prisma.LineItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LineItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LineItemCountArgs<ExtArgs>
+            result: $Utils.Optional<LineItemCountAggregateOutputType> | number
+          }
+        }
+      }
       Activity: {
         payload: Prisma.$ActivityPayload<ExtArgs>
         fields: Prisma.ActivityFieldRefs
@@ -1597,6 +1687,7 @@ export namespace Prisma {
     email?: EmailOmit
     company?: CompanyOmit
     deal?: DealOmit
+    lineItem?: LineItemOmit
     activity?: ActivityOmit
     task?: TaskOmit
     emailTemplate?: EmailTemplateOmit
@@ -1809,11 +1900,13 @@ export namespace Prisma {
    */
 
   export type DealCountOutputType = {
+    lineItems: number
     activities: number
     tasks: number
   }
 
   export type DealCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lineItems?: boolean | DealCountOutputTypeCountLineItemsArgs
     activities?: boolean | DealCountOutputTypeCountActivitiesArgs
     tasks?: boolean | DealCountOutputTypeCountTasksArgs
   }
@@ -1827,6 +1920,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the DealCountOutputType
      */
     select?: DealCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DealCountOutputType without action
+   */
+  export type DealCountOutputTypeCountLineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LineItemWhereInput
   }
 
   /**
@@ -9092,6 +9192,7 @@ export namespace Prisma {
     lossReason: number
     priority: number
     notes: number
+    competitors: number
     owner: number
     createdAt: number
     updatedAt: number
@@ -9170,6 +9271,7 @@ export namespace Prisma {
     lossReason?: true
     priority?: true
     notes?: true
+    competitors?: true
     owner?: true
     createdAt?: true
     updatedAt?: true
@@ -9277,6 +9379,7 @@ export namespace Prisma {
     lossReason: string | null
     priority: string
     notes: string | null
+    competitors: string[]
     owner: string
     createdAt: Date
     updatedAt: Date
@@ -9316,12 +9419,14 @@ export namespace Prisma {
     lossReason?: boolean
     priority?: boolean
     notes?: boolean
+    competitors?: boolean
     owner?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
     contact?: boolean | Deal$contactArgs<ExtArgs>
     company?: boolean | Deal$companyArgs<ExtArgs>
+    lineItems?: boolean | Deal$lineItemsArgs<ExtArgs>
     activities?: boolean | Deal$activitiesArgs<ExtArgs>
     tasks?: boolean | Deal$tasksArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
@@ -9341,6 +9446,7 @@ export namespace Prisma {
     lossReason?: boolean
     priority?: boolean
     notes?: boolean
+    competitors?: boolean
     owner?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9363,6 +9469,7 @@ export namespace Prisma {
     lossReason?: boolean
     priority?: boolean
     notes?: boolean
+    competitors?: boolean
     owner?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9385,16 +9492,18 @@ export namespace Prisma {
     lossReason?: boolean
     priority?: boolean
     notes?: boolean
+    competitors?: boolean
     owner?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
   }
 
-  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "value" | "currency" | "stage" | "probability" | "contactId" | "companyId" | "expectedCloseDate" | "actualCloseDate" | "lossReason" | "priority" | "notes" | "owner" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["deal"]>
+  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "value" | "currency" | "stage" | "probability" | "contactId" | "companyId" | "expectedCloseDate" | "actualCloseDate" | "lossReason" | "priority" | "notes" | "competitors" | "owner" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["deal"]>
   export type DealInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | Deal$contactArgs<ExtArgs>
     company?: boolean | Deal$companyArgs<ExtArgs>
+    lineItems?: boolean | Deal$lineItemsArgs<ExtArgs>
     activities?: boolean | Deal$activitiesArgs<ExtArgs>
     tasks?: boolean | Deal$tasksArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
@@ -9413,6 +9522,7 @@ export namespace Prisma {
     objects: {
       contact: Prisma.$ContactPayload<ExtArgs> | null
       company: Prisma.$CompanyPayload<ExtArgs> | null
+      lineItems: Prisma.$LineItemPayload<ExtArgs>[]
       activities: Prisma.$ActivityPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
     }
@@ -9430,6 +9540,7 @@ export namespace Prisma {
       lossReason: string | null
       priority: string
       notes: string | null
+      competitors: string[]
       owner: string
       createdAt: Date
       updatedAt: Date
@@ -9830,6 +9941,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     contact<T extends Deal$contactArgs<ExtArgs> = {}>(args?: Subset<T, Deal$contactArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     company<T extends Deal$companyArgs<ExtArgs> = {}>(args?: Subset<T, Deal$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lineItems<T extends Deal$lineItemsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$lineItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activities<T extends Deal$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, Deal$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tasks<T extends Deal$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Deal$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -9874,6 +9986,7 @@ export namespace Prisma {
     readonly lossReason: FieldRef<"Deal", 'String'>
     readonly priority: FieldRef<"Deal", 'String'>
     readonly notes: FieldRef<"Deal", 'String'>
+    readonly competitors: FieldRef<"Deal", 'String[]'>
     readonly owner: FieldRef<"Deal", 'String'>
     readonly createdAt: FieldRef<"Deal", 'DateTime'>
     readonly updatedAt: FieldRef<"Deal", 'DateTime'>
@@ -10312,6 +10425,30 @@ export namespace Prisma {
   }
 
   /**
+   * Deal.lineItems
+   */
+  export type Deal$lineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    where?: LineItemWhereInput
+    orderBy?: LineItemOrderByWithRelationInput | LineItemOrderByWithRelationInput[]
+    cursor?: LineItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LineItemScalarFieldEnum | LineItemScalarFieldEnum[]
+  }
+
+  /**
    * Deal.activities
    */
   export type Deal$activitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10375,6 +10512,1166 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DealInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LineItem
+   */
+
+  export type AggregateLineItem = {
+    _count: LineItemCountAggregateOutputType | null
+    _avg: LineItemAvgAggregateOutputType | null
+    _sum: LineItemSumAggregateOutputType | null
+    _min: LineItemMinAggregateOutputType | null
+    _max: LineItemMaxAggregateOutputType | null
+  }
+
+  export type LineItemAvgAggregateOutputType = {
+    id: number | null
+    dealId: number | null
+    quantity: number | null
+    unitPrice: number | null
+    total: number | null
+  }
+
+  export type LineItemSumAggregateOutputType = {
+    id: number | null
+    dealId: number | null
+    quantity: number | null
+    unitPrice: number | null
+    total: number | null
+  }
+
+  export type LineItemMinAggregateOutputType = {
+    id: number | null
+    dealId: number | null
+    productName: string | null
+    quantity: number | null
+    unitPrice: number | null
+    total: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    isDeleted: boolean | null
+  }
+
+  export type LineItemMaxAggregateOutputType = {
+    id: number | null
+    dealId: number | null
+    productName: string | null
+    quantity: number | null
+    unitPrice: number | null
+    total: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    isDeleted: boolean | null
+  }
+
+  export type LineItemCountAggregateOutputType = {
+    id: number
+    dealId: number
+    productName: number
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt: number
+    updatedAt: number
+    isDeleted: number
+    _all: number
+  }
+
+
+  export type LineItemAvgAggregateInputType = {
+    id?: true
+    dealId?: true
+    quantity?: true
+    unitPrice?: true
+    total?: true
+  }
+
+  export type LineItemSumAggregateInputType = {
+    id?: true
+    dealId?: true
+    quantity?: true
+    unitPrice?: true
+    total?: true
+  }
+
+  export type LineItemMinAggregateInputType = {
+    id?: true
+    dealId?: true
+    productName?: true
+    quantity?: true
+    unitPrice?: true
+    total?: true
+    createdAt?: true
+    updatedAt?: true
+    isDeleted?: true
+  }
+
+  export type LineItemMaxAggregateInputType = {
+    id?: true
+    dealId?: true
+    productName?: true
+    quantity?: true
+    unitPrice?: true
+    total?: true
+    createdAt?: true
+    updatedAt?: true
+    isDeleted?: true
+  }
+
+  export type LineItemCountAggregateInputType = {
+    id?: true
+    dealId?: true
+    productName?: true
+    quantity?: true
+    unitPrice?: true
+    total?: true
+    createdAt?: true
+    updatedAt?: true
+    isDeleted?: true
+    _all?: true
+  }
+
+  export type LineItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LineItem to aggregate.
+     */
+    where?: LineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LineItems to fetch.
+     */
+    orderBy?: LineItemOrderByWithRelationInput | LineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LineItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LineItems
+    **/
+    _count?: true | LineItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LineItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LineItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LineItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LineItemMaxAggregateInputType
+  }
+
+  export type GetLineItemAggregateType<T extends LineItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateLineItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLineItem[P]>
+      : GetScalarType<T[P], AggregateLineItem[P]>
+  }
+
+
+
+
+  export type LineItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LineItemWhereInput
+    orderBy?: LineItemOrderByWithAggregationInput | LineItemOrderByWithAggregationInput[]
+    by: LineItemScalarFieldEnum[] | LineItemScalarFieldEnum
+    having?: LineItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LineItemCountAggregateInputType | true
+    _avg?: LineItemAvgAggregateInputType
+    _sum?: LineItemSumAggregateInputType
+    _min?: LineItemMinAggregateInputType
+    _max?: LineItemMaxAggregateInputType
+  }
+
+  export type LineItemGroupByOutputType = {
+    id: number
+    dealId: number
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt: Date
+    updatedAt: Date
+    isDeleted: boolean
+    _count: LineItemCountAggregateOutputType | null
+    _avg: LineItemAvgAggregateOutputType | null
+    _sum: LineItemSumAggregateOutputType | null
+    _min: LineItemMinAggregateOutputType | null
+    _max: LineItemMaxAggregateOutputType | null
+  }
+
+  type GetLineItemGroupByPayload<T extends LineItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LineItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LineItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LineItemGroupByOutputType[P]>
+            : GetScalarType<T[P], LineItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LineItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dealId?: boolean
+    productName?: boolean
+    quantity?: boolean
+    unitPrice?: boolean
+    total?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lineItem"]>
+
+  export type LineItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dealId?: boolean
+    productName?: boolean
+    quantity?: boolean
+    unitPrice?: boolean
+    total?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lineItem"]>
+
+  export type LineItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dealId?: boolean
+    productName?: boolean
+    quantity?: boolean
+    unitPrice?: boolean
+    total?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lineItem"]>
+
+  export type LineItemSelectScalar = {
+    id?: boolean
+    dealId?: boolean
+    productName?: boolean
+    quantity?: boolean
+    unitPrice?: boolean
+    total?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    isDeleted?: boolean
+  }
+
+  export type LineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dealId" | "productName" | "quantity" | "unitPrice" | "total" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["lineItem"]>
+  export type LineItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }
+  export type LineItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }
+  export type LineItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    deal?: boolean | DealDefaultArgs<ExtArgs>
+  }
+
+  export type $LineItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LineItem"
+    objects: {
+      deal: Prisma.$DealPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      dealId: number
+      productName: string
+      quantity: number
+      unitPrice: number
+      total: number
+      createdAt: Date
+      updatedAt: Date
+      isDeleted: boolean
+    }, ExtArgs["result"]["lineItem"]>
+    composites: {}
+  }
+
+  type LineItemGetPayload<S extends boolean | null | undefined | LineItemDefaultArgs> = $Result.GetResult<Prisma.$LineItemPayload, S>
+
+  type LineItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LineItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LineItemCountAggregateInputType | true
+    }
+
+  export interface LineItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LineItem'], meta: { name: 'LineItem' } }
+    /**
+     * Find zero or one LineItem that matches the filter.
+     * @param {LineItemFindUniqueArgs} args - Arguments to find a LineItem
+     * @example
+     * // Get one LineItem
+     * const lineItem = await prisma.lineItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LineItemFindUniqueArgs>(args: SelectSubset<T, LineItemFindUniqueArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LineItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LineItemFindUniqueOrThrowArgs} args - Arguments to find a LineItem
+     * @example
+     * // Get one LineItem
+     * const lineItem = await prisma.lineItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LineItemFindUniqueOrThrowArgs>(args: SelectSubset<T, LineItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LineItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemFindFirstArgs} args - Arguments to find a LineItem
+     * @example
+     * // Get one LineItem
+     * const lineItem = await prisma.lineItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LineItemFindFirstArgs>(args?: SelectSubset<T, LineItemFindFirstArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LineItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemFindFirstOrThrowArgs} args - Arguments to find a LineItem
+     * @example
+     * // Get one LineItem
+     * const lineItem = await prisma.lineItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LineItemFindFirstOrThrowArgs>(args?: SelectSubset<T, LineItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LineItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LineItems
+     * const lineItems = await prisma.lineItem.findMany()
+     * 
+     * // Get first 10 LineItems
+     * const lineItems = await prisma.lineItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const lineItemWithIdOnly = await prisma.lineItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LineItemFindManyArgs>(args?: SelectSubset<T, LineItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LineItem.
+     * @param {LineItemCreateArgs} args - Arguments to create a LineItem.
+     * @example
+     * // Create one LineItem
+     * const LineItem = await prisma.lineItem.create({
+     *   data: {
+     *     // ... data to create a LineItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends LineItemCreateArgs>(args: SelectSubset<T, LineItemCreateArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LineItems.
+     * @param {LineItemCreateManyArgs} args - Arguments to create many LineItems.
+     * @example
+     * // Create many LineItems
+     * const lineItem = await prisma.lineItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LineItemCreateManyArgs>(args?: SelectSubset<T, LineItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LineItems and returns the data saved in the database.
+     * @param {LineItemCreateManyAndReturnArgs} args - Arguments to create many LineItems.
+     * @example
+     * // Create many LineItems
+     * const lineItem = await prisma.lineItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LineItems and only return the `id`
+     * const lineItemWithIdOnly = await prisma.lineItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LineItemCreateManyAndReturnArgs>(args?: SelectSubset<T, LineItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LineItem.
+     * @param {LineItemDeleteArgs} args - Arguments to delete one LineItem.
+     * @example
+     * // Delete one LineItem
+     * const LineItem = await prisma.lineItem.delete({
+     *   where: {
+     *     // ... filter to delete one LineItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LineItemDeleteArgs>(args: SelectSubset<T, LineItemDeleteArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LineItem.
+     * @param {LineItemUpdateArgs} args - Arguments to update one LineItem.
+     * @example
+     * // Update one LineItem
+     * const lineItem = await prisma.lineItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LineItemUpdateArgs>(args: SelectSubset<T, LineItemUpdateArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LineItems.
+     * @param {LineItemDeleteManyArgs} args - Arguments to filter LineItems to delete.
+     * @example
+     * // Delete a few LineItems
+     * const { count } = await prisma.lineItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LineItemDeleteManyArgs>(args?: SelectSubset<T, LineItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LineItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LineItems
+     * const lineItem = await prisma.lineItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LineItemUpdateManyArgs>(args: SelectSubset<T, LineItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LineItems and returns the data updated in the database.
+     * @param {LineItemUpdateManyAndReturnArgs} args - Arguments to update many LineItems.
+     * @example
+     * // Update many LineItems
+     * const lineItem = await prisma.lineItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LineItems and only return the `id`
+     * const lineItemWithIdOnly = await prisma.lineItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LineItemUpdateManyAndReturnArgs>(args: SelectSubset<T, LineItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LineItem.
+     * @param {LineItemUpsertArgs} args - Arguments to update or create a LineItem.
+     * @example
+     * // Update or create a LineItem
+     * const lineItem = await prisma.lineItem.upsert({
+     *   create: {
+     *     // ... data to create a LineItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LineItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LineItemUpsertArgs>(args: SelectSubset<T, LineItemUpsertArgs<ExtArgs>>): Prisma__LineItemClient<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LineItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemCountArgs} args - Arguments to filter LineItems to count.
+     * @example
+     * // Count the number of LineItems
+     * const count = await prisma.lineItem.count({
+     *   where: {
+     *     // ... the filter for the LineItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends LineItemCountArgs>(
+      args?: Subset<T, LineItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LineItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LineItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LineItemAggregateArgs>(args: Subset<T, LineItemAggregateArgs>): Prisma.PrismaPromise<GetLineItemAggregateType<T>>
+
+    /**
+     * Group by LineItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LineItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LineItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LineItemGroupByArgs['orderBy'] }
+        : { orderBy?: LineItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LineItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLineItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LineItem model
+   */
+  readonly fields: LineItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LineItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LineItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    deal<T extends DealDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DealDefaultArgs<ExtArgs>>): Prisma__DealClient<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LineItem model
+   */
+  interface LineItemFieldRefs {
+    readonly id: FieldRef<"LineItem", 'Int'>
+    readonly dealId: FieldRef<"LineItem", 'Int'>
+    readonly productName: FieldRef<"LineItem", 'String'>
+    readonly quantity: FieldRef<"LineItem", 'Int'>
+    readonly unitPrice: FieldRef<"LineItem", 'Float'>
+    readonly total: FieldRef<"LineItem", 'Float'>
+    readonly createdAt: FieldRef<"LineItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"LineItem", 'DateTime'>
+    readonly isDeleted: FieldRef<"LineItem", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LineItem findUnique
+   */
+  export type LineItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which LineItem to fetch.
+     */
+    where: LineItemWhereUniqueInput
+  }
+
+  /**
+   * LineItem findUniqueOrThrow
+   */
+  export type LineItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which LineItem to fetch.
+     */
+    where: LineItemWhereUniqueInput
+  }
+
+  /**
+   * LineItem findFirst
+   */
+  export type LineItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which LineItem to fetch.
+     */
+    where?: LineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LineItems to fetch.
+     */
+    orderBy?: LineItemOrderByWithRelationInput | LineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LineItems.
+     */
+    cursor?: LineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LineItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LineItems.
+     */
+    distinct?: LineItemScalarFieldEnum | LineItemScalarFieldEnum[]
+  }
+
+  /**
+   * LineItem findFirstOrThrow
+   */
+  export type LineItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which LineItem to fetch.
+     */
+    where?: LineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LineItems to fetch.
+     */
+    orderBy?: LineItemOrderByWithRelationInput | LineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LineItems.
+     */
+    cursor?: LineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LineItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LineItems.
+     */
+    distinct?: LineItemScalarFieldEnum | LineItemScalarFieldEnum[]
+  }
+
+  /**
+   * LineItem findMany
+   */
+  export type LineItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * Filter, which LineItems to fetch.
+     */
+    where?: LineItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LineItems to fetch.
+     */
+    orderBy?: LineItemOrderByWithRelationInput | LineItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LineItems.
+     */
+    cursor?: LineItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LineItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LineItems.
+     */
+    skip?: number
+    distinct?: LineItemScalarFieldEnum | LineItemScalarFieldEnum[]
+  }
+
+  /**
+   * LineItem create
+   */
+  export type LineItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LineItem.
+     */
+    data: XOR<LineItemCreateInput, LineItemUncheckedCreateInput>
+  }
+
+  /**
+   * LineItem createMany
+   */
+  export type LineItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LineItems.
+     */
+    data: LineItemCreateManyInput | LineItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LineItem createManyAndReturn
+   */
+  export type LineItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many LineItems.
+     */
+    data: LineItemCreateManyInput | LineItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LineItem update
+   */
+  export type LineItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LineItem.
+     */
+    data: XOR<LineItemUpdateInput, LineItemUncheckedUpdateInput>
+    /**
+     * Choose, which LineItem to update.
+     */
+    where: LineItemWhereUniqueInput
+  }
+
+  /**
+   * LineItem updateMany
+   */
+  export type LineItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LineItems.
+     */
+    data: XOR<LineItemUpdateManyMutationInput, LineItemUncheckedUpdateManyInput>
+    /**
+     * Filter which LineItems to update
+     */
+    where?: LineItemWhereInput
+    /**
+     * Limit how many LineItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LineItem updateManyAndReturn
+   */
+  export type LineItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * The data used to update LineItems.
+     */
+    data: XOR<LineItemUpdateManyMutationInput, LineItemUncheckedUpdateManyInput>
+    /**
+     * Filter which LineItems to update
+     */
+    where?: LineItemWhereInput
+    /**
+     * Limit how many LineItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LineItem upsert
+   */
+  export type LineItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LineItem to update in case it exists.
+     */
+    where: LineItemWhereUniqueInput
+    /**
+     * In case the LineItem found by the `where` argument doesn't exist, create a new LineItem with this data.
+     */
+    create: XOR<LineItemCreateInput, LineItemUncheckedCreateInput>
+    /**
+     * In case the LineItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LineItemUpdateInput, LineItemUncheckedUpdateInput>
+  }
+
+  /**
+   * LineItem delete
+   */
+  export type LineItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
+    /**
+     * Filter which LineItem to delete.
+     */
+    where: LineItemWhereUniqueInput
+  }
+
+  /**
+   * LineItem deleteMany
+   */
+  export type LineItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LineItems to delete
+     */
+    where?: LineItemWhereInput
+    /**
+     * Limit how many LineItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LineItem without action
+   */
+  export type LineItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LineItem
+     */
+    select?: LineItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LineItem
+     */
+    omit?: LineItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LineItemInclude<ExtArgs> | null
   }
 
 
@@ -14085,6 +15382,7 @@ export namespace Prisma {
     lossReason: 'lossReason',
     priority: 'priority',
     notes: 'notes',
+    competitors: 'competitors',
     owner: 'owner',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -14092,6 +15390,21 @@ export namespace Prisma {
   };
 
   export type DealScalarFieldEnum = (typeof DealScalarFieldEnum)[keyof typeof DealScalarFieldEnum]
+
+
+  export const LineItemScalarFieldEnum: {
+    id: 'id',
+    dealId: 'dealId',
+    productName: 'productName',
+    quantity: 'quantity',
+    unitPrice: 'unitPrice',
+    total: 'total',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    isDeleted: 'isDeleted'
+  };
+
+  export type LineItemScalarFieldEnum = (typeof LineItemScalarFieldEnum)[keyof typeof LineItemScalarFieldEnum]
 
 
   export const ActivityScalarFieldEnum: {
@@ -14845,12 +16158,14 @@ export namespace Prisma {
     lossReason?: StringNullableFilter<"Deal"> | string | null
     priority?: StringFilter<"Deal"> | string
     notes?: StringNullableFilter<"Deal"> | string | null
+    competitors?: StringNullableListFilter<"Deal">
     owner?: StringFilter<"Deal"> | string
     createdAt?: DateTimeFilter<"Deal"> | Date | string
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     isDeleted?: BoolFilter<"Deal"> | boolean
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    lineItems?: LineItemListRelationFilter
     activities?: ActivityListRelationFilter
     tasks?: TaskListRelationFilter
   }
@@ -14869,12 +16184,14 @@ export namespace Prisma {
     lossReason?: SortOrderInput | SortOrder
     priority?: SortOrder
     notes?: SortOrderInput | SortOrder
+    competitors?: SortOrder
     owner?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
     contact?: ContactOrderByWithRelationInput
     company?: CompanyOrderByWithRelationInput
+    lineItems?: LineItemOrderByRelationAggregateInput
     activities?: ActivityOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
   }
@@ -14896,12 +16213,14 @@ export namespace Prisma {
     lossReason?: StringNullableFilter<"Deal"> | string | null
     priority?: StringFilter<"Deal"> | string
     notes?: StringNullableFilter<"Deal"> | string | null
+    competitors?: StringNullableListFilter<"Deal">
     owner?: StringFilter<"Deal"> | string
     createdAt?: DateTimeFilter<"Deal"> | Date | string
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     isDeleted?: BoolFilter<"Deal"> | boolean
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    lineItems?: LineItemListRelationFilter
     activities?: ActivityListRelationFilter
     tasks?: TaskListRelationFilter
   }, "id">
@@ -14920,6 +16239,7 @@ export namespace Prisma {
     lossReason?: SortOrderInput | SortOrder
     priority?: SortOrder
     notes?: SortOrderInput | SortOrder
+    competitors?: SortOrder
     owner?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14948,10 +16268,88 @@ export namespace Prisma {
     lossReason?: StringNullableWithAggregatesFilter<"Deal"> | string | null
     priority?: StringWithAggregatesFilter<"Deal"> | string
     notes?: StringNullableWithAggregatesFilter<"Deal"> | string | null
+    competitors?: StringNullableListFilter<"Deal">
     owner?: StringWithAggregatesFilter<"Deal"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Deal"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Deal"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"Deal"> | boolean
+  }
+
+  export type LineItemWhereInput = {
+    AND?: LineItemWhereInput | LineItemWhereInput[]
+    OR?: LineItemWhereInput[]
+    NOT?: LineItemWhereInput | LineItemWhereInput[]
+    id?: IntFilter<"LineItem"> | number
+    dealId?: IntFilter<"LineItem"> | number
+    productName?: StringFilter<"LineItem"> | string
+    quantity?: IntFilter<"LineItem"> | number
+    unitPrice?: FloatFilter<"LineItem"> | number
+    total?: FloatFilter<"LineItem"> | number
+    createdAt?: DateTimeFilter<"LineItem"> | Date | string
+    updatedAt?: DateTimeFilter<"LineItem"> | Date | string
+    isDeleted?: BoolFilter<"LineItem"> | boolean
+    deal?: XOR<DealScalarRelationFilter, DealWhereInput>
+  }
+
+  export type LineItemOrderByWithRelationInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+    deal?: DealOrderByWithRelationInput
+  }
+
+  export type LineItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: LineItemWhereInput | LineItemWhereInput[]
+    OR?: LineItemWhereInput[]
+    NOT?: LineItemWhereInput | LineItemWhereInput[]
+    dealId?: IntFilter<"LineItem"> | number
+    productName?: StringFilter<"LineItem"> | string
+    quantity?: IntFilter<"LineItem"> | number
+    unitPrice?: FloatFilter<"LineItem"> | number
+    total?: FloatFilter<"LineItem"> | number
+    createdAt?: DateTimeFilter<"LineItem"> | Date | string
+    updatedAt?: DateTimeFilter<"LineItem"> | Date | string
+    isDeleted?: BoolFilter<"LineItem"> | boolean
+    deal?: XOR<DealScalarRelationFilter, DealWhereInput>
+  }, "id">
+
+  export type LineItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+    _count?: LineItemCountOrderByAggregateInput
+    _avg?: LineItemAvgOrderByAggregateInput
+    _max?: LineItemMaxOrderByAggregateInput
+    _min?: LineItemMinOrderByAggregateInput
+    _sum?: LineItemSumOrderByAggregateInput
+  }
+
+  export type LineItemScalarWhereWithAggregatesInput = {
+    AND?: LineItemScalarWhereWithAggregatesInput | LineItemScalarWhereWithAggregatesInput[]
+    OR?: LineItemScalarWhereWithAggregatesInput[]
+    NOT?: LineItemScalarWhereWithAggregatesInput | LineItemScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LineItem"> | number
+    dealId?: IntWithAggregatesFilter<"LineItem"> | number
+    productName?: StringWithAggregatesFilter<"LineItem"> | string
+    quantity?: IntWithAggregatesFilter<"LineItem"> | number
+    unitPrice?: FloatWithAggregatesFilter<"LineItem"> | number
+    total?: FloatWithAggregatesFilter<"LineItem"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"LineItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LineItem"> | Date | string
+    isDeleted?: BoolWithAggregatesFilter<"LineItem"> | boolean
   }
 
   export type ActivityWhereInput = {
@@ -15873,12 +17271,14 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
     contact?: ContactCreateNestedOneWithoutDealsInput
     company?: CompanyCreateNestedOneWithoutDealsInput
+    lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
   }
@@ -15897,10 +17297,12 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
   }
@@ -15916,12 +17318,14 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     contact?: ContactUpdateOneWithoutDealsNestedInput
     company?: CompanyUpdateOneWithoutDealsNestedInput
+    lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
   }
@@ -15940,10 +17344,12 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
   }
@@ -15962,6 +17368,7 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15979,6 +17386,7 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15999,7 +17407,88 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LineItemCreateInput = {
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    deal: DealCreateNestedOneWithoutLineItemsInput
+  }
+
+  export type LineItemUncheckedCreateInput = {
+    id?: number
+    dealId: number
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LineItemUpdateInput = {
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deal?: DealUpdateOneRequiredWithoutLineItemsNestedInput
+  }
+
+  export type LineItemUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    dealId?: IntFieldUpdateOperationsInput | number
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LineItemCreateManyInput = {
+    id?: number
+    dealId: number
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LineItemUpdateManyMutationInput = {
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LineItemUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    dealId?: IntFieldUpdateOperationsInput | number
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -16943,6 +18432,16 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type LineItemListRelationFilter = {
+    every?: LineItemWhereInput
+    some?: LineItemWhereInput
+    none?: LineItemWhereInput
+  }
+
+  export type LineItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type DealCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -16957,6 +18456,7 @@ export namespace Prisma {
     lossReason?: SortOrder
     priority?: SortOrder
     notes?: SortOrder
+    competitors?: SortOrder
     owner?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -17033,6 +18533,63 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type DealScalarRelationFilter = {
+    is?: DealWhereInput
+    isNot?: DealWhereInput
+  }
+
+  export type LineItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+  }
+
+  export type LineItemAvgOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
+  }
+
+  export type LineItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+  }
+
+  export type LineItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    isDeleted?: SortOrder
+  }
+
+  export type LineItemSumOrderByAggregateInput = {
+    id?: SortOrder
+    dealId?: SortOrder
+    quantity?: SortOrder
+    unitPrice?: SortOrder
+    total?: SortOrder
   }
 
   export type DealNullableScalarRelationFilter = {
@@ -17592,6 +19149,10 @@ export namespace Prisma {
     deleteMany?: DealScalarWhereInput | DealScalarWhereInput[]
   }
 
+  export type DealCreatecompetitorsInput = {
+    set: string[]
+  }
+
   export type ContactCreateNestedOneWithoutDealsInput = {
     create?: XOR<ContactCreateWithoutDealsInput, ContactUncheckedCreateWithoutDealsInput>
     connectOrCreate?: ContactCreateOrConnectWithoutDealsInput
@@ -17602,6 +19163,13 @@ export namespace Prisma {
     create?: XOR<CompanyCreateWithoutDealsInput, CompanyUncheckedCreateWithoutDealsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutDealsInput
     connect?: CompanyWhereUniqueInput
+  }
+
+  export type LineItemCreateNestedManyWithoutDealInput = {
+    create?: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput> | LineItemCreateWithoutDealInput[] | LineItemUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: LineItemCreateOrConnectWithoutDealInput | LineItemCreateOrConnectWithoutDealInput[]
+    createMany?: LineItemCreateManyDealInputEnvelope
+    connect?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
   }
 
   export type ActivityCreateNestedManyWithoutDealInput = {
@@ -17616,6 +19184,13 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutDealInput | TaskCreateOrConnectWithoutDealInput[]
     createMany?: TaskCreateManyDealInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type LineItemUncheckedCreateNestedManyWithoutDealInput = {
+    create?: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput> | LineItemCreateWithoutDealInput[] | LineItemUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: LineItemCreateOrConnectWithoutDealInput | LineItemCreateOrConnectWithoutDealInput[]
+    createMany?: LineItemCreateManyDealInputEnvelope
+    connect?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
   }
 
   export type ActivityUncheckedCreateNestedManyWithoutDealInput = {
@@ -17640,6 +19215,11 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type DealUpdatecompetitorsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
   export type ContactUpdateOneWithoutDealsNestedInput = {
     create?: XOR<ContactCreateWithoutDealsInput, ContactUncheckedCreateWithoutDealsInput>
     connectOrCreate?: ContactCreateOrConnectWithoutDealsInput
@@ -17658,6 +19238,20 @@ export namespace Prisma {
     delete?: CompanyWhereInput | boolean
     connect?: CompanyWhereUniqueInput
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutDealsInput, CompanyUpdateWithoutDealsInput>, CompanyUncheckedUpdateWithoutDealsInput>
+  }
+
+  export type LineItemUpdateManyWithoutDealNestedInput = {
+    create?: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput> | LineItemCreateWithoutDealInput[] | LineItemUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: LineItemCreateOrConnectWithoutDealInput | LineItemCreateOrConnectWithoutDealInput[]
+    upsert?: LineItemUpsertWithWhereUniqueWithoutDealInput | LineItemUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: LineItemCreateManyDealInputEnvelope
+    set?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    disconnect?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    delete?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    connect?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    update?: LineItemUpdateWithWhereUniqueWithoutDealInput | LineItemUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: LineItemUpdateManyWithWhereWithoutDealInput | LineItemUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: LineItemScalarWhereInput | LineItemScalarWhereInput[]
   }
 
   export type ActivityUpdateManyWithoutDealNestedInput = {
@@ -17688,6 +19282,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type LineItemUncheckedUpdateManyWithoutDealNestedInput = {
+    create?: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput> | LineItemCreateWithoutDealInput[] | LineItemUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: LineItemCreateOrConnectWithoutDealInput | LineItemCreateOrConnectWithoutDealInput[]
+    upsert?: LineItemUpsertWithWhereUniqueWithoutDealInput | LineItemUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: LineItemCreateManyDealInputEnvelope
+    set?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    disconnect?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    delete?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    connect?: LineItemWhereUniqueInput | LineItemWhereUniqueInput[]
+    update?: LineItemUpdateWithWhereUniqueWithoutDealInput | LineItemUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: LineItemUpdateManyWithWhereWithoutDealInput | LineItemUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: LineItemScalarWhereInput | LineItemScalarWhereInput[]
+  }
+
   export type ActivityUncheckedUpdateManyWithoutDealNestedInput = {
     create?: XOR<ActivityCreateWithoutDealInput, ActivityUncheckedCreateWithoutDealInput> | ActivityCreateWithoutDealInput[] | ActivityUncheckedCreateWithoutDealInput[]
     connectOrCreate?: ActivityCreateOrConnectWithoutDealInput | ActivityCreateOrConnectWithoutDealInput[]
@@ -17714,6 +19322,20 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutDealInput | TaskUpdateWithWhereUniqueWithoutDealInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutDealInput | TaskUpdateManyWithWhereWithoutDealInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type DealCreateNestedOneWithoutLineItemsInput = {
+    create?: XOR<DealCreateWithoutLineItemsInput, DealUncheckedCreateWithoutLineItemsInput>
+    connectOrCreate?: DealCreateOrConnectWithoutLineItemsInput
+    connect?: DealWhereUniqueInput
+  }
+
+  export type DealUpdateOneRequiredWithoutLineItemsNestedInput = {
+    create?: XOR<DealCreateWithoutLineItemsInput, DealUncheckedCreateWithoutLineItemsInput>
+    connectOrCreate?: DealCreateOrConnectWithoutLineItemsInput
+    upsert?: DealUpsertWithoutLineItemsInput
+    connect?: DealWhereUniqueInput
+    update?: XOR<XOR<DealUpdateToOneWithWhereWithoutLineItemsInput, DealUpdateWithoutLineItemsInput>, DealUncheckedUpdateWithoutLineItemsInput>
   }
 
   export type ContactCreateNestedOneWithoutActivitiesInput = {
@@ -18266,11 +19888,13 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
     company?: CompanyCreateNestedOneWithoutDealsInput
+    lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
   }
@@ -18288,10 +19912,12 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
   }
@@ -18489,6 +20115,7 @@ export namespace Prisma {
     lossReason?: StringNullableFilter<"Deal"> | string | null
     priority?: StringFilter<"Deal"> | string
     notes?: StringNullableFilter<"Deal"> | string | null
+    competitors?: StringNullableListFilter<"Deal">
     owner?: StringFilter<"Deal"> | string
     createdAt?: DateTimeFilter<"Deal"> | Date | string
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
@@ -18731,11 +20358,13 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
     contact?: ContactCreateNestedOneWithoutDealsInput
+    lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
   }
@@ -18753,10 +20382,12 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
   }
@@ -18927,6 +20558,37 @@ export namespace Prisma {
   export type CompanyCreateOrConnectWithoutDealsInput = {
     where: CompanyWhereUniqueInput
     create: XOR<CompanyCreateWithoutDealsInput, CompanyUncheckedCreateWithoutDealsInput>
+  }
+
+  export type LineItemCreateWithoutDealInput = {
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LineItemUncheckedCreateWithoutDealInput = {
+    id?: number
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type LineItemCreateOrConnectWithoutDealInput = {
+    where: LineItemWhereUniqueInput
+    create: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput>
+  }
+
+  export type LineItemCreateManyDealInputEnvelope = {
+    data: LineItemCreateManyDealInput | LineItemCreateManyDealInput[]
+    skipDuplicates?: boolean
   }
 
   export type ActivityCreateWithoutDealInput = {
@@ -19115,6 +20777,37 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
+  export type LineItemUpsertWithWhereUniqueWithoutDealInput = {
+    where: LineItemWhereUniqueInput
+    update: XOR<LineItemUpdateWithoutDealInput, LineItemUncheckedUpdateWithoutDealInput>
+    create: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput>
+  }
+
+  export type LineItemUpdateWithWhereUniqueWithoutDealInput = {
+    where: LineItemWhereUniqueInput
+    data: XOR<LineItemUpdateWithoutDealInput, LineItemUncheckedUpdateWithoutDealInput>
+  }
+
+  export type LineItemUpdateManyWithWhereWithoutDealInput = {
+    where: LineItemScalarWhereInput
+    data: XOR<LineItemUpdateManyMutationInput, LineItemUncheckedUpdateManyWithoutDealInput>
+  }
+
+  export type LineItemScalarWhereInput = {
+    AND?: LineItemScalarWhereInput | LineItemScalarWhereInput[]
+    OR?: LineItemScalarWhereInput[]
+    NOT?: LineItemScalarWhereInput | LineItemScalarWhereInput[]
+    id?: IntFilter<"LineItem"> | number
+    dealId?: IntFilter<"LineItem"> | number
+    productName?: StringFilter<"LineItem"> | string
+    quantity?: IntFilter<"LineItem"> | number
+    unitPrice?: FloatFilter<"LineItem"> | number
+    total?: FloatFilter<"LineItem"> | number
+    createdAt?: DateTimeFilter<"LineItem"> | Date | string
+    updatedAt?: DateTimeFilter<"LineItem"> | Date | string
+    isDeleted?: BoolFilter<"LineItem"> | boolean
+  }
+
   export type ActivityUpsertWithWhereUniqueWithoutDealInput = {
     where: ActivityWhereUniqueInput
     update: XOR<ActivityUpdateWithoutDealInput, ActivityUncheckedUpdateWithoutDealInput>
@@ -19145,6 +20838,112 @@ export namespace Prisma {
   export type TaskUpdateManyWithWhereWithoutDealInput = {
     where: TaskScalarWhereInput
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutDealInput>
+  }
+
+  export type DealCreateWithoutLineItemsInput = {
+    name: string
+    value: number
+    currency?: string
+    stage: string
+    probability?: number | null
+    expectedCloseDate?: Date | string | null
+    actualCloseDate?: Date | string | null
+    lossReason?: string | null
+    priority: string
+    notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
+    owner?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    contact?: ContactCreateNestedOneWithoutDealsInput
+    company?: CompanyCreateNestedOneWithoutDealsInput
+    activities?: ActivityCreateNestedManyWithoutDealInput
+    tasks?: TaskCreateNestedManyWithoutDealInput
+  }
+
+  export type DealUncheckedCreateWithoutLineItemsInput = {
+    id?: number
+    name: string
+    value: number
+    currency?: string
+    stage: string
+    probability?: number | null
+    contactId?: number | null
+    companyId?: number | null
+    expectedCloseDate?: Date | string | null
+    actualCloseDate?: Date | string | null
+    lossReason?: string | null
+    priority: string
+    notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
+    owner?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+  }
+
+  export type DealCreateOrConnectWithoutLineItemsInput = {
+    where: DealWhereUniqueInput
+    create: XOR<DealCreateWithoutLineItemsInput, DealUncheckedCreateWithoutLineItemsInput>
+  }
+
+  export type DealUpsertWithoutLineItemsInput = {
+    update: XOR<DealUpdateWithoutLineItemsInput, DealUncheckedUpdateWithoutLineItemsInput>
+    create: XOR<DealCreateWithoutLineItemsInput, DealUncheckedCreateWithoutLineItemsInput>
+    where?: DealWhereInput
+  }
+
+  export type DealUpdateToOneWithWhereWithoutLineItemsInput = {
+    where?: DealWhereInput
+    data: XOR<DealUpdateWithoutLineItemsInput, DealUncheckedUpdateWithoutLineItemsInput>
+  }
+
+  export type DealUpdateWithoutLineItemsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    value?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    probability?: NullableIntFieldUpdateOperationsInput | number | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lossReason?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
+    owner?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    contact?: ContactUpdateOneWithoutDealsNestedInput
+    company?: CompanyUpdateOneWithoutDealsNestedInput
+    activities?: ActivityUpdateManyWithoutDealNestedInput
+    tasks?: TaskUpdateManyWithoutDealNestedInput
+  }
+
+  export type DealUncheckedUpdateWithoutLineItemsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    value?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    probability?: NullableIntFieldUpdateOperationsInput | number | null
+    contactId?: NullableIntFieldUpdateOperationsInput | number | null
+    companyId?: NullableIntFieldUpdateOperationsInput | number | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lossReason?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
+    owner?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type ContactCreateWithoutActivitiesInput = {
@@ -19218,12 +21017,14 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
     contact?: ContactCreateNestedOneWithoutDealsInput
     company?: CompanyCreateNestedOneWithoutDealsInput
+    lineItems?: LineItemCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
   }
 
@@ -19241,10 +21042,12 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
   }
 
@@ -19341,12 +21144,14 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     contact?: ContactUpdateOneWithoutDealsNestedInput
     company?: CompanyUpdateOneWithoutDealsNestedInput
+    lineItems?: LineItemUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
   }
 
@@ -19364,10 +21169,12 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
   }
 
@@ -19442,12 +21249,14 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
     contact?: ContactCreateNestedOneWithoutDealsInput
     company?: CompanyCreateNestedOneWithoutDealsInput
+    lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
   }
 
@@ -19465,10 +21274,12 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
   }
 
@@ -19565,12 +21376,14 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     contact?: ContactUpdateOneWithoutDealsNestedInput
     company?: CompanyUpdateOneWithoutDealsNestedInput
+    lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
   }
 
@@ -19588,10 +21401,12 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
   }
 
@@ -19677,6 +21492,7 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19793,11 +21609,13 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneWithoutDealsNestedInput
+    lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
   }
@@ -19815,10 +21633,12 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
   }
@@ -19836,6 +21656,7 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19920,6 +21741,7 @@ export namespace Prisma {
     lossReason?: string | null
     priority: string
     notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
     owner?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20016,11 +21838,13 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     contact?: ContactUpdateOneWithoutDealsNestedInput
+    lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
   }
@@ -20038,10 +21862,12 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
   }
@@ -20059,10 +21885,22 @@ export namespace Prisma {
     lossReason?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
     owner?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LineItemCreateManyDealInput = {
+    id?: number
+    productName: string
+    quantity: number
+    unitPrice: number
+    total: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
   }
 
   export type ActivityCreateManyDealInput = {
@@ -20092,6 +21930,38 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+  }
+
+  export type LineItemUpdateWithoutDealInput = {
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LineItemUncheckedUpdateWithoutDealInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LineItemUncheckedUpdateManyWithoutDealInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    total?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ActivityUpdateWithoutDealInput = {

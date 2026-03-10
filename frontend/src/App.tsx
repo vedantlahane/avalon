@@ -12,6 +12,7 @@ import { Tasks } from './pages/Tasks';
 import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 import { ContactDetail } from './pages/ContactDetail';
+import { Toaster } from 'react-hot-toast';
 
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
@@ -19,6 +20,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="flex h-screen bg-[#F9FAFB] text-[#111827] font-sans selection:bg-indigo-100 selection:text-indigo-900">
+        <Toaster position="top-right" />
         {/* Accent Line */}
         <div className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#4F46E5] to-[#7C3AED] z-[60]"></div>
         

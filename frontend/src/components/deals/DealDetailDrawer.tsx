@@ -15,11 +15,13 @@ import {
   MoreVertical,
   Zap,
   Edit2,
-  Plus
+  Plus,
+  Package,
+  ShieldAlert
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils';
-import { Deal, Activity } from '../../types';
+import { Deal, Activity, LineItem } from '../../types';
 import { dealService } from '../../services/deal.service';
 import { format } from 'date-fns';
 
@@ -48,7 +50,7 @@ export const DealDetailDrawer: React.FC<DealDetailDrawerProps> = ({ isOpen, onCl
     }
   }, [isOpen, dealId]);
 
-  if (!deal && isLoading) return null; // Or a skeleton
+  if (!deal && isLoading) return null;
 
   return (
     <AnimatePresence>
@@ -102,7 +104,7 @@ export const DealDetailDrawer: React.FC<DealDetailDrawerProps> = ({ isOpen, onCl
                 <h2 className="text-2xl font-black text-gray-900 leading-tight">{deal?.name}</h2>
                 <div className="flex items-center gap-4 mt-2">
                   <div className="text-2xl font-black text-indigo-600">
-                    ${deal?.value.toLocaleString()}
+                    {deal?.currency || '$'}{deal?.value.toLocaleString()}
                   </div>
                   <div className="w-[1px] h-4 bg-gray-200" />
                   <div className="flex items-center gap-1.5 text-sm font-bold text-gray-500">
@@ -129,7 +131,7 @@ export const DealDetailDrawer: React.FC<DealDetailDrawerProps> = ({ isOpen, onCl
             </div>
 
             {/* Tabs */}
-            <div className="bg-white border-b border-gray-100 flex px-6">
+            <div className="bg-white border-b border-gray-100 flex px-6 sticky top-0 z-10">
               {['Overview', 'Timeline', 'Tasks'].map(tab => (
                 <button
                   key={tab}
@@ -160,10 +162,10 @@ export const DealDetailDrawer: React.FC<DealDetailDrawerProps> = ({ isOpen, onCl
                       <h4 className="text-sm font-black uppercase tracking-widest">AI Opportunity Insight</h4>
                     </div>
                     <p className="text-sm font-medium leading-relaxed opacity-90 relative">
-                      "This deal is moving 24% faster than average for this stage. The contact has high engagement with the proposal sent yesterday. Suggest scheduling the technical demo before Friday."
+                      "Based on industry data and {deal?.company?.name || 'the company'}'s profile, similar deals closed within 45 days. Suggest focusing on the {deal?.lineItems?.[0]?.productName || 'core'} package which has a higher success rate."
                     </p>
                     <button className="mt-4 w-full bg-white text-indigo-600 py-2 rounded-xl text-xs font-black hover:bg-indigo-50 transition-all shadow-lg relative">
-                      Apply AI Recommendation
+                      View Similar Won Deals
                     </button>
                   </div>
 
@@ -210,6 +212,50 @@ export const DealDetailDrawer: React.FC<DealDetailDrawerProps> = ({ isOpen, onCl
                         </div>
                       </div>
                     </div>
+
+                    {/* Competitors */}
+                    {deal?.competitors && deal.competitors.length > 0 && (
+                      <div className="pt-6 border-t border-gray-50 space-y-3">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                          <ShieldAlert size={12} />
+                          Competitors
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {deal.competitors.map(comp => (
+                            <span key={comp} className="px-2 py-1 bg-gray-50 border border-gray-100 rounded-lg text-[10px] font-bold text-gray-600 uppercase">
+                              {comp}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Line Items */}
+                    {deal?.lineItems && deal.lineItems.length > 0 && (
+                      <div className="pt-6 border-t border-gray-50 space-y-3">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                          <Package size={12} />
+                          Products/Line Items
+                        </p>
+                        <div className="space-y-2">
+                          {deal.lineItems.map((item, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                              <div>
+                                <p className="text-xs font-bold text-gray-900">{item.productName}</p>
+                                <p className="text-[10px] text-gray-500">{item.quantity} x {deal.currency || '$'}{item.unitPrice.toLocaleString()}</p>
+                              </div>
+                              <div className="text-xs font-black text-gray-900">
+                                {deal.currency || '$'}{item.total.toLocaleString()}
+                              </div>
+                            </div>
+                          ))}
+                          <div className="flex justify-between items-center px-3 pt-2">
+                            <span className="text-[10px] font-black uppercase text-gray-400">Total Value</span>
+                            <span className="text-sm font-black text-indigo-600">{deal.currency || '$'}{deal.value.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="pt-6 border-t border-gray-50 space-y-2">
                       <p className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
