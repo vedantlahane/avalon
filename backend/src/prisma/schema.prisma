@@ -348,37 +348,149 @@ model Deal {
 
 model Activity {
 
+  
+
+
+
   id              Int      @id @default(autoincrement())
+
+  
+
+
 
   type            String   // Email, Call, Meeting, Note, Task, Demo, Follow-up
 
+  
+
+
+
   title           String
+
+  
+
+
 
   description     String?
 
+  
+
+
+
   contactId       Int?
+
+  
+
+
 
   contact         Contact? @relation(fields: [contactId], references: [id])
 
+  
+
+
+
   dealId          Int?
+
+  
+
+
 
   deal            Deal?    @relation(fields: [dealId], references: [id])
 
+  
+
+
+
   date            DateTime @default(now())
+
+  
+
+
 
   durationMinutes Int?
 
-  outcome         String?  // Completed, Pending, Cancelled, No-show
+  
+
+
+
+  outcome         String?  // Connected, Pending, Cancelled, No-show, etc.
+
+  
+
+
 
   nextSteps       String?
 
+  
+
+
+
+  
+
+  
+
+
+
+  // New optional fields for enhanced activity logging
+
+  
+
+
+
+  sentiment       String?  // Positive, Neutral, Negative, Cautious
+
+  
+
+
+
+  metadata        Json?    // For type-specific fields like attendees, products, objections, etc.
+
+  
+
+
+
+  keyPoints       String[] @default([])
+
+  
+
+
+
+  aiSummary       String?
+
+  
+
+
+
+  
+
+  
+
+
+
   createdAt       DateTime @default(now())
+
+  
+
+
 
   updatedAt       DateTime @updatedAt
 
+  
+
+
+
   isDeleted       Boolean  @default(false)
 
+  
+
+
+
 }
+
+  
+
+
+
+
 
 
 

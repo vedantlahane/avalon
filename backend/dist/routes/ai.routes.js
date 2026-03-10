@@ -60,4 +60,92 @@ Keep responses concise and helpful. Use emojis.
     c.header('Connection', 'keep-alive');
     return c.body(result.data);
 }));
+aiRoutes.post('/summarize-activity', catchAsync(async (c) => {
+    const { notes, type } = await c.req.json();
+    const llm = new Llm({ provider: process.env.LLM_PROVIDER });
+    const prompt = `
+    Summarize the following ${type} notes into a concise summary, a list of key discussion points, and detect the overall sentiment (Positive, Neutral, Negative, or Cautious).
+    
+    Notes: "${notes}"
+    
+    Respond ONLY with a JSON object in this exact format:
+    {
+      "summary": "concise summary string",
+      "keyPoints": ["point 1", "point 2", ...],
+      "sentiment": "SentimentValue"
+    }
+  `;
+    const result = await llm.generateText({
+        messages: [{ role: 'user', content: prompt }],
+        model: process.env.LLM_MODEL
+    });
+    try {
+        const jsonStr = result.text.replace(/```json\n?|```/g, '').trim();
+        return c.json(JSON.parse(jsonStr));
+    }
+    catch (error) {
+        return c.json({
+            summary: "Could not generate summary",
+            keyPoints: [],
+            sentiment: "Neutral"
+        });
+    }
+}));
+aiRoutes.post('/extract-tasks', catchAsync(async (c) => {
+    const { notes } = await c.req.json();
+    const llm = new Llm({ provider: process.env.LLM_PROVIDER });
+    const prompt = `
+    Extract potential follow-up tasks from the following meeting/call notes.
+    For each task, provide a title, a suggested due date (relative to today), and priority (Low, Medium, High).
+    
+    Notes: "${notes}"
+    
+    Respond ONLY with a JSON object in this exact format:
+    {
+      "tasks": [
+        { "title": "Task title", "dueDate": "YYYY-MM-DD", "priority": "PriorityValue" },
+        ...
+      ]
+    }
+  `;
+    const result = await llm.generateText({
+        messages: [{ role: 'user', content: prompt }],
+        model: process.env.LLM_MODEL
+    });
+    try {
+        const jsonStr = result.text.replace(/```json\n?|```/g, '').trim();
+        return c.json(JSON.parse(jsonStr));
+    }
+    catch (error) {
+        return c.json({ tasks: [] });
+    }
+}));
+aiRoutes.post('/suggest-next-steps', catchAsync(async (c) => {
+    const { notes, type, currentStage } = await c.req.json();
+    const llm = new Llm({ provider: process.env.LLM_PROVIDER });
+    const prompt = `
+    Based on the following ${type} notes and the current deal stage "${currentStage}", suggest 2-3 strategic next steps to move the deal forward.
+    Also suggest if the deal stage should be updated or win probability changed.
+    
+    Notes: "${notes}"
+    
+    Respond ONLY with a JSON object in this exact format:
+    {
+      "suggestions": ["suggestion 1", "suggestion 2"],
+      "recommendedStage": "NewStageName or null",
+      "recommendedProbability": number or null
+    }
+  `;
+    const result = await llm.generateText({
+        messages: [{ role: 'user', content: prompt }],
+        model: process.env.LLM_MODEL
+    });
+    try {
+        const jsonStr = result.text.replace(/```json\n?|```/g, '').trim();
+        return c.json(JSON.parse(jsonStr));
+    }
+    catch (error) {
+        return c.json({ suggestions: [], recommendedStage: null, recommendedProbability: null });
+    }
+}));
 export default aiRoutes;

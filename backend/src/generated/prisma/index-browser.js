@@ -276,6 +276,10 @@ exports.Prisma.ActivityScalarFieldEnum = {
   durationMinutes: 'durationMinutes',
   outcome: 'outcome',
   nextSteps: 'nextSteps',
+  sentiment: 'sentiment',
+  metadata: 'metadata',
+  keyPoints: 'keyPoints',
+  aiSummary: 'aiSummary',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isDeleted: 'isDeleted'

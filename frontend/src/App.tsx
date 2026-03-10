@@ -9,6 +9,8 @@ import { ToastProvider } from './components/layout/ToastProvider';
 import { EmailComposerModal } from './components/layout/EmailComposerModal';
 import { CommandPalette } from './components/layout/CommandPalette';
 import { ShortcutGuide } from './components/layout/ShortcutGuide';
+import { LogActivityModal } from './components/activities/LogActivityModal';
+import { useActivityStore } from './lib/activity-store';
 import OnboardingModal from './components/onboarding/OnboardingModal';
 import { authService } from './services/auth.service';
 import { User } from './types';
@@ -101,6 +103,7 @@ const AnimatedRoutes: React.FC = () => {
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const { isOpen: isActivityOpen, close: closeActivity, contactId, dealId } = useActivityStore();
   const [user, setUser] = useState<User | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -221,6 +224,12 @@ const App: React.FC = () => {
 
         <AIPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <EmailComposerModal />
+        <LogActivityModal 
+          isOpen={isActivityOpen} 
+          onClose={closeActivity}
+          contactId={contactId}
+          dealId={dealId}
+        />
         <CommandPalette />
         <ShortcutGuide isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
         

@@ -12323,6 +12323,8 @@ export namespace Prisma {
     durationMinutes: number | null
     outcome: string | null
     nextSteps: string | null
+    sentiment: string | null
+    aiSummary: string | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -12339,6 +12341,8 @@ export namespace Prisma {
     durationMinutes: number | null
     outcome: string | null
     nextSteps: string | null
+    sentiment: string | null
+    aiSummary: string | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -12355,6 +12359,10 @@ export namespace Prisma {
     durationMinutes: number
     outcome: number
     nextSteps: number
+    sentiment: number
+    metadata: number
+    keyPoints: number
+    aiSummary: number
     createdAt: number
     updatedAt: number
     isDeleted: number
@@ -12387,6 +12395,8 @@ export namespace Prisma {
     durationMinutes?: true
     outcome?: true
     nextSteps?: true
+    sentiment?: true
+    aiSummary?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -12403,6 +12413,8 @@ export namespace Prisma {
     durationMinutes?: true
     outcome?: true
     nextSteps?: true
+    sentiment?: true
+    aiSummary?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -12419,6 +12431,10 @@ export namespace Prisma {
     durationMinutes?: true
     outcome?: true
     nextSteps?: true
+    sentiment?: true
+    metadata?: true
+    keyPoints?: true
+    aiSummary?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -12522,6 +12538,10 @@ export namespace Prisma {
     durationMinutes: number | null
     outcome: string | null
     nextSteps: string | null
+    sentiment: string | null
+    metadata: JsonValue | null
+    keyPoints: string[]
+    aiSummary: string | null
     createdAt: Date
     updatedAt: Date
     isDeleted: boolean
@@ -12557,6 +12577,10 @@ export namespace Prisma {
     durationMinutes?: boolean
     outcome?: boolean
     nextSteps?: boolean
+    sentiment?: boolean
+    metadata?: boolean
+    keyPoints?: boolean
+    aiSummary?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -12575,6 +12599,10 @@ export namespace Prisma {
     durationMinutes?: boolean
     outcome?: boolean
     nextSteps?: boolean
+    sentiment?: boolean
+    metadata?: boolean
+    keyPoints?: boolean
+    aiSummary?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -12593,6 +12621,10 @@ export namespace Prisma {
     durationMinutes?: boolean
     outcome?: boolean
     nextSteps?: boolean
+    sentiment?: boolean
+    metadata?: boolean
+    keyPoints?: boolean
+    aiSummary?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
@@ -12611,12 +12643,16 @@ export namespace Prisma {
     durationMinutes?: boolean
     outcome?: boolean
     nextSteps?: boolean
+    sentiment?: boolean
+    metadata?: boolean
+    keyPoints?: boolean
+    aiSummary?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
   }
 
-  export type ActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "description" | "contactId" | "dealId" | "date" | "durationMinutes" | "outcome" | "nextSteps" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["activity"]>
+  export type ActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "description" | "contactId" | "dealId" | "date" | "durationMinutes" | "outcome" | "nextSteps" | "sentiment" | "metadata" | "keyPoints" | "aiSummary" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["activity"]>
   export type ActivityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | Activity$contactArgs<ExtArgs>
     deal?: boolean | Activity$dealArgs<ExtArgs>
@@ -12647,6 +12683,10 @@ export namespace Prisma {
       durationMinutes: number | null
       outcome: string | null
       nextSteps: string | null
+      sentiment: string | null
+      metadata: Prisma.JsonValue | null
+      keyPoints: string[]
+      aiSummary: string | null
       createdAt: Date
       updatedAt: Date
       isDeleted: boolean
@@ -13085,6 +13125,10 @@ export namespace Prisma {
     readonly durationMinutes: FieldRef<"Activity", 'Int'>
     readonly outcome: FieldRef<"Activity", 'String'>
     readonly nextSteps: FieldRef<"Activity", 'String'>
+    readonly sentiment: FieldRef<"Activity", 'String'>
+    readonly metadata: FieldRef<"Activity", 'Json'>
+    readonly keyPoints: FieldRef<"Activity", 'String[]'>
+    readonly aiSummary: FieldRef<"Activity", 'String'>
     readonly createdAt: FieldRef<"Activity", 'DateTime'>
     readonly updatedAt: FieldRef<"Activity", 'DateTime'>
     readonly isDeleted: FieldRef<"Activity", 'Boolean'>
@@ -18413,6 +18457,10 @@ export namespace Prisma {
     durationMinutes: 'durationMinutes',
     outcome: 'outcome',
     nextSteps: 'nextSteps',
+    sentiment: 'sentiment',
+    metadata: 'metadata',
+    keyPoints: 'keyPoints',
+    aiSummary: 'aiSummary',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     isDeleted: 'isDeleted'
@@ -19521,6 +19569,10 @@ export namespace Prisma {
     durationMinutes?: IntNullableFilter<"Activity"> | number | null
     outcome?: StringNullableFilter<"Activity"> | string | null
     nextSteps?: StringNullableFilter<"Activity"> | string | null
+    sentiment?: StringNullableFilter<"Activity"> | string | null
+    metadata?: JsonNullableFilter<"Activity">
+    keyPoints?: StringNullableListFilter<"Activity">
+    aiSummary?: StringNullableFilter<"Activity"> | string | null
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     updatedAt?: DateTimeFilter<"Activity"> | Date | string
     isDeleted?: BoolFilter<"Activity"> | boolean
@@ -19539,6 +19591,10 @@ export namespace Prisma {
     durationMinutes?: SortOrderInput | SortOrder
     outcome?: SortOrderInput | SortOrder
     nextSteps?: SortOrderInput | SortOrder
+    sentiment?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    keyPoints?: SortOrder
+    aiSummary?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -19560,6 +19616,10 @@ export namespace Prisma {
     durationMinutes?: IntNullableFilter<"Activity"> | number | null
     outcome?: StringNullableFilter<"Activity"> | string | null
     nextSteps?: StringNullableFilter<"Activity"> | string | null
+    sentiment?: StringNullableFilter<"Activity"> | string | null
+    metadata?: JsonNullableFilter<"Activity">
+    keyPoints?: StringNullableListFilter<"Activity">
+    aiSummary?: StringNullableFilter<"Activity"> | string | null
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     updatedAt?: DateTimeFilter<"Activity"> | Date | string
     isDeleted?: BoolFilter<"Activity"> | boolean
@@ -19578,6 +19638,10 @@ export namespace Prisma {
     durationMinutes?: SortOrderInput | SortOrder
     outcome?: SortOrderInput | SortOrder
     nextSteps?: SortOrderInput | SortOrder
+    sentiment?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    keyPoints?: SortOrder
+    aiSummary?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -19602,6 +19666,10 @@ export namespace Prisma {
     durationMinutes?: IntNullableWithAggregatesFilter<"Activity"> | number | null
     outcome?: StringNullableWithAggregatesFilter<"Activity"> | string | null
     nextSteps?: StringNullableWithAggregatesFilter<"Activity"> | string | null
+    sentiment?: StringNullableWithAggregatesFilter<"Activity"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"Activity">
+    keyPoints?: StringNullableListFilter<"Activity">
+    aiSummary?: StringNullableWithAggregatesFilter<"Activity"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Activity"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Activity"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"Activity"> | boolean
@@ -21014,6 +21082,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -21032,6 +21104,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -21045,6 +21121,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21063,6 +21143,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21079,6 +21163,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -21092,6 +21180,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21108,6 +21200,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -22459,6 +22555,10 @@ export namespace Prisma {
     durationMinutes?: SortOrder
     outcome?: SortOrder
     nextSteps?: SortOrder
+    sentiment?: SortOrder
+    metadata?: SortOrder
+    keyPoints?: SortOrder
+    aiSummary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -22482,6 +22582,8 @@ export namespace Prisma {
     durationMinutes?: SortOrder
     outcome?: SortOrder
     nextSteps?: SortOrder
+    sentiment?: SortOrder
+    aiSummary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -22498,6 +22600,8 @@ export namespace Prisma {
     durationMinutes?: SortOrder
     outcome?: SortOrder
     nextSteps?: SortOrder
+    sentiment?: SortOrder
+    aiSummary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -23445,6 +23549,10 @@ export namespace Prisma {
     update?: XOR<XOR<DealUpdateToOneWithWhereWithoutLineItemsInput, DealUpdateWithoutLineItemsInput>, DealUncheckedUpdateWithoutLineItemsInput>
   }
 
+  export type ActivityCreatekeyPointsInput = {
+    set: string[]
+  }
+
   export type ContactCreateNestedOneWithoutActivitiesInput = {
     create?: XOR<ContactCreateWithoutActivitiesInput, ContactUncheckedCreateWithoutActivitiesInput>
     connectOrCreate?: ContactCreateOrConnectWithoutActivitiesInput
@@ -23455,6 +23563,11 @@ export namespace Prisma {
     create?: XOR<DealCreateWithoutActivitiesInput, DealUncheckedCreateWithoutActivitiesInput>
     connectOrCreate?: DealCreateOrConnectWithoutActivitiesInput
     connect?: DealWhereUniqueInput
+  }
+
+  export type ActivityUpdatekeyPointsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type ContactUpdateOneWithoutActivitiesNestedInput = {
@@ -23995,6 +24108,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -24011,6 +24128,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -24286,6 +24407,10 @@ export namespace Prisma {
     durationMinutes?: IntNullableFilter<"Activity"> | number | null
     outcome?: StringNullableFilter<"Activity"> | string | null
     nextSteps?: StringNullableFilter<"Activity"> | string | null
+    sentiment?: StringNullableFilter<"Activity"> | string | null
+    metadata?: JsonNullableFilter<"Activity">
+    keyPoints?: StringNullableListFilter<"Activity">
+    aiSummary?: StringNullableFilter<"Activity"> | string | null
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     updatedAt?: DateTimeFilter<"Activity"> | Date | string
     isDeleted?: BoolFilter<"Activity"> | boolean
@@ -25029,6 +25154,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -25045,6 +25174,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -26214,6 +26347,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -26318,6 +26455,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -26334,6 +26475,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -26349,6 +26494,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -26773,6 +26922,10 @@ export namespace Prisma {
     durationMinutes?: number | null
     outcome?: string | null
     nextSteps?: string | null
+    sentiment?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityCreatekeyPointsInput | string[]
+    aiSummary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -26857,6 +27010,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -26873,6 +27030,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -26888,6 +27049,10 @@ export namespace Prisma {
     durationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     outcome?: NullableStringFieldUpdateOperationsInput | string | null
     nextSteps?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: ActivityUpdatekeyPointsInput | string[]
+    aiSummary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean

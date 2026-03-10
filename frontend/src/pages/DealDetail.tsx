@@ -49,6 +49,9 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { composerStore } from '../lib/composer-store';
 
+import { ActivityTimeline } from '../components/activities/ActivityTimeline';
+import { LogActivityModal } from '../components/activities/LogActivityModal';
+
 type Tab = 'Activity' | 'Emails' | 'Tasks' | 'Notes' | 'Files';
 
 import confetti from 'canvas-confetti';
@@ -62,6 +65,7 @@ export const DealDetail: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('Activity');
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
 
   const triggerConfetti = () => {
     const duration = 3 * 1000;
@@ -294,7 +298,10 @@ export const DealDetail: React.FC = () => {
                   <Mail size={18} />
                   <span>Email</span>
                 </button>
-                <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-gray-50 transition-all shadow-sm active:scale-95">
+                <button 
+                  onClick={() => setIsActivityModalOpen(true)}
+                  className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-gray-50 transition-all shadow-sm active:scale-95"
+                >
                   <Phone size={18} />
                   <span>Log Call</span>
                 </button>
@@ -357,59 +364,10 @@ export const DealDetail: React.FC = () => {
                     exit={{ opacity: 0, x: 10 }}
                     className="space-y-8"
                   >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-black text-gray-900">Activity Timeline</h3>
-                      <div className="relative group">
-                        <button className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm active:scale-95">
-                          <PlusCircle size={16} />
-                          <span>Log Activity</span>
-                          <ChevronDown size={14} />
-                        </button>
-                        <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-2xl shadow-xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20">
-                          {['Email', 'Call', 'Meeting', 'Demo', 'Note'].map((type) => (
-                            <button key={type} className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold text-gray-600 hover:bg-gray-50 transition-all flex items-center gap-2">
-                              {getActivityIcon(type as ActivityType)}
-                              {type}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-[2px] before:bg-gray-100">
-                      {activities.map((activity) => (
-                        <div key={activity.id} className="relative group">
-                          <div className="absolute -left-[25px] top-0 w-8 h-8 rounded-full bg-white border-2 border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-indigo-500 group-hover:text-indigo-500 transition-all z-10 shadow-sm">
-                            {getActivityIcon(activity.type)}
-                          </div>
-                          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm group-hover:shadow-md group-hover:border-indigo-100 transition-all">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <h4 className="text-sm font-black text-gray-900">{activity.title}</h4>
-                                <p className="text-xs text-gray-500 mt-1">{activity.description}</p>
-                              </div>
-                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-lg">
-                                {formatDistanceToNow(new Date(activity.date), { addSuffix: true })}
-                              </span>
-                            </div>
-                            {activity.outcome && (
-                              <span className={cn(
-                                "text-[10px] font-black px-2 py-0.5 rounded-lg uppercase tracking-widest border",
-                                activity.outcome === 'Completed' ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-yellow-50 text-yellow-700 border-yellow-100"
-                              )}>
-                                {activity.outcome}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                      {activities.length === 0 && (
-                        <div className="text-center py-20 bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
-                          <Clock size={48} className="text-gray-200 mx-auto mb-4" />
-                          <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">No activities recorded</p>
-                        </div>
-                      )}
-                    </div>
+                    <ActivityTimeline 
+                      dealId={deal.id} 
+                      onLogClick={() => setIsActivityModalOpen(true)}
+                    />
                   </motion.div>
                 )}
 
@@ -779,10 +737,19 @@ export const DealDetail: React.FC = () => {
                   <ArrowRight size={16} className="text-gray-300 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all" />
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            
+                  <LogActivityModal 
+                    isOpen={isActivityModalOpen}
+                    onClose={() => setIsActivityModalOpen(false)}
+                    dealId={deal.id}
+                    contactId={deal.contactId || undefined}
+                    onSuccess={() => id && loadDealData(parseInt(id))}
+                  />
+                </div>
+              );
+            };
+            

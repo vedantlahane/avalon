@@ -42,6 +42,9 @@ import { EmptyState } from '../components/common/EmptyState';
 import { DashboardSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
 
+import { ActivityTimeline } from '../components/activities/ActivityTimeline';
+import { LogActivityModal } from '../components/activities/LogActivityModal';
+
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -75,6 +78,7 @@ export const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState('This Month');
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -303,69 +307,68 @@ export const Dashboard: React.FC = () => {
         <SalesLeaderboard data={data.salesLeaderboard} />
       </div>
 
-      {/* Bottom Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
-            <AlertTriangle size={20} className="text-red-500" />
-            At Risk
-          </h3>
-          <div className="space-y-3">
-            {data.dealsAtRisk.map(deal => (
-              <div key={deal.id} className="flex items-center justify-between p-3 rounded-xl border border-muted/30 hover:bg-destructive/10 transition-colors cursor-pointer group">
-                <div>
-                  <p className="text-sm font-bold text-foreground group-hover:text-destructive">{deal.name}</p>
-                  <p className="text-xs text-muted-foreground">{formatCurrency(deal.value)} • Stalled</p>
+      {/* Activity & Lead Scoring */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-8 bg-card p-6 rounded-2xl border border-border shadow-sm">
+          <ActivityTimeline 
+            onLogClick={() => setIsActivityModalOpen(true)}
+          />
+        </div>
+
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
+            <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+              <Calendar size={20} className="text-primary" />
+              Upcoming Tasks
+            </h3>
+            <div className="space-y-3">
+              {data.upcomingTasks.slice(0, 5).map(task => (
+                <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl border border-border/50 hover:bg-muted/50 transition-colors group cursor-pointer">
+                  <div className="w-5 h-5 rounded border-2 border-border flex-shrink-0 group-hover:border-primary transition-colors"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-foreground truncate">{task.title}</p>
+                    <p className="text-[10px] text-muted-foreground font-medium">Due: {task.dueDate ? format(new Date(task.dueDate), 'MMM d') : 'No date'}</p>
+                  </div>
                 </div>
-                <ChevronRight size={16} className="text-muted-foreground/30 group-hover:text-destructive/50" />
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
-            <Calendar size={20} className="text-primary" />
-            Tasks
-          </h3>
-          <div className="space-y-3">
-            {data.upcomingTasks.slice(0, 4).map(task => (
-              <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors">
-                <div className="w-4 h-4 rounded border border-border flex-shrink-0"></div>
-                <p className="text-sm font-medium text-foreground truncate">{task.title}</p>
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
+            <h3 className="text-lg font-bold text-foreground mb-6">Lead Scoring</h3>
+            <div className="h-48 relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={data.leadScoreDistribution}
+                    cx="50%" cy="50%"
+                    innerRadius={60} outerRadius={80}
+                    paddingAngle={5} dataKey="count"
+                  >
+                    {data.leadScoreDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--card)', border: 'none', borderRadius: '12px' }}
+                    itemStyle={{ color: 'var(--foreground)' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-2xl font-bold text-foreground">90</span>
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Leads</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <h3 className="text-lg font-bold text-foreground mb-6">Lead Scoring</h3>
-          <div className="h-48 relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={data.leadScoreDistribution}
-                  cx="50%" cy="50%"
-                  innerRadius={60} outerRadius={80}
-                  paddingAngle={5} dataKey="count"
-                >
-                  {data.leadScoreDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--card)', border: 'none', borderRadius: '12px' }}
-                  itemStyle={{ color: 'var(--foreground)' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl font-bold text-foreground">90</span>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Leads</span>
             </div>
           </div>
         </div>
       </div>
+
+      <LogActivityModal
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+        onSuccess={fetchData}
+      />
     </div>
   );
 };

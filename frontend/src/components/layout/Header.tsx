@@ -6,12 +6,14 @@ import { useTheme } from '../../hooks/useTheme';
 import { cn } from '../../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { composerStore } from '../../lib/composer-store';
+import { useActivityStore } from '../../lib/activity-store';
 
 export const Header: React.FC = () => {
   const { theme, setTheme, isDark } = useTheme();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const navigate = useNavigate();
+  const activityStore = useActivityStore();
 
   const toggleTheme = () => {
     if (theme === 'light') setTheme('dark');
@@ -25,6 +27,7 @@ export const Header: React.FC = () => {
   };
 
   const quickAddItems = [
+    { label: 'Activity', icon: <ActivityIcon size={16} />, action: () => activityStore.open() },
     { label: 'Contact', icon: <User size={16} />, action: () => navigate('/contacts') },
     { label: 'Deal', icon: <Plus size={16} />, action: () => navigate('/deals') },
     { label: 'Task', icon: <Plus size={16} />, action: () => navigate('/tasks') },

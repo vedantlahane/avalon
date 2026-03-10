@@ -3,7 +3,13 @@ import { leadScoringService } from '../services/leadScoringService.js';
 import catchAsync from '../utils/catchAsync.js';
 export const activityController = {
     getActivities: catchAsync(async (c) => {
-        const activities = await activityService.getActivities();
+        const contactId = c.req.query('contactId');
+        const dealId = c.req.query('dealId');
+        const filters = {
+            ...(contactId && { contactId: parseInt(contactId) }),
+            ...(dealId && { dealId: parseInt(dealId) })
+        };
+        const activities = await activityService.getActivities(filters);
         return c.json(activities);
     }),
     createActivity: catchAsync(async (c) => {

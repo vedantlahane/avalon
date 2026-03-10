@@ -131,6 +131,9 @@ export interface LineItem {
   updatedAt: string;
 }
 
+export type ActivityType = 'Email' | 'Call' | 'Meeting' | 'Note' | 'Task' | 'Demo' | 'Follow-up' | 'Other';
+export type ActivityOutcome = 'Completed' | 'Pending' | 'Cancelled' | 'No-show' | 'Connected' | 'Left Voicemail' | 'No Answer' | 'Busy' | 'Wrong Number';
+
 export interface Activity {
   id: number;
   type: ActivityType;
@@ -144,6 +147,10 @@ export interface Activity {
   durationMinutes?: number;
   outcome?: ActivityOutcome;
   nextSteps?: string;
+  sentiment?: 'Positive' | 'Neutral' | 'Negative' | 'Cautious';
+  metadata?: Record<string, any>;
+  keyPoints?: string[];
+  aiSummary?: string;
   createdAt: string;
   updatedAt: string;
 }

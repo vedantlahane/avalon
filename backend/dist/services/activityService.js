@@ -1,10 +1,19 @@
 import prisma from '../client.js';
 export const activityService = {
-    getActivities: async () => {
+    getActivities: async (filters = {}) => {
+        const where = { isDeleted: false };
+        if (filters.contactId)
+            where.contactId = filters.contactId;
+        if (filters.dealId)
+            where.dealId = filters.dealId;
         return await prisma.activity.findMany({
+            where,
             include: {
                 contact: true,
                 deal: true
+            },
+            orderBy: {
+                date: 'desc'
             }
         });
     },

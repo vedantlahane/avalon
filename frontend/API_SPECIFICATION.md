@@ -30,8 +30,17 @@
 - `PATCH /tasks/:id` - Update a task (status, priority, etc.)
 - `DELETE /tasks/:id` - Soft delete a task
 
-### AI Integration
-- `POST /ai/chat` - AI Chat Assistant endpoint for CRM queries and insights. Returns a stream of messages.
+### Activities
+- `GET /activities` - List all activities (query params: `contactId`, `dealId`)
+- `POST /activities` - Create new activity
+- `PATCH /activities/:id` - Update activity
+- `DELETE /activities/:id` - Soft delete activity
+
+### AI
+- `POST /ai/chat` - AI Chat assistant (streaming)
+- `POST /ai/summarize-activity` - Summarize activity notes and detect sentiment
+- `POST /ai/extract-tasks` - Extract tasks from activity notes
+- `POST /ai/suggest-next-steps` - Suggest next steps based on activity and deal stage
 
 ## Sentiment Analysis
 - `GET /emails/sentiment/summary`: Get overall sentiment summary cards data

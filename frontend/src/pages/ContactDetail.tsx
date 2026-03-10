@@ -52,6 +52,9 @@ import { LeadScoreDetails } from '../components/contacts/LeadScoreDetails';
 import { EnrichmentResult } from '../types';
 import { composerStore } from '../lib/composer-store';
 
+import { ActivityTimeline } from '../components/activities/ActivityTimeline';
+import { LogActivityModal } from '../components/activities/LogActivityModal';
+
 type Tab = 'Activity Timeline' | 'Emails' | 'Deals' | 'Tasks' | 'Notes';
 
 export const ContactDetail: React.FC = () => {
@@ -65,7 +68,7 @@ export const ContactDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('Activity Timeline');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activityFilter, setActivityFilter] = useState<ActivityType | 'All'>('All');
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   
   const [isEnriching, setIsEnriching] = useState(false);
   const [enrichmentResult, setEnrichmentResult] = useState<EnrichmentResult | null>(null);
@@ -511,69 +514,10 @@ export const ContactDetail: React.FC = () => {
                     exit={{ opacity: 0, x: 10 }}
                     className="space-y-6"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Filter size={16} className="text-gray-400" />
-                        <select 
-                          value={activityFilter}
-                          onChange={(e) => setActivityFilter(e.target.value as ActivityType | 'All')}
-                          className="text-xs font-bold bg-gray-50 border-none outline-none focus:ring-0 rounded-lg px-3 py-1.5 text-gray-600"
-                        >
-                          <option value="All">All Activities</option>
-                          <option value="Email">Emails</option>
-                          <option value="Call">Calls</option>
-                          <option value="Meeting">Meetings</option>
-                          <option value="Note">Notes</option>
-                          <option value="Task">Tasks</option>
-                        </select>
-                      </div>
-                      <button className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm active:scale-95">
-                        <PlusCircle size={14} />
-                        <span>Log Activity</span>
-                      </button>
-                    </div>
-
-                    <div className="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-[2px] before:bg-gray-100">
-                      {activities
-                        .filter(a => activityFilter === 'All' || a.type === activityFilter)
-                        .map((activity) => (
-                        <div key={activity.id} className="relative group">
-                          <div className="absolute -left-[25px] top-0 w-8 h-8 rounded-full bg-white border-2 border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-indigo-500 group-hover:text-indigo-500 transition-all z-10 shadow-sm">
-                            {getActivityIcon(activity.type)}
-                          </div>
-                          <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm group-hover:shadow-md group-hover:border-indigo-100 transition-all">
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="text-sm font-black text-gray-900">{activity.title}</h4>
-                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-lg">
-                                {formatDistanceToNow(new Date(activity.date), { addSuffix: true })}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-500 leading-relaxed mb-4">{activity.description}</p>
-                            <div className="flex flex-wrap items-center gap-3">
-                              {activity.outcome && (
-                                <span className={cn(
-                                  "text-[10px] font-black px-2 py-0.5 rounded-lg uppercase tracking-widest border",
-                                  activity.outcome === 'Completed' ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-yellow-50 text-yellow-700 border-yellow-100"
-                                )}>
-                                  {activity.outcome}
-                                </span>
-                              )}
-                              {activity.dealId && (
-                                <div className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest border border-indigo-100">
-                                  <TrendingUp size={10} />
-                                  Deal Associated
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      {activities.length === 0 && (
-                        <div className="text-center py-12 bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
-                          <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">No activities recorded</p>
-                        </div>
-                      )}
-                    </div>
+                    <ActivityTimeline 
+                      contactId={contact.id} 
+                      onLogClick={() => setIsActivityModalOpen(true)}
+                    />
                   </motion.div>
                 )}
 
@@ -897,6 +841,13 @@ export const ContactDetail: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => id && loadContactData(parseInt(id))}
         contact={contact}
+      />
+
+      <LogActivityModal
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+        contactId={contact.id}
+        onSuccess={() => id && loadContactData(parseInt(id))}
       />
     </div>
   );
