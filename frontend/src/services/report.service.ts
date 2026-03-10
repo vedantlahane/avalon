@@ -43,11 +43,26 @@ export interface ReportData {
     leadScoreDistribution: any[];
   };
   aiInsights: {
-    predictions: any;
-    likelyToClose: any[];
-    likelyToLose: any[];
-    likelyToChurn: any[];
-    recommendedFocus: string[];
+    lastAnalyzed: string;
+    executiveSummary: {
+      title: string;
+      content: string;
+      confidence: number;
+      dataPointsCount: number;
+    };
+    actionItems: any[];
+    dealsAtRisk: any[];
+    opportunities: any[];
+    performanceCoaching: {
+      strengths: string[];
+      improvements: string[];
+      tip: string;
+    };
+    competitorIntelligence: {
+      mentions: any[];
+      analysis: string;
+      strategy: string;
+    };
   };
 }
 

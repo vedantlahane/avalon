@@ -54,7 +54,8 @@
 - `GET /reports/pipeline-analysis`: Get pipeline analysis report data
 - `GET /reports/activity-reports`: Get activity report data
 - `GET /reports/contact-analytics`: Get contact analytics report data
-- `GET /reports/ai-insights`: Get AI-powered insights report data
+- `GET /reports/ai-insights` - Get comprehensive AI-powered insights (Executive Summary, Actions, Risks, Opportunities, Coaching, Competitors)
+  - Response: `{ lastAnalyzed, executiveSummary, actionItems, dealsAtRisk, opportunities, performanceCoaching, competitorIntelligence }`
 - `POST /reports/ai-query`: Query report data using natural language
   - Body: `{ query: string }`
   - Response: `{ answer: string, data: any, chartType: string }`

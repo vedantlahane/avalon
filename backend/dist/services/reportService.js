@@ -130,31 +130,170 @@ export const reportService = {
     },
     getAiInsights: async () => {
         return {
-            predictions: {
-                nextQuarterRevenue: 1850000,
-                confidence: 0.78,
-                momentum: 0.12
+            lastAnalyzed: new Date(Date.now() - 1000 * 60 * 2).toISOString(), // 2 minutes ago
+            executiveSummary: {
+                title: "Weekly Executive Summary (Mar 1-6, 2026)",
+                content: "Your CRM is in good health overall. Pipeline grew 12% this week to $1.24M. However, 3 deals need immediate attention due to stalling activity. Your email engagement rates are strong at 68% open rate. Lead quality improved with 4 new hot leads entering the funnel from the website channel.\n\nKey recommendation: Focus this week on advancing the Quantum Finance deal - it's your largest at-risk deal worth $80K. A personal call to Sarah Chen could prevent potential loss.",
+                confidence: 85,
+                dataPointsCount: 47
             },
-            likelyToClose: [
-                { name: 'Acme Enterprise', value: 120000, prob: 0.82 },
-                { name: 'Quantum Analytics', value: 85000, prob: 0.78 },
-                { name: 'BrightPath Sync', value: 45000, prob: 0.75 },
+            actionItems: [
+                {
+                    id: 1,
+                    priority: "High",
+                    priorityLabel: "🔴 #1",
+                    action: "Call Sarah Chen at Quantum Finance",
+                    description: "Call Sarah Chen at Quantum Finance to address pricing concerns and prevent deal loss ($80K at risk)",
+                    impact: "High",
+                    effort: "Low",
+                    status: "Pending",
+                    type: "Call",
+                    contactId: 101,
+                    dealId: 201
+                },
+                {
+                    id: 2,
+                    priority: "High",
+                    priorityLabel: "🟠 #2",
+                    action: "Send proposal follow-up to John Smith at Acme",
+                    description: "Send proposal follow-up to John Smith at Acme (7 days since last contact, $120K deal approaching close date)",
+                    impact: "High",
+                    effort: "Med",
+                    status: "Pending",
+                    type: "Email",
+                    contactId: 102,
+                    dealId: 202
+                },
+                {
+                    id: 3,
+                    priority: "Medium",
+                    priorityLabel: "🟡 #3",
+                    action: "Prepare for CloudNine demo",
+                    description: "Prepare for CloudNine demo tomorrow at 3PM. Based on their profile, focus on integration capabilities",
+                    impact: "Med",
+                    effort: "Med",
+                    status: "Pending",
+                    type: "Meeting",
+                    dealId: 203
+                },
+                {
+                    id: 4,
+                    priority: "Medium",
+                    priorityLabel: "🟢 #4",
+                    action: "Enrich 5 new website leads",
+                    description: "Enrich 5 new website leads that came in this week. AI can auto-enrich all 5.",
+                    impact: "Med",
+                    effort: "Low",
+                    status: "Pending",
+                    type: "Enrichment"
+                },
+                {
+                    id: 5,
+                    priority: "Low",
+                    priorityLabel: "🟢 #5",
+                    action: "Update CRM notes from last week",
+                    description: "Update CRM notes from last week's 3 calls (notes are missing/incomplete)",
+                    impact: "Low",
+                    effort: "Low",
+                    status: "Pending",
+                    type: "Log"
+                }
             ],
-            likelyToLose: [
-                { name: 'RetailMax E-comm', value: 120000, reason: 'Stalled 18d' },
-                { name: 'EduVerse Learning', value: 55000, reason: 'Competitor' },
-                { name: 'CloudNine Migr.', value: 60000, reason: 'No activity 10d' },
+            dealsAtRisk: [
+                {
+                    id: 201,
+                    name: "Quantum Finance - Premium Package",
+                    value: 80000,
+                    riskScore: 82,
+                    riskLevel: "HIGH",
+                    riskFactors: [
+                        "Negative email sentiment detected",
+                        "Competitor mentioned (\"CompetitorX\")",
+                        "Decision-maker not engaged yet",
+                        "5 days since last meaningful contact"
+                    ],
+                    daysToClose: 12,
+                    probabilityChange: { from: 68, to: 45 },
+                    suggested: "Immediate personal call + discount offer + executive sponsor introduction"
+                },
+                {
+                    id: 202,
+                    name: "Beta Inc - Growth Plan",
+                    value: 55000,
+                    riskScore: 58,
+                    riskLevel: "MODERATE",
+                    riskFactors: [
+                        "Proposal sent 14 days ago, no response",
+                        "Contact went silent after initial interest"
+                    ],
+                    probabilityChange: { from: 55, to: 38 },
+                    suggested: "Re-engagement email with new case study from their industry"
+                },
+                {
+                    id: 203,
+                    name: "EduVerse - Starter Plan",
+                    value: 25000,
+                    riskScore: 42,
+                    riskLevel: "LOW-MODERATE",
+                    riskFactors: [
+                        "Small deal showing low engagement",
+                        "Budget decision pushed to next quarter"
+                    ],
+                    suggested: "Move to nurture sequence"
+                }
             ],
-            likelyToChurn: [
-                { name: 'Sarah Chen', company: 'Acme', signal: 'Sentiment Drop' },
-                { name: 'Jessica Williams', company: 'RetailMax', signal: 'Unresponsive' },
-                { name: 'Michael Rodriguez', company: 'BrightPath', signal: 'Delayed Sign-off' },
+            opportunities: [
+                {
+                    type: "Upsell",
+                    title: "Upsell Opportunity: BrightPath Health",
+                    description: "BrightPath has been using the Basic plan for 6 months with 95% utilization. Based on their growth (hired 20 people last quarter), they likely need the Enterprise plan (+$40K ARR)",
+                    actions: ["Create Upsell Deal", "Draft Outreach"]
+                },
+                {
+                    type: "Expansion",
+                    title: "Expansion: Acme Technologies",
+                    description: "3 departments at Acme are using the product. Contact in Marketing dept (Lisa Park) recently visited pricing page 4 times (simulated). Cross-sell opportunity: Marketing module",
+                    actions: ["View Contact", "Create Deal"]
+                },
+                {
+                    type: "Referral",
+                    title: "Referral Potential: GreenLeaf Energy",
+                    description: "GreenLeaf had highest satisfaction score (NPS 9/10). Similar companies: SolarTech, WindPower Inc. Ask for referral introduction.",
+                    actions: ["Draft Referral Request Email"]
+                },
+                {
+                    type: "Timing",
+                    title: "Timing Alert: RetailMax Inc",
+                    description: "RetailMax's fiscal year ends March 31. Companies in retail typically have budget to spend before year-end. Reach out now.",
+                    actions: ["Create Deal", "Draft Outreach"]
+                }
             ],
-            recommendedFocus: [
-                'Enterprise segment is trending 12% above forecast',
-                'Healthcare deals have a 15% higher close rate this month',
-                'Leads from Web Events convert 2x faster than average'
-            ]
+            performanceCoaching: {
+                strengths: [
+                    "Email open rate (68%) is 15% above average",
+                    "Demo-to-Proposal conversion (75%) is strong",
+                    "Average response time (4hrs) is improving"
+                ],
+                improvements: [
+                    "Proposal-to-Close rate (40%) is below industry average (55%). Consider: Adding ROI calculations to proposals, Following up within 48hrs of sending, Including customer testimonials",
+                    "Only 3 calls logged this week vs your target of 10. Call activity is the #1 predictor of deal closure in your data."
+                ],
+                tip: "Your best-performing deals all had one thing in common: multi-threading (engaging 3+ contacts at the target company). Currently, 60% of your active deals only have 1 contact. Add more stakeholders to increase win probability by 35%."
+            },
+            competitorIntelligence: {
+                mentions: [
+                    { name: "CompetitorX", count: 3, details: [
+                            { contact: "Sarah Chen", quote: "We're also evaluating CompetitorX's pricing" },
+                            { contact: "John Smith", quote: "CompetitorX offered 20% less" },
+                            { note: "Internal note: \"Acme comparing features\"" }
+                        ] },
+                    { name: "CompetitorY", count: 1, details: [
+                            { contact: "Mike Ross", quote: "Previously used CompetitorY" }
+                        ] }
+                ],
+                analysis: "CompetitorX is your primary threat this month. They're competing on price. Counter-strategy: Emphasize superior integration capabilities and customer support SLA. Send battlecard to affected deal owners.",
+                strategy: "Focus on superior integration and customer support."
+            }
         };
     }
 };

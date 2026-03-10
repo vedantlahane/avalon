@@ -36,7 +36,8 @@ const navItems: NavItem[] = [
   { icon: BarChart3, label: 'Reports', path: '/reports', section: 'Navigation' },
   
   { icon: Bot, label: 'AI Assistant', path: '/ai', section: 'AI' },
-  { icon: Brain, label: 'AI Insights', path: '/sentiment', section: 'AI' },
+  { icon: Brain, label: 'AI Insights', path: '/ai-insights', section: 'AI' },
+  { icon: TrendingUp, label: 'Sentiment', path: '/sentiment', section: 'AI' },
   
   { icon: Settings, label: 'Settings', path: '/settings', section: 'Settings' },
 ];
