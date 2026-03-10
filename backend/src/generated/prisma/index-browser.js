@@ -169,6 +169,7 @@ exports.Prisma.ContactScalarFieldEnum = {
   address: 'address',
   linkedinUrl: 'linkedinUrl',
   twitterUrl: 'twitterUrl',
+  website: 'website',
   notes: 'notes',
   lastContacted: 'lastContacted',
   owner: 'owner',

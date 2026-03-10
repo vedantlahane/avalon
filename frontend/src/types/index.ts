@@ -41,6 +41,7 @@ export interface Contact {
   address?: string;
   linkedinUrl?: string;
   twitterUrl?: string;
+  website?: string;
   notes?: string;
   lastContacted?: string;
   owner: string;

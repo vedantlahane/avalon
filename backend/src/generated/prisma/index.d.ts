@@ -5156,6 +5156,7 @@ export namespace Prisma {
     address: string | null
     linkedinUrl: string | null
     twitterUrl: string | null
+    website: string | null
     notes: string | null
     lastContacted: Date | null
     owner: string | null
@@ -5179,6 +5180,7 @@ export namespace Prisma {
     address: string | null
     linkedinUrl: string | null
     twitterUrl: string | null
+    website: string | null
     notes: string | null
     lastContacted: Date | null
     owner: string | null
@@ -5203,6 +5205,7 @@ export namespace Prisma {
     address: number
     linkedinUrl: number
     twitterUrl: number
+    website: number
     notes: number
     lastContacted: number
     owner: number
@@ -5240,6 +5243,7 @@ export namespace Prisma {
     address?: true
     linkedinUrl?: true
     twitterUrl?: true
+    website?: true
     notes?: true
     lastContacted?: true
     owner?: true
@@ -5263,6 +5267,7 @@ export namespace Prisma {
     address?: true
     linkedinUrl?: true
     twitterUrl?: true
+    website?: true
     notes?: true
     lastContacted?: true
     owner?: true
@@ -5287,6 +5292,7 @@ export namespace Prisma {
     address?: true
     linkedinUrl?: true
     twitterUrl?: true
+    website?: true
     notes?: true
     lastContacted?: true
     owner?: true
@@ -5398,6 +5404,7 @@ export namespace Prisma {
     address: string | null
     linkedinUrl: string | null
     twitterUrl: string | null
+    website: string | null
     notes: string | null
     lastContacted: Date | null
     owner: string
@@ -5441,6 +5448,7 @@ export namespace Prisma {
     address?: boolean
     linkedinUrl?: boolean
     twitterUrl?: boolean
+    website?: boolean
     notes?: boolean
     lastContacted?: boolean
     owner?: boolean
@@ -5471,6 +5479,7 @@ export namespace Prisma {
     address?: boolean
     linkedinUrl?: boolean
     twitterUrl?: boolean
+    website?: boolean
     notes?: boolean
     lastContacted?: boolean
     owner?: boolean
@@ -5496,6 +5505,7 @@ export namespace Prisma {
     address?: boolean
     linkedinUrl?: boolean
     twitterUrl?: boolean
+    website?: boolean
     notes?: boolean
     lastContacted?: boolean
     owner?: boolean
@@ -5521,6 +5531,7 @@ export namespace Prisma {
     address?: boolean
     linkedinUrl?: boolean
     twitterUrl?: boolean
+    website?: boolean
     notes?: boolean
     lastContacted?: boolean
     owner?: boolean
@@ -5530,7 +5541,7 @@ export namespace Prisma {
     isDeleted?: boolean
   }
 
-  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "jobTitle" | "companyId" | "leadSource" | "leadStatus" | "leadScore" | "tags" | "address" | "linkedinUrl" | "twitterUrl" | "notes" | "lastContacted" | "owner" | "avatarUrl" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["contact"]>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "jobTitle" | "companyId" | "leadSource" | "leadStatus" | "leadScore" | "tags" | "address" | "linkedinUrl" | "twitterUrl" | "website" | "notes" | "lastContacted" | "owner" | "avatarUrl" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["contact"]>
   export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | Contact$companyArgs<ExtArgs>
     activities?: boolean | Contact$activitiesArgs<ExtArgs>
@@ -5570,6 +5581,7 @@ export namespace Prisma {
       address: string | null
       linkedinUrl: string | null
       twitterUrl: string | null
+      website: string | null
       notes: string | null
       lastContacted: Date | null
       owner: string
@@ -6019,6 +6031,7 @@ export namespace Prisma {
     readonly address: FieldRef<"Contact", 'String'>
     readonly linkedinUrl: FieldRef<"Contact", 'String'>
     readonly twitterUrl: FieldRef<"Contact", 'String'>
+    readonly website: FieldRef<"Contact", 'String'>
     readonly notes: FieldRef<"Contact", 'String'>
     readonly lastContacted: FieldRef<"Contact", 'DateTime'>
     readonly owner: FieldRef<"Contact", 'String'>
@@ -14008,6 +14021,7 @@ export namespace Prisma {
     address: 'address',
     linkedinUrl: 'linkedinUrl',
     twitterUrl: 'twitterUrl',
+    website: 'website',
     notes: 'notes',
     lastContacted: 'lastContacted',
     owner: 'owner',
@@ -14486,6 +14500,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableFilter<"Contact"> | string | null
     twitterUrl?: StringNullableFilter<"Contact"> | string | null
+    website?: StringNullableFilter<"Contact"> | string | null
     notes?: StringNullableFilter<"Contact"> | string | null
     lastContacted?: DateTimeNullableFilter<"Contact"> | Date | string | null
     owner?: StringFilter<"Contact"> | string
@@ -14515,6 +14530,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     linkedinUrl?: SortOrderInput | SortOrder
     twitterUrl?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     lastContacted?: SortOrderInput | SortOrder
     owner?: SortOrder
@@ -14547,6 +14563,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableFilter<"Contact"> | string | null
     twitterUrl?: StringNullableFilter<"Contact"> | string | null
+    website?: StringNullableFilter<"Contact"> | string | null
     notes?: StringNullableFilter<"Contact"> | string | null
     lastContacted?: DateTimeNullableFilter<"Contact"> | Date | string | null
     owner?: StringFilter<"Contact"> | string
@@ -14576,6 +14593,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     linkedinUrl?: SortOrderInput | SortOrder
     twitterUrl?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     lastContacted?: SortOrderInput | SortOrder
     owner?: SortOrder
@@ -14608,6 +14626,7 @@ export namespace Prisma {
     address?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     twitterUrl?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    website?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Contact"> | string | null
     lastContacted?: DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
     owner?: StringWithAggregatesFilter<"Contact"> | string
@@ -15451,6 +15470,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -15480,6 +15500,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -15506,6 +15527,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -15535,6 +15557,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -15563,6 +15586,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -15585,6 +15609,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -15609,6 +15634,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -16680,6 +16706,7 @@ export namespace Prisma {
     address?: SortOrder
     linkedinUrl?: SortOrder
     twitterUrl?: SortOrder
+    website?: SortOrder
     notes?: SortOrder
     lastContacted?: SortOrder
     owner?: SortOrder
@@ -16709,6 +16736,7 @@ export namespace Prisma {
     address?: SortOrder
     linkedinUrl?: SortOrder
     twitterUrl?: SortOrder
+    website?: SortOrder
     notes?: SortOrder
     lastContacted?: SortOrder
     owner?: SortOrder
@@ -16732,6 +16760,7 @@ export namespace Prisma {
     address?: SortOrder
     linkedinUrl?: SortOrder
     twitterUrl?: SortOrder
+    website?: SortOrder
     notes?: SortOrder
     lastContacted?: SortOrder
     owner?: SortOrder
@@ -18513,6 +18542,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -18541,6 +18571,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -18582,6 +18613,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -18610,6 +18642,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -18635,6 +18668,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -18662,6 +18696,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -18770,6 +18805,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Contact"> | string | null
     linkedinUrl?: StringNullableFilter<"Contact"> | string | null
     twitterUrl?: StringNullableFilter<"Contact"> | string | null
+    website?: StringNullableFilter<"Contact"> | string | null
     notes?: StringNullableFilter<"Contact"> | string | null
     lastContacted?: DateTimeNullableFilter<"Contact"> | Date | string | null
     owner?: StringFilter<"Contact"> | string
@@ -18808,6 +18844,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -18836,6 +18873,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -18991,6 +19029,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19019,6 +19058,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19120,6 +19160,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -19148,6 +19189,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -19235,6 +19277,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19263,6 +19306,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19340,6 +19384,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -19368,6 +19413,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -19455,6 +19501,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19483,6 +19530,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19849,6 +19897,7 @@ export namespace Prisma {
     address?: string | null
     linkedinUrl?: string | null
     twitterUrl?: string | null
+    website?: string | null
     notes?: string | null
     lastContacted?: Date | string | null
     owner?: string
@@ -19890,6 +19939,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19917,6 +19967,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string
@@ -19944,6 +19995,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
     twitterUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     lastContacted?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: StringFieldUpdateOperationsInput | string

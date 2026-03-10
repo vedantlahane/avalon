@@ -25,11 +25,13 @@ import {
   Sun,
   Cloud,
   CheckCircle2,
-  X
+  X,
+  Edit2
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ContactModal } from '../components/contacts/ContactModal';
 
 type ViewMode = 'list' | 'grid';
 type SortOption = 'name-az' | 'name-za' | 'score-high' | 'score-low' | 'recently-added' | 'last-contacted';
@@ -50,6 +52,8 @@ export const Contacts: React.FC = () => {
   // UI States
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
 
   useEffect(() => {
     loadContacts();
@@ -65,6 +69,20 @@ export const Contacts: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleAddContact = () => {
+    setContactToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditContact = (contact: Contact) => {
+    setContactToEdit(contact);
+    setIsModalOpen(true);
+  };
+
+  const handleModalSuccess = () => {
+    loadContacts();
   };
 
   const allTags = useMemo(() => {
@@ -195,7 +213,10 @@ export const Contacts: React.FC = () => {
                   <LayoutGrid size={18} />
                 </button>
               </div>
-              <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md active:scale-95">
+              <button 
+                onClick={handleAddContact}
+                className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md active:scale-95"
+              >
                 <Plus size={18} />
                 <span>Add Contact</span>
               </button>
@@ -443,7 +464,10 @@ export const Contacts: React.FC = () => {
                   Try adjusting your search or filters to find what you're looking for.
                 </p>
               </div>
-              <button className="bg-indigo-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-sm">
+              <button 
+                onClick={handleAddContact}
+                className="bg-indigo-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-sm"
+              >
                 Add your first contact
               </button>
             </div>
@@ -544,8 +568,11 @@ export const Contacts: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="View Detail">
-                            <ExternalLink size={16} />
+                          <button 
+                            onClick={() => handleEditContact(contact)}
+                            className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Edit Contact"
+                          >
+                            <Edit2 size={16} />
                           </button>
                           <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="More">
                             <MoreVertical size={16} />
@@ -567,8 +594,11 @@ export const Contacts: React.FC = () => {
                   className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all group relative cursor-pointer"
                 >
                   <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
-                    <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
-                      <MoreVertical size={18} />
+                    <button 
+                      onClick={() => handleEditContact(contact)}
+                      className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                    >
+                      <Edit2 size={18} />
                     </button>
                   </div>
 
@@ -796,7 +826,10 @@ export const Contacts: React.FC = () => {
                   </div>
 
                   <div className="pt-6 border-t border-gray-100 flex gap-3">
-                    <button className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-indigo-700 transition-all active:scale-95">
+                    <button 
+                      onClick={() => handleEditContact(selectedContact)}
+                      className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-indigo-700 transition-all active:scale-95"
+                    >
                       Edit Contact
                     </button>
                     <button className="flex-1 bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all active:scale-95">
@@ -809,6 +842,13 @@ export const Contacts: React.FC = () => {
           </>
         )}
       </AnimatePresence>
+
+      <ContactModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleModalSuccess}
+        contact={contactToEdit}
+      />
     </div>
   );
 };

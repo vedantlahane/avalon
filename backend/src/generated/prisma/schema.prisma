@@ -104,6 +104,8 @@ model Contact {
 
   twitterUrl String?
 
+  website String?
+
   notes String?
 
   lastContacted DateTime?

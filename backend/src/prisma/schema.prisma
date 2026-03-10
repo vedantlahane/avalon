@@ -118,13 +118,17 @@ model Contact {
 
   address         String?
 
-  linkedinUrl     String?
+    linkedinUrl     String?
 
-  twitterUrl      String?
+    twitterUrl      String?
 
-  notes           String?
+    website         String?
 
-  lastContacted   DateTime?
+    notes           String?
+
+    lastContacted   DateTime?
+
+  
 
     owner           String     @default("Me")
 
