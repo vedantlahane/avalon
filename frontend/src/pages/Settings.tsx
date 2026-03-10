@@ -22,11 +22,15 @@ import {
   Bot,
   Sun,
   Moon,
-  Laptop
+  Laptop,
+  Info
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../hooks/useTheme';
 import { toastStore } from '../lib/toast-store';
+
+import { ImportWizard } from '../components/common/ImportWizard';
+import { ExportModal } from '../components/common/ExportModal';
 
 type SettingsTab = 'Profile' | 'Organization' | 'Pipeline' | 'Tags' | 'Email' | 'AI Configuration' | 'Integrations' | 'Goals' | 'Notifications' | 'Import/Export';
 
@@ -245,7 +249,84 @@ const IntegrationsSection = () => {
 
 const GoalsSection = () => <div>Goals Settings coming soon.</div>;
 const NotificationsSection = () => <div>Notifications Settings coming soon.</div>;
-const ImportExportSection = () => <div>Import/Export Settings coming soon.</div>;
+
+const ImportExportSection = () => {
+  const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [exportResource, setExportResource] = useState<'contacts' | 'deals' | 'companies'>('contacts');
+
+  return (
+    <div className="space-y-8 page-fade-in">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Import & Export</h2>
+        <p className="text-muted-foreground">Manage your data by importing from or exporting to external files.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Import Card */}
+        <div className="p-8 bg-muted/30 border border-border rounded-3xl space-y-6 flex flex-col items-center text-center">
+          <div className="p-4 bg-indigo-500/10 rounded-2xl text-indigo-500">
+            <Upload size={48} />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-foreground">Import Data</h3>
+            <p className="text-sm text-muted-foreground">Upload a CSV or XLSX file to bulk add contacts to your CRM. Our AI will help you map columns automatically.</p>
+          </div>
+          <button 
+            onClick={() => setIsImportOpen(true)}
+            className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 btn-hover ripple"
+          >
+            Start Import Wizard
+          </button>
+        </div>
+
+        {/* Export Card */}
+        <div className="p-8 bg-muted/30 border border-border rounded-3xl space-y-6 flex flex-col items-center text-center">
+          <div className="p-4 bg-emerald-500/10 rounded-2xl text-emerald-500">
+            <Download size={48} />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-foreground">Export Data</h3>
+            <p className="text-sm text-muted-foreground">Download your contacts, deals, or companies in CSV, XLSX, PDF, or JSON format for external use or backups.</p>
+          </div>
+          <div className="flex gap-2 w-full">
+            <select 
+              className="flex-1 px-4 py-3 bg-card border border-border rounded-xl outline-none text-sm font-bold"
+              value={exportResource}
+              onChange={(e) => setExportResource(e.target.value as any)}
+            >
+              <option value="contacts">Contacts</option>
+              <option value="deals">Deals</option>
+              <option value="companies">Companies</option>
+            </select>
+            <button 
+              onClick={() => setIsExportOpen(true)}
+              className="px-6 py-3 bg-card border border-border text-foreground rounded-xl font-bold hover:bg-muted transition-all ripple"
+            >
+              Export
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-start gap-4">
+        <Info className="text-amber-500 shrink-0" size={20} />
+        <div className="space-y-1">
+          <p className="text-sm font-bold text-amber-900 dark:text-amber-200">Recommendation for Exports</p>
+          <p className="text-xs text-amber-800 dark:text-amber-300">For security and data integrity, we recommend regular exports of your CRM data. Use the AI Summary option when exporting to PDF for an executive overview.</p>
+        </div>
+      </div>
+
+      <ImportWizard isOpen={isImportOpen} onClose={() => setIsImportOpen(false)} resource="contacts" />
+      <ExportModal 
+        isOpen={isExportOpen} 
+        onClose={() => setIsExportOpen(false)} 
+        resource={exportResource} 
+        totalCount={100} 
+      />
+    </div>
+  );
+};
 
 export const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('Profile');

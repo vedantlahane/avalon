@@ -28,6 +28,7 @@ import {
   Search, 
   Filter, 
   TrendingUp,
+  Download,
   Building2,
   AlertCircle,
   Zap,
@@ -42,6 +43,7 @@ import { cn, formatCurrency } from '../lib/utils';
 import { DealModal } from '../components/deals/DealModal';
 import { DealForecast } from '../components/deals/DealForecast';
 import { DealListView } from '../components/deals/DealListView';
+import { ExportModal } from '../components/common/ExportModal';
 import { EmptyState } from '../components/common/EmptyState';
 import { ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
@@ -198,6 +200,7 @@ export const Deals: React.FC = () => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [initialStage, setInitialStage] = useState<DealStage | undefined>(undefined);
 
   const fetchData = async () => {
@@ -385,6 +388,13 @@ export const Deals: React.FC = () => {
             </button>
           </div>
           <button 
+            onClick={() => setIsExportOpen(true)}
+            className="flex items-center gap-2 bg-card border border-border px-4 py-2.5 rounded-xl text-xs font-bold text-muted-foreground hover:text-foreground transition-all shadow-sm btn-hover"
+          >
+            <Download size={16} />
+            <span className="hidden sm:inline">Export</span>
+          </button>
+          <button 
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-md btn-hover ripple"
           >
@@ -533,6 +543,13 @@ export const Deals: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchData}
         initialStage={initialStage}
+      />
+      <ExportModal 
+        isOpen={isExportOpen} 
+        onClose={() => setIsExportOpen(false)} 
+        resource="deals" 
+        totalCount={deals.length}
+        filteredCount={filteredDeals.length}
       />
     </div>
   );

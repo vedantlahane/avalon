@@ -4,8 +4,8 @@ export type Industry = 'Technology' | 'Healthcare' | 'Finance' | 'Education' | '
 export type CompanySize = '1-10' | '11-50' | '51-200' | '201-500' | '501-1000' | '1000+';
 export type DealStage = 'Lead' | 'Qualified' | 'Discovery' | 'Proposal' | 'Negotiation' | 'Closed Won' | 'Closed Lost';
 export type DealPriority = 'Low' | 'Medium' | 'High' | 'Critical';
-export type ActivityType = 'Email' | 'Call' | 'Meeting' | 'Note' | 'Task' | 'Demo' | 'Follow-up';
-export type ActivityOutcome = 'Completed' | 'Pending' | 'Cancelled' | 'No-show';
+export type ActivityType = 'Email' | 'Call' | 'Meeting' | 'Note' | 'Task' | 'Demo' | 'Follow-up' | 'Other';
+export type ActivityOutcome = 'Completed' | 'Pending' | 'Cancelled' | 'No-show' | 'Connected' | 'Left Voicemail' | 'No Answer' | 'Busy' | 'Wrong Number';
 export type TaskPriority = 'Low' | 'Medium' | 'High' | 'Urgent';
 export type TaskStatus = 'To Do' | 'In Progress' | 'Completed';
 export type EmailTemplateCategory = 'Follow-up' | 'Introduction' | 'Proposal' | 'Thank You' | 'Re-engagement' | 'Custom';
@@ -130,9 +130,6 @@ export interface LineItem {
   createdAt: string;
   updatedAt: string;
 }
-
-export type ActivityType = 'Email' | 'Call' | 'Meeting' | 'Note' | 'Task' | 'Demo' | 'Follow-up' | 'Other';
-export type ActivityOutcome = 'Completed' | 'Pending' | 'Cancelled' | 'No-show' | 'Connected' | 'Left Voicemail' | 'No Answer' | 'Busy' | 'Wrong Number';
 
 export interface Activity {
   id: number;

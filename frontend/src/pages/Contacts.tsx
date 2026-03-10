@@ -20,6 +20,8 @@ import { useNavigate } from 'react-router-dom';
 import { contactService } from '../services/contact.service';
 import { Contact } from '../types';
 import { ContactModal } from '../components/contacts/ContactModal';
+import { ImportWizard } from '../components/common/ImportWizard';
+import { ExportModal } from '../components/common/ExportModal';
 import { LeadScoreBadge } from '../components/contacts/LeadScoreBadge';
 import { cn } from '../lib/utils';
 import { CardGridSkeleton, ListSkeleton } from '../components/common/Skeletons';
@@ -35,6 +37,8 @@ export const Contacts = () => {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -93,9 +97,19 @@ export const Contacts = () => {
           <p className="text-sm text-muted-foreground mt-1 font-medium">Manage your customer relationships</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-muted transition-all ripple shadow-sm">
+          <button 
+            onClick={() => setIsImportOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-muted transition-all ripple shadow-sm"
+          >
             <Upload size={14} />
             <span className="hidden sm:inline">Import</span>
+          </button>
+          <button 
+            onClick={() => setIsExportOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-muted transition-all ripple shadow-sm"
+          >
+            <Download size={14} />
+            <span className="hidden sm:inline">Export</span>
           </button>
           <button 
             onClick={() => setIsModalOpen(true)}
@@ -153,7 +167,7 @@ export const Contacts = () => {
           description="Start building your network! Add contacts manually or import them from a CSV file."
           actions={[
             { label: 'Add Contact', onClick: () => setIsModalOpen(true), icon: Plus },
-            { label: 'Import CSV', onClick: () => {}, variant: 'secondary', icon: Upload }
+            { label: 'Import CSV', onClick: () => setIsImportOpen(true), variant: 'secondary', icon: Upload }
           ]}
           aiTip="Enter just an email and AI will enrich the rest!"
         />
@@ -311,6 +325,14 @@ export const Contacts = () => {
       )}
 
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={fetchData} />
+      <ImportWizard isOpen={isImportOpen} onClose={() => { setIsImportOpen(false); fetchData(); }} resource="contacts" />
+      <ExportModal 
+        isOpen={isExportOpen} 
+        onClose={() => setIsExportOpen(false)} 
+        resource="contacts" 
+        totalCount={contacts.length}
+        filteredCount={filteredContacts.length}
+      />
     </div>
   );
 };

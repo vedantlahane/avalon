@@ -73,3 +73,18 @@
 - `PATCH /notifications/:id/read` - Mark a notification as read
 - `POST /notifications/mark-all-read` - Mark all notifications as read
 - `DELETE /notifications/:id` - Soft delete a notification
+
+### Import/Export
+- `POST /crm/import/analyze` - Analyze CSV file and return metadata and suggested mapping
+  - Body: `FormData` (file: File)
+  - Response: `{ fileName: string, rowCount: number, columns: string[], suggestedMapping: Record<string, string> }`
+- `POST /crm/import/preview` - Preview data and validation errors
+  - Body: `{ data: any[], mapping: Record<string, string> }`
+  - Response: `{ summary: { total: number, valid: number, warnings: number, errors: number }, preview: any[], validationErrors: any[] }`
+- `POST /crm/import/execute` - Perform the actual import
+  - Body: `{ data: any[], mapping: Record<string, string>, duplicateHandling: string }`
+  - Response: `{ created: number, updated: number, skipped: number, failed: number }`
+- `GET /crm/export` - Export data to various formats
+  - Query params: `resource` (contacts|deals|companies), `ids` (comma separated or 'all'), `format` (csv|xlsx|pdf|json), `fields` (comma separated), `includeAiSummary` (boolean)
+  - Response: File download
+- `POST /crm/contacts/:id/enrich` - Enrich contact with AI data

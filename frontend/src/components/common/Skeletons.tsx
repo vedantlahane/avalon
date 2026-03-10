@@ -4,6 +4,8 @@ export const SkeletonBase = ({ className }: { className?: string }) => (
   <div className={`skeleton-pulse ${className}`} />
 );
 
+export const Skeleton = SkeletonBase;
+
 export const DashboardSkeleton = () => (
   <div className="p-6 space-y-8 page-fade-in">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

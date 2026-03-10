@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useToast } from '@/lib/toast-store';
+import { toastStore } from '@/lib/toast-store';
 import { activityService } from '@/services/activity.service';
 import { contactService } from '@/services/contact.service';
 import { dealService } from '@/services/deal.service';
@@ -38,14 +38,23 @@ const CALL_OUTCOMES: ActivityOutcome[] = [
 export const LogActivityModal: React.FC<LogActivityModalProps> = ({
   isOpen,
   onClose,
+  onSuccess,
   contactId: initialContactId,
-  dealId: initialDealId,
-  onSuccess
+  dealId: initialDealId
 }) => {
-  const { addToast } = useToast();
-  const [activeTab, setActiveTab] = useState<ActivityType>('Call');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState<ActivityType>('Email');
   const [isSummarizing, setIsSummarizing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAiSummary, setShowAiSummary] = useState(false);
+
+  const addToast = (message: string, type: 'success' | 'error' | 'warning' | 'info' | 'ai') => {
+    toastStore.add({
+      type,
+      title: type === 'ai' ? 'AI Insights' : type.charAt(0).toUpperCase() + type.slice(1),
+      message
+    });
+  };
+
   
   // Form State
   const [contactId, setContactId] = useState<number | undefined>(initialContactId);

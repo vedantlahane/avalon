@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { 
   Building2, Search, Filter, Plus, Globe, Users, 
   TrendingUp, DollarSign, Brain, 
-  MapPin, Briefcase, ChevronRight
+  MapPin, Briefcase, ChevronRight, Download
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CompanyWithStats } from '../types';
@@ -11,11 +11,13 @@ import { cn } from '../lib/utils';
 import { EmptyState } from '../components/common/EmptyState';
 import { CardGridSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
+import { ExportModal } from '../components/common/ExportModal';
 
 export const Companies: React.FC = () => {
   const [companies, setCompanies] = useState<CompanyWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     industry: 'All',
@@ -66,6 +68,13 @@ export const Companies: React.FC = () => {
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          <button 
+            onClick={() => setIsExportOpen(true)}
+            className="flex items-center gap-2 bg-card border border-border text-muted-foreground px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all ripple shadow-sm"
+          >
+            <Download size={16} />
+            <span>Export</span>
+          </button>
           <button className="flex items-center gap-2 bg-card border border-border text-muted-foreground px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all ripple shadow-sm">
             <Brain size={16} className="text-primary" />
             <span>AI Enrich</span>
@@ -219,6 +228,14 @@ export const Companies: React.FC = () => {
           </div>
         )}
       </div>
+
+      <ExportModal 
+        isOpen={isExportOpen} 
+        onClose={() => setIsExportOpen(false)} 
+        resource="companies" 
+        totalCount={companies.length}
+        filteredCount={filteredCompanies.length}
+      />
     </div>
   );
 };

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { reportService } from '../services/report.service';
 import { EmptyState } from '../components/common/EmptyState';
+import { ExportModal } from '../components/common/ExportModal';
 import { useNavigate } from 'react-router-dom';
 
 const COLORS = ['#4f46e5', '#8b5cf6', '#ec4899', '#f97316', '#eab308', '#22c55e', '#06b6d4'];
@@ -20,6 +21,7 @@ const Reports: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('sales');
   const [loading, setLoading] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
   const [aiResponse, setAiResponse] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -92,9 +94,12 @@ const Reports: React.FC = () => {
           <p className="text-gray-500 mt-1">Comprehensive insights into your sales pipeline and performance.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors shadow-sm">
-            <Plus size={18} />
-            <span>Create Custom Report</span>
+          <button 
+            onClick={() => setIsExportOpen(true)}
+            className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            <Download size={18} />
+            <span>Download Report</span>
           </button>
           <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm">
             <Sparkles size={18} />
@@ -266,6 +271,13 @@ const Reports: React.FC = () => {
           </>
         )}
       </div>
+
+      <ExportModal 
+        isOpen={isExportOpen} 
+        onClose={() => setIsExportOpen(false)} 
+        resource={activeTab === 'sales' || activeTab === 'pipeline' ? 'deals' : activeTab === 'contact' ? 'contacts' : 'companies'} 
+        totalCount={100} // Mock count for reports page
+      />
     </div>
   );
 };

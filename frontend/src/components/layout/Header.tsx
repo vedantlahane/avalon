@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Bell, Settings, Bot, Terminal, Menu, Sun, Moon, Laptop, Plus, User, LogOut, ChevronDown, BarChart3, BookOpen } from 'lucide-react';
+import { Search, Bell, Settings, Bot, Terminal, Menu, Sun, Moon, Laptop, Plus, User, LogOut, ChevronDown, BarChart3, BookOpen, Activity } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
 import { commandPaletteStore } from '../../lib/command-palette-store';
 import { useTheme } from '../../hooks/useTheme';
@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
   };
 
   const quickAddItems = [
-    { label: 'Activity', icon: <ActivityIcon size={16} />, action: () => activityStore.open() },
+    { label: 'Activity', icon: <Activity size={16} />, action: () => activityStore.open() },
     { label: 'Contact', icon: <User size={16} />, action: () => navigate('/contacts') },
     { label: 'Deal', icon: <Plus size={16} />, action: () => navigate('/deals') },
     { label: 'Task', icon: <Plus size={16} />, action: () => navigate('/tasks') },

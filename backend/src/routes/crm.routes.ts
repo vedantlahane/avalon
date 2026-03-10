@@ -8,11 +8,18 @@ import { emailTemplateController } from '../controllers/emailTemplateController.
 import { dashboardController } from '../controllers/dashboardController.js';
 import { emailController } from '../controllers/emailController.js';
 import { reportController } from '../controllers/reportController.js';
+import { analyzeImport, previewImport, executeImport, exportData } from '../controllers/importExportController.ts';
 
 const crmRoutes = new Hono();
 
 // Dashboard
 crmRoutes.get('/dashboard/stats', dashboardController.getStats);
+
+// Import/Export
+crmRoutes.post('/import/analyze', analyzeImport);
+crmRoutes.post('/import/preview', previewImport);
+crmRoutes.post('/import/execute', executeImport);
+crmRoutes.get('/export', exportData);
 
 // Reports
 crmRoutes.get('/reports/sales-performance', reportController.getSalesPerformance);
