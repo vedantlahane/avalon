@@ -1,5 +1,12 @@
 # API Specification
 
+### Auth Endpoints
+- `GET /auth/me` - Get current user profile
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login with email and password
+- `PATCH /auth/onboarding` - Update user onboarding status and personalization data (Authenticated)
+  - Body: `{ isOnboarded?: boolean, role?: string, teamSize?: string, revenueTarget?: number }`
+
 ### Company Management
 - `GET /crm/companies` - Get all companies with stats
 - `GET /crm/companies/:id` - Get company by ID with stats

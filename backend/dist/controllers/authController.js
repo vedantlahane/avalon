@@ -204,6 +204,19 @@ export async function login(c) {
     }
 }
 /**
+ * PATCH /auth/onboarding
+ * Update user onboarding status and personalization data
+ */
+export async function updateOnboarding(c) {
+    const userId = c.get('userId');
+    const body = await c.req.json();
+    if (!userId) {
+        throw new ApiError(401, 'Unauthorized');
+    }
+    const updatedUser = await userService.updateUserOnboarding(userId, body);
+    return c.json({ user: updatedUser });
+}
+/**
  * POST /auth/phone/send-otp
  * Send OTP to phone number via WhatsApp
  * Body: { phone: string }

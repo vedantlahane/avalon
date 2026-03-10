@@ -61,6 +61,12 @@ authRoutes.get('/me', authMiddleware, catchAsync(authController.getCurrentUser))
  */
 authRoutes.get('/identities', authMiddleware, catchAsync(authController.getUserIdentities));
 /**
+ * PATCH /auth/onboarding
+ * Update onboarding information
+ * Requires: Authorization header with valid JWT
+ */
+authRoutes.patch('/onboarding', authMiddleware, catchAsync(authController.updateOnboarding));
+/**
  * DELETE /auth/identities/:provider
  * Unlink an identity provider (e.g., 'Google', 'GitHub')
  * Requires: Authorization header with valid JWT

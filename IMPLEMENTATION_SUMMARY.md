@@ -1,38 +1,24 @@
 # Implementation Summary
 
-## Features Implemented
+## User Onboarding Flow
+- Created `OnboardingModal` component with 5 steps:
+  - **Welcome Screen**: Intro to NexusCRM AI with animated illustration.
+  - **Quick Setup**: Form to capture user name, role, team size, and revenue target.
+  - **Get Started**: Options to import CSV, use demo data, or start fresh.
+  - **Feature Tour**: Interactive 4-step tour highlighting AI Assistant, Pipeline, AI Insights, and Command Palette.
+  - **Ready Screen**: AI-generated first task suggestion and final call-to-action.
+- Implemented smooth transitions between steps using `framer-motion`.
+- Added skippable functionality at any step.
+- Integrated onboarding trigger in `App.tsx` based on user's `isOnboarded` status.
+- Added progress indicators (dots) at the bottom of the flow.
 
-### Settings Page
-- **Profile Management**: Avatar upload, personal info (name, email, role), timezone, date format, and theme preferences (Light/Dark/Auto).
-- **Pipeline Configuration**: Ability to customize multiple pipelines (New Business, Upsell, Partnership) with custom stages, probabilities, and colors.
-- **AI Configuration**: Comprehensive control over AI assistant behavior, communication style (Professional, Friendly, Concise, Detailed), scoring weights, and data privacy.
-- **Goals & Targets**: Revenue and activity targets for tracking performance with visual progress bars.
-- **Notifications**: Granular settings for email, in-app, and AI-specific alerts (e.g., deal at risk, negative sentiment detection).
-- **Import/Export**: CSV contact import with "🤖 AI Auto-Map" functionality and export options for contacts, deals, activities, and PDF reports.
-- **Integrations**: UI mockups for Gmail (Connected), Google Cal, LinkedIn, Slack, Twilio, and Zapier with interactive connectivity states.
+## Backend & API
+- Updated Prisma schema `User` model with onboarding-related fields: `isOnboarded`, `role`, `teamSize`, and `revenueTarget`.
+- Added `PATCH /auth/onboarding` endpoint to save user preferences and completion status.
+- Updated `userService` and `authController` to handle onboarding updates.
+- Added `authService` to the frontend with mock data support for onboarding state.
 
-### Agent Integration
-- **Updated Agent Config**: Strictly followed provided configuration for the NexusCRM AI Assistant with sync/async trigger events (`new_lead_captured`, `deal_stagnation_alert`, `incoming_email_analysis`).
-
-## Technical Details
-- **UI/UX**: Modern, clean sidebar-based layout using Tailwind CSS v4 and `lucide-react` icons.
-- **Animations**: Added `animate-in fade-in` effects for smooth section transitions.
-- **Responsiveness**: Fully responsive layout designed for both desktop and mobile views.
-
-## Status
-- [x] Profile Section
-- [x] Pipeline Configuration
-- [x] AI Configuration
-- [x] Goals & Targets
-- [x] Notifications
-- [x] Import/Export
-- [x] Integrations
-
-### Notification System
-- **Notification Bell**: Header-mounted bell icon with unread count badge and real-time updates.
-- **Notification Dropdown**: Categorized and time-grouped (Today, Yesterday, Older) notification list.
-- **Toast Notifications**: Interactive top-right alerts for critical AI and system events with auto-dismiss.
-- **Service Integration**: Full frontend/backend integration for marking notifications as read or deleting them.
-- **AI Alerts**: Specialized styling and icons for AI-detected deal risks and sentiment changes.
-
-## Technical Details
+## Navigation & UI
+- Ensured onboarding flow matches the professional and modern design language of the CRM.
+- Used Lucide icons for visual clarity in each onboarding step.
+- Implemented persistent storage of onboarding state in both database and mock local storage.

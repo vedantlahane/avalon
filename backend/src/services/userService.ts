@@ -125,6 +125,21 @@ export async function unlinkIdentity(userId: string, provider: string): Promise<
 }
 
 /**
+ * Update user onboarding information
+ */
+export async function updateUserOnboarding(userId: string, data: {
+    isOnboarded?: boolean;
+    role?: string;
+    teamSize?: string;
+    revenueTarget?: number;
+}): Promise<User> {
+    return await prisma.user.update({
+        where: { id: userId },
+        data
+    });
+}
+
+/**
  * Register user with email and password
  */
 export async function registerWithEmailPassword(email: string, password: string, name?: string): Promise<User> {

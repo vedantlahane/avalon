@@ -108,6 +108,15 @@ export async function unlinkIdentity(userId, provider) {
     });
 }
 /**
+ * Update user onboarding information
+ */
+export async function updateUserOnboarding(userId, data) {
+    return await prisma.user.update({
+        where: { id: userId },
+        data
+    });
+}
+/**
  * Register user with email and password
  */
 export async function registerWithEmailPassword(email, password, name) {

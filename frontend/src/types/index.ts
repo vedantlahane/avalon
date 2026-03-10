@@ -259,6 +259,16 @@ export interface SalesLeaderboard {
 
 export type NotificationType = 'AI' | 'Deal' | 'Task' | 'Email' | 'Contact' | 'System';
 
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  isOnboarded: boolean;
+  role?: string;
+  teamSize?: string;
+  revenueTarget?: number;
+}
+
 export interface Notification {
   id: number;
   type: NotificationType;

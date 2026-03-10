@@ -2054,14 +2054,28 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    revenueTarget: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    revenueTarget: number | null
   }
 
   export type UserMinAggregateOutputType = {
     id: string | null
     email: string | null
     name: string | null
+    isOnboarded: boolean | null
+    role: string | null
+    teamSize: string | null
+    revenueTarget: number | null
     createdAt: Date | null
     isDeleted: boolean | null
   }
@@ -2070,6 +2084,10 @@ export namespace Prisma {
     id: string | null
     email: string | null
     name: string | null
+    isOnboarded: boolean | null
+    role: string | null
+    teamSize: string | null
+    revenueTarget: number | null
     createdAt: Date | null
     isDeleted: boolean | null
   }
@@ -2078,16 +2096,32 @@ export namespace Prisma {
     id: number
     email: number
     name: number
+    isOnboarded: number
+    role: number
+    teamSize: number
+    revenueTarget: number
     createdAt: number
     isDeleted: number
     _all: number
   }
 
 
+  export type UserAvgAggregateInputType = {
+    revenueTarget?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    revenueTarget?: true
+  }
+
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
     name?: true
+    isOnboarded?: true
+    role?: true
+    teamSize?: true
+    revenueTarget?: true
     createdAt?: true
     isDeleted?: true
   }
@@ -2096,6 +2130,10 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    isOnboarded?: true
+    role?: true
+    teamSize?: true
+    revenueTarget?: true
     createdAt?: true
     isDeleted?: true
   }
@@ -2104,6 +2142,10 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    isOnboarded?: true
+    role?: true
+    teamSize?: true
+    revenueTarget?: true
     createdAt?: true
     isDeleted?: true
     _all?: true
@@ -2147,6 +2189,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -2177,6 +2231,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -2185,9 +2241,15 @@ export namespace Prisma {
     id: string
     email: string
     name: string | null
+    isOnboarded: boolean | null
+    role: string | null
+    teamSize: string | null
+    revenueTarget: number | null
     createdAt: Date
     isDeleted: boolean | null
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -2210,6 +2272,10 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    isOnboarded?: boolean
+    role?: boolean
+    teamSize?: boolean
+    revenueTarget?: boolean
     createdAt?: boolean
     isDeleted?: boolean
     identities?: boolean | User$identitiesArgs<ExtArgs>
@@ -2220,6 +2286,10 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    isOnboarded?: boolean
+    role?: boolean
+    teamSize?: boolean
+    revenueTarget?: boolean
     createdAt?: boolean
     isDeleted?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2228,6 +2298,10 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    isOnboarded?: boolean
+    role?: boolean
+    teamSize?: boolean
+    revenueTarget?: boolean
     createdAt?: boolean
     isDeleted?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2236,11 +2310,15 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    isOnboarded?: boolean
+    role?: boolean
+    teamSize?: boolean
+    revenueTarget?: boolean
     createdAt?: boolean
     isDeleted?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "createdAt" | "isDeleted", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "isOnboarded" | "role" | "teamSize" | "revenueTarget" | "createdAt" | "isDeleted", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     identities?: boolean | User$identitiesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2257,6 +2335,10 @@ export namespace Prisma {
       id: string
       email: string
       name: string | null
+      isOnboarded: boolean | null
+      role: string | null
+      teamSize: string | null
+      revenueTarget: number | null
       createdAt: Date
       isDeleted: boolean | null
     }, ExtArgs["result"]["user"]>
@@ -2686,6 +2768,10 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly isOnboarded: FieldRef<"User", 'Boolean'>
+    readonly role: FieldRef<"User", 'String'>
+    readonly teamSize: FieldRef<"User", 'String'>
+    readonly revenueTarget: FieldRef<"User", 'Float'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly isDeleted: FieldRef<"User", 'Boolean'>
   }
@@ -16782,6 +16868,10 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     name: 'name',
+    isOnboarded: 'isOnboarded',
+    role: 'role',
+    teamSize: 'teamSize',
+    revenueTarget: 'revenueTarget',
     createdAt: 'createdAt',
     isDeleted: 'isDeleted'
   };
@@ -17073,6 +17163,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -17083,13 +17194,6 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -17119,20 +17223,6 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
   /**
    * Deep Input Types
    */
@@ -17145,6 +17235,10 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
+    isOnboarded?: BoolNullableFilter<"User"> | boolean | null
+    role?: StringNullableFilter<"User"> | string | null
+    teamSize?: StringNullableFilter<"User"> | string | null
+    revenueTarget?: FloatNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     isDeleted?: BoolNullableFilter<"User"> | boolean | null
     identities?: UserIdentityListRelationFilter
@@ -17154,6 +17248,10 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    isOnboarded?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    teamSize?: SortOrderInput | SortOrder
+    revenueTarget?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     isDeleted?: SortOrderInput | SortOrder
     identities?: UserIdentityOrderByRelationAggregateInput
@@ -17166,6 +17264,10 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    isOnboarded?: BoolNullableFilter<"User"> | boolean | null
+    role?: StringNullableFilter<"User"> | string | null
+    teamSize?: StringNullableFilter<"User"> | string | null
+    revenueTarget?: FloatNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     isDeleted?: BoolNullableFilter<"User"> | boolean | null
     identities?: UserIdentityListRelationFilter
@@ -17175,11 +17277,17 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    isOnboarded?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    teamSize?: SortOrderInput | SortOrder
+    revenueTarget?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     isDeleted?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -17189,6 +17297,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    isOnboarded?: BoolNullableWithAggregatesFilter<"User"> | boolean | null
+    role?: StringNullableWithAggregatesFilter<"User"> | string | null
+    teamSize?: StringNullableWithAggregatesFilter<"User"> | string | null
+    revenueTarget?: FloatNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     isDeleted?: BoolNullableWithAggregatesFilter<"User"> | boolean | null
   }
@@ -18363,6 +18475,10 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    isOnboarded?: boolean | null
+    role?: string | null
+    teamSize?: string | null
+    revenueTarget?: number | null
     createdAt?: Date | string
     isDeleted?: boolean | null
     identities?: UserIdentityCreateNestedManyWithoutUserInput
@@ -18372,6 +18488,10 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    isOnboarded?: boolean | null
+    role?: string | null
+    teamSize?: string | null
+    revenueTarget?: number | null
     createdAt?: Date | string
     isDeleted?: boolean | null
     identities?: UserIdentityUncheckedCreateNestedManyWithoutUserInput
@@ -18381,6 +18501,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    teamSize?: NullableStringFieldUpdateOperationsInput | string | null
+    revenueTarget?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
     identities?: UserIdentityUpdateManyWithoutUserNestedInput
@@ -18390,6 +18514,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    teamSize?: NullableStringFieldUpdateOperationsInput | string | null
+    revenueTarget?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
     identities?: UserIdentityUncheckedUpdateManyWithoutUserNestedInput
@@ -18399,6 +18527,10 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    isOnboarded?: boolean | null
+    role?: string | null
+    teamSize?: string | null
+    revenueTarget?: number | null
     createdAt?: Date | string
     isDeleted?: boolean | null
   }
@@ -18407,6 +18539,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    teamSize?: NullableStringFieldUpdateOperationsInput | string | null
+    revenueTarget?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -18415,6 +18551,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    teamSize?: NullableStringFieldUpdateOperationsInput | string | null
+    revenueTarget?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -19781,6 +19921,22 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -19790,11 +19946,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type BoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
   export type UserIdentityListRelationFilter = {
@@ -19816,14 +19967,26 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    isOnboarded?: SortOrder
+    role?: SortOrder
+    teamSize?: SortOrder
+    revenueTarget?: SortOrder
     createdAt?: SortOrder
     isDeleted?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    revenueTarget?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    isOnboarded?: SortOrder
+    role?: SortOrder
+    teamSize?: SortOrder
+    revenueTarget?: SortOrder
     createdAt?: SortOrder
     isDeleted?: SortOrder
   }
@@ -19832,8 +19995,16 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    isOnboarded?: SortOrder
+    role?: SortOrder
+    teamSize?: SortOrder
+    revenueTarget?: SortOrder
     createdAt?: SortOrder
     isDeleted?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    revenueTarget?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -19872,6 +20043,30 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -19884,14 +20079,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -20862,12 +21049,20 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type UserIdentityUpdateManyWithoutUserNestedInput = {
@@ -21586,6 +21781,22 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -21595,11 +21806,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -21658,6 +21864,30 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -21670,14 +21900,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -21768,17 +21990,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -21875,6 +22086,10 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    isOnboarded?: boolean | null
+    role?: string | null
+    teamSize?: string | null
+    revenueTarget?: number | null
     createdAt?: Date | string
     isDeleted?: boolean | null
   }
@@ -21883,6 +22098,10 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    isOnboarded?: boolean | null
+    role?: string | null
+    teamSize?: string | null
+    revenueTarget?: number | null
     createdAt?: Date | string
     isDeleted?: boolean | null
   }
@@ -21907,6 +22126,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    teamSize?: NullableStringFieldUpdateOperationsInput | string | null
+    revenueTarget?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -21915,6 +22138,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    teamSize?: NullableStringFieldUpdateOperationsInput | string | null
+    revenueTarget?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }

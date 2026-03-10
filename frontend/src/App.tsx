@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -19,13 +19,36 @@ import { Settings } from './pages/Settings';
 import { ToastProvider } from './components/layout/ToastProvider';
 import { EmailComposerModal } from './components/layout/EmailComposerModal';
 import { CommandPalette } from './components/layout/CommandPalette';
+import OnboardingModal from './components/onboarding/OnboardingModal';
+import { authService } from './services/auth.service';
+import { User } from './types';
 import { useNotificationSimulator } from './hooks/useNotificationSimulator';
 import { commandPaletteStore } from './lib/command-palette-store';
 import { cn } from './lib/utils';
 
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [loading, setLoading] = useState(true);
   useNotificationSimulator();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+        if (!currentUser.isOnboarded) {
+          setShowOnboarding(true);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -88,6 +111,16 @@ const App: React.FC = () => {
         <AIPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
         <EmailComposerModal />
         <CommandPalette />
+        
+        {showOnboarding && (
+          <OnboardingModal 
+            onComplete={(updatedUser) => {
+              setUser(updatedUser);
+              setShowOnboarding(false);
+            }} 
+            onSkip={() => setShowOnboarding(false)}
+          />
+        )}
       </div>
     </Router>
     );
