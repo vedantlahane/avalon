@@ -6,6 +6,13 @@
 - `PATCH /email-templates/:id` - Update an email template
 - `DELETE /email-templates/:id` - Delete an email template (soft delete)
 
+### Task Management
+- `GET /tasks` - Get all tasks (with contact and deal info)
+- `GET /tasks/suggestions` - Get AI suggested tasks based on CRM data
+- `POST /tasks` - Create a new task
+- `PATCH /tasks/:id` - Update a task (status, priority, etc.)
+- `DELETE /tasks/:id` - Soft delete a task
+
 ### AI Integration
 - `POST /ai/chat` - AI Chat Assistant endpoint for CRM queries and insights. Returns a stream of messages.
 

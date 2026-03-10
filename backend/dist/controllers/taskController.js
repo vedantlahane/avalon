@@ -20,5 +20,9 @@ export const taskController = {
         const id = parseInt(c.req.param('id'));
         await taskService.deleteTask(id);
         return c.json({ message: 'Task deleted successfully' });
+    }),
+    getSuggestions: catchAsync(async (c) => {
+        const suggestions = await taskService.getSuggestions();
+        return c.json(suggestions);
     })
 };

@@ -57,6 +57,7 @@ crmRoutes.delete('/activities/:id', activityController.deleteActivity);
 
 // Tasks
 crmRoutes.get('/tasks', taskController.getTasks);
+crmRoutes.get('/tasks/suggestions', taskController.getSuggestions);
 crmRoutes.post('/tasks', taskController.createTask);
 crmRoutes.patch('/tasks/:id', taskController.updateTask);
 crmRoutes.delete('/tasks/:id', taskController.deleteTask);
