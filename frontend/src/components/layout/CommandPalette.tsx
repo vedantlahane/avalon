@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, User, Building2, DollarSign, Plus, Mail, MessageSquare, ListCheck, BarChart3, TrendingUp, Info, Zap, X } from 'lucide-react';
+import { Search, User, Building2, DollarSign, Plus, Mail, MessageSquare, ListCheck, BarChart3, TrendingUp, Info, Zap, X, Clock } from 'lucide-react';
 import { commandPaletteStore } from '../../lib/command-palette-store';
 import { cn } from '../../lib/utils';
 import { MOCK_CONTACTS, MOCK_COMPANIES, MOCK_DEALS } from '../../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import { composerStore } from '../../lib/composer-store';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CommandResult {
   type: 'header' | 'item';
@@ -61,34 +62,31 @@ export const CommandPalette: React.FC = () => {
   ).slice(0, 5) : [];
 
   const quickActions = [
-    { icon: <Plus size={18} />, label: 'New Contact', action: () => navigate('/contacts') },
-    { icon: <Plus size={18} />, label: 'New Deal', action: () => navigate('/deals') },
-    { icon: <Plus size={18} />, label: 'New Task', action: () => navigate('/tasks') },
-    { icon: <Mail size={18} />, label: 'Compose Email', action: () => composerStore.open() },
-    { icon: <MessageSquare size={18} />, label: 'Ask AI', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
+    { icon: <Plus size={16} />, label: 'New Contact', action: () => navigate('/contacts') },
+    { icon: <Plus size={16} />, label: 'New Deal', action: () => navigate('/deals') },
+    { icon: <Plus size={16} />, label: 'New Task', action: () => navigate('/tasks') },
+    { icon: <Mail size={16} />, label: 'Compose Email', action: () => composerStore.open() },
+    { icon: <MessageSquare size={16} />, label: 'Ask AI', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
   ];
 
   const recent = [
-    { icon: <User size={18} className="text-blue-500" />, label: 'John Smith', action: () => navigate('/contacts/1') },
-    { icon: <DollarSign size={18} className="text-green-500" />, label: 'Acme Enterprise Plan', action: () => navigate('/deals/1') },
-    { icon: <Mail size={18} className="text-indigo-500" />, label: 'Sent follow-up to Sarah', action: () => navigate('/inbox') },
+    { icon: <Clock size={16} className="text-muted-foreground" />, label: 'John Smith', sublabel: 'Contact', action: () => navigate('/contacts/1') },
+    { icon: <Clock size={16} className="text-muted-foreground" />, label: 'Acme Enterprise Plan', sublabel: 'Deal', action: () => navigate('/deals/1') },
+    { icon: <Clock size={16} className="text-muted-foreground" />, label: 'Sent follow-up to Sarah', sublabel: 'Email', action: () => navigate('/inbox') },
   ];
 
   const aiCommands = [
-    { icon: <Mail size={18} />, command: '/email', description: 'Open email composer', action: () => composerStore.open() },
-    { icon: <Zap size={18} />, command: '/call', description: 'Log a call', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
-    { icon: <DollarSign size={18} />, command: '/deal', description: 'Create or find deal', action: () => navigate('/deals') },
-    { icon: <ListCheck size={18} />, command: '/task', description: 'Create task', action: () => navigate('/tasks') },
-    { icon: <BarChart3 size={18} />, command: '/report', description: 'Generate report', action: () => navigate('/reports') },
-    { icon: <Zap size={18} />, command: '/score', description: 'View lead score', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
-    { icon: <TrendingUp size={18} />, command: '/forecast', description: 'Pipeline forecast', action: () => navigate('/reports') },
-    { icon: <Zap size={18} />, command: '/insights', description: 'AI daily insights', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
+    { icon: <Mail size={16} />, command: '/email', description: 'Open email composer', action: () => composerStore.open() },
+    { icon: <Zap size={16} />, command: '/call', description: 'Log a call', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
+    { icon: <DollarSign size={16} />, command: '/deal', description: 'Create or find deal', action: () => navigate('/deals') },
+    { icon: <ListCheck size={16} />, command: '/task', description: 'Create task', action: () => navigate('/tasks') },
+    { icon: <BarChart3 size={16} />, command: '/report', description: 'Generate report', action: () => navigate('/reports') },
   ];
 
   const results: CommandResult[] = [];
   
   if (!query) {
-    results.push({ type: 'header', label: 'Recent' });
+    results.push({ type: 'header', label: 'Recent Searches' });
     recent.forEach(r => results.push({ type: 'item', ...r }));
     
     results.push({ type: 'header', label: 'Quick Actions' });
@@ -104,7 +102,7 @@ export const CommandPalette: React.FC = () => {
       results.push({ type: 'header', label: 'AI Commands' });
       matchedAiCommands.forEach(c => results.push({ 
         type: 'item', 
-        icon: <Zap size={18} className="text-indigo-500" />, 
+        icon: <Zap size={16} className="text-indigo-500" />, 
         label: c.command, 
         sublabel: c.description,
         action: c.action
@@ -116,7 +114,7 @@ export const CommandPalette: React.FC = () => {
         results.push({ type: 'header', label: 'Contacts' });
         filteredContacts.forEach(c => results.push({ 
             type: 'item', 
-            icon: <User size={18} className="text-blue-500" />, 
+            icon: <User size={16} className="text-blue-500" />, 
             label: `${c.firstName} ${c.lastName}`, 
             sublabel: c.jobTitle + ' at ' + c.company?.name,
             action: () => navigate(`/contacts/${c.id}`)
@@ -127,7 +125,7 @@ export const CommandPalette: React.FC = () => {
         results.push({ type: 'header', label: 'Companies' });
         filteredCompanies.forEach(c => results.push({ 
             type: 'item', 
-            icon: <Building2 size={18} className="text-orange-500" />, 
+            icon: <Building2 size={16} className="text-orange-500" />, 
             label: c.name, 
             action: () => navigate('/companies')
         }));
@@ -137,7 +135,7 @@ export const CommandPalette: React.FC = () => {
         results.push({ type: 'header', label: 'Deals' });
         filteredDeals.forEach(d => results.push({ 
             type: 'item', 
-            icon: <DollarSign size={18} className="text-green-500" />, 
+            icon: <DollarSign size={16} className="text-green-500" />, 
             label: d.name, 
             sublabel: `$${d.value.toLocaleString()}`,
             action: () => navigate(`/deals/${d.id}`)
@@ -165,126 +163,139 @@ export const CommandPalette: React.FC = () => {
     }
   };
 
-  if (!isOpen) return null;
-
   const itemResults = results.filter(r => r.type === 'item');
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] px-4">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" 
-        onClick={() => commandPaletteStore.close()}
-      />
-      
-      {/* Modal */}
-      <div className="relative w-full max-w-[600px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center border-b border-gray-100 p-4">
-          <Search className="text-gray-400 mr-3" size={20} />
-          <input
-            ref={inputRef}
-            type="text"
-            className="flex-1 bg-transparent border-none outline-none text-lg text-gray-900 placeholder-gray-400"
-            placeholder="Type a command or search..."
-            value={query}
-            onChange={(e) => {
-                setQuery(e.target.value);
-                setSelectedIndex(0);
-            }}
-            onKeyDown={handleKeyDown}
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
+            onClick={() => commandPaletteStore.close()}
           />
-          <div className="flex items-center gap-2">
-            <kbd className="px-2 py-1 bg-gray-100 border border-gray-200 rounded text-[10px] font-bold text-gray-500 uppercase">ESC</kbd>
-          </div>
-        </div>
-
-        <div className="max-h-[400px] overflow-y-auto py-2">
-          {results.length === 0 ? (
-            <div className="px-6 py-10 text-center">
-              <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Info size={24} className="text-gray-400" />
-              </div>
-              <p className="text-gray-500 font-medium">No results found for "{query}"</p>
-              <p className="text-gray-400 text-sm mt-1">Try searching for a contact, company, or deal</p>
+          
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -20 }}
+            className="relative w-full max-w-[640px] bg-card border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+          >
+            <div className="flex items-center border-b border-border p-4">
+              <Search className="text-muted-foreground mr-3" size={20} />
+              <input
+                ref={inputRef}
+                type="text"
+                className="flex-1 bg-transparent border-none outline-none text-lg text-foreground placeholder-muted-foreground"
+                placeholder="Search contacts, deals, companies... (⌘K)"
+                value={query}
+                onChange={(e) => {
+                    setQuery(e.target.value);
+                    setSelectedIndex(0);
+                }}
+                onKeyDown={handleKeyDown}
+              />
+              <button 
+                onClick={() => commandPaletteStore.close()}
+                className="p-1.5 hover:bg-muted rounded-lg text-muted-foreground transition-colors"
+              >
+                <X size={18} />
+              </button>
             </div>
-          ) : (
-            results.map((result, index) => {
-              if (result.type === 'header') {
-                return (
-                  <div key={`header-${result.label}`} className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    {result.label}
-                  </div>
-                );
-              }
 
-              const itemIndex = results.slice(0, index).filter(r => r.type === 'item').length;
-              const isSelected = itemIndex === selectedIndex;
-
-              return (
-                <button
-                  key={`item-${index}`}
-                  className={cn(
-                    "w-full flex items-center px-4 py-2.5 text-left transition-colors relative group",
-                    isSelected ? "bg-indigo-50" : "hover:bg-gray-50"
-                  )}
-                  onClick={() => {
-                    result.action?.();
-                    commandPaletteStore.close();
-                  }}
-                  onMouseEnter={() => setSelectedIndex(itemIndex)}
-                >
-                  {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-600" />}
-                  <div className={cn(
-                    "w-9 h-9 rounded-lg flex items-center justify-center mr-3 transition-colors",
-                    isSelected ? "bg-white shadow-sm" : "bg-gray-50 group-hover:bg-white"
-                  )}>
-                    {result.icon}
+            <div className="max-h-[480px] overflow-y-auto py-2 custom-scrollbar">
+              {results.length === 0 ? (
+                <div className="px-6 py-12 text-center">
+                  <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Info size={24} className="text-muted-foreground" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className={cn("font-medium truncate", isSelected ? "text-indigo-900" : "text-gray-900")}>
+                  <p className="text-foreground font-bold">No results found for "{query}"</p>
+                  <p className="text-muted-foreground text-sm mt-1">Try searching for something else or use AI commands</p>
+                </div>
+              ) : (
+                results.map((result, index) => {
+                  if (result.type === 'header') {
+                    return (
+                      <div key={`header-${result.label}`} className="px-4 py-2 mt-2 first:mt-0 text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-50">
                         {result.label}
-                      </span>
-                      {result.type_label && (
-                        <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded ml-2 uppercase font-bold">
-                          {result.type_label}
-                        </span>
-                      )}
-                    </div>
-                    {result.sublabel && (
-                      <div className="text-xs text-gray-500 truncate mt-0.5">{result.sublabel}</div>
-                    )}
-                  </div>
-                  {isSelected && (
-                    <div className="ml-3 flex items-center gap-1 opacity-60">
-                       <span className="text-[10px] font-bold text-indigo-600">ENTER</span>
-                    </div>
-                  )}
-                </button>
-              );
-            })
-          )}
-        </div>
+                      </div>
+                    );
+                  }
 
-        <div className="border-t border-gray-100 p-3 bg-gray-50 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-[10px] text-gray-400 font-bold uppercase tracking-tight">
-            <div className="flex items-center gap-1.5">
-              <kbd className="p-1 bg-white border border-gray-200 rounded text-[9px] min-w-[16px] flex items-center justify-center shadow-sm">↑</kbd>
-              <kbd className="p-1 bg-white border border-gray-200 rounded text-[9px] min-w-[16px] flex items-center justify-center shadow-sm">↓</kbd>
-              <span>to navigate</span>
+                  const itemIndex = results.slice(0, index).filter(r => r.type === 'item').length;
+                  const isSelected = itemIndex === selectedIndex;
+
+                  return (
+                    <button
+                      key={`item-${index}`}
+                      className={cn(
+                        "w-full flex items-center px-4 py-2.5 text-left transition-all relative group",
+                        isSelected ? "bg-primary/10" : "hover:bg-muted/50"
+                      )}
+                      onClick={() => {
+                        result.action?.();
+                        commandPaletteStore.close();
+                      }}
+                      onMouseEnter={() => setSelectedIndex(itemIndex)}
+                    >
+                      {isSelected && <div className="absolute left-0 top-1 bottom-1 w-1 bg-primary rounded-r-full" />}
+                      <div className={cn(
+                        "w-9 h-9 rounded-xl flex items-center justify-center mr-3 transition-all",
+                        isSelected ? "bg-card shadow-sm scale-110" : "bg-muted"
+                      )}>
+                        {result.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className={cn("font-bold truncate text-sm", isSelected ? "text-primary" : "text-foreground")}>
+                            {result.label}
+                          </span>
+                          {result.type_label && (
+                            <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded ml-2 uppercase font-black tracking-tighter">
+                              {result.type_label}
+                            </span>
+                          )}
+                        </div>
+                        {result.sublabel && (
+                          <div className="text-xs text-muted-foreground truncate mt-0.5 font-medium">{result.sublabel}</div>
+                        )}
+                      </div>
+                      {isSelected && (
+                        <div className="ml-3 flex items-center gap-1 opacity-60">
+                           <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border text-[9px] font-bold text-muted-foreground">ENTER</kbd>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })
+              )}
             </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="p-1 px-1.5 bg-white border border-gray-200 rounded text-[9px] shadow-sm">ENTER</kbd>
-              <span>to select</span>
+
+            <div className="border-t border-border p-3 bg-muted/30 flex items-center justify-between">
+              <div className="flex items-center gap-4 text-[9px] text-muted-foreground font-black uppercase tracking-widest">
+                <div className="flex items-center gap-1.5">
+                  <div className="flex gap-1">
+                    <kbd className="px-1 bg-card border border-border rounded shadow-sm text-[10px]">↑</kbd>
+                    <kbd className="px-1 bg-card border border-border rounded shadow-sm text-[10px]">↓</kbd>
+                  </div>
+                  <span>to navigate</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <kbd className="px-1.5 bg-card border border-border rounded shadow-sm text-[10px]">ENTER</kbd>
+                  <span>to select</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-black uppercase tracking-widest">
+                 <span>Prefix with </span>
+                 <kbd className="px-1.5 bg-card border border-border rounded text-primary shadow-sm">/</kbd>
+                 <span> for AI</span>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-tight">
-             <span>Prefix with </span>
-             <kbd className="p-1 px-1.5 bg-white border border-gray-200 rounded text-[9px] text-indigo-600 shadow-sm">/</kbd>
-             <span> for AI commands</span>
-          </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 };

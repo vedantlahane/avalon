@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { AIPanel } from './components/layout/AIPanel';
+import { Breadcrumbs } from './components/layout/Breadcrumbs';
 import { Dashboard } from './pages/Dashboard';
 import { Deals } from './pages/Deals';
 import { DealDetail } from './pages/DealDetail';
@@ -25,8 +27,41 @@ import { User } from './types';
 import { useNotificationSimulator } from './hooks/useNotificationSimulator';
 import { commandPaletteStore } from './lib/command-palette-store';
 import { cn } from './lib/utils';
-
 import { MobileFAB } from './components/layout/MobileFAB';
+
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -10 }}
+        transition={{ duration: 0.2 }}
+        className="h-full"
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/deals" element={<Deals />} />
+          <Route path="/deals/:id" element={<DealDetail />} />
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/contacts/:id" element={<ContactDetail />} />
+          <Route path="/companies" element={<Companies />} />
+          <Route path="/companies/:id" element={<CompanyDetail />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="/templates" element={<EmailTemplates />} />
+          <Route path="/sentiment" element={<SentimentAnalysis />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 const App: React.FC = () => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
@@ -79,25 +114,11 @@ const App: React.FC = () => {
         
         <div className="flex-1 flex flex-col min-w-0 relative h-full">
           <Header />
+          <Breadcrumbs />
           
           <main className="flex-1 overflow-y-auto custom-scrollbar relative bg-background">
             <div className="h-full">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/deals" element={<Deals />} />
-                <Route path="/deals/:id" element={<DealDetail />} />
-                <Route path="/contacts" element={<Contacts />} />
-                <Route path="/contacts/:id" element={<ContactDetail />} />
-                <Route path="/companies" element={<Companies />} />
-                <Route path="/companies/:id" element={<CompanyDetail />} />
-                <Route path="/inbox" element={<Inbox />} />
-                <Route path="/templates" element={<EmailTemplates />} />
-                <Route path="/sentiment" element={<SentimentAnalysis />} />
-                <Route path="/tasks" element={<Tasks />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+              <AnimatedRoutes />
             </div>
           </main>
           
@@ -133,6 +154,5 @@ const App: React.FC = () => {
     </Router>
   );
 };
-
 
 export default App;
