@@ -1,57 +1,32 @@
-# Implementation Summary - Add Deal Modal/Drawer
+# Implementation Summary - Deal Forecast View
 
 ## Features Implemented
 
-### Deal Modal/Drawer (Frontend)
-- **Form Layout**: Right-side drawer with 550px width and clean sectioning.
-- **Section 1: Deal Information**:
-  - Deal Name with AI-suggested naming based on selected company.
-  - Deal Value and Currency dropdown (USD, EUR, GBP, INR).
-  - Pipeline Stage with colored status indicators.
-  - Priority dropdown with colored emojis (Low, Medium, High, Critical).
-- **Section 2: Associations**:
-  - Searchable Contact and Company dropdowns using `react-select`.
-  - Automatic company population when a contact is selected.
-  - Deal Owner dropdown.
-- **Section 3: Timeline**:
-  - Expected Close Date with AI-suggested date (~45 days out).
-  - Read-only Created Date.
-- **Section 4: Additional Details**:
-  - Win Probability slider (0-100%) with dynamic color coding (Red/Yellow/Green).
-  - Competitors tag input system.
-  - Notes text area.
-- **Section 5: Products/Line Items**:
-  - Dynamic line item addition/removal.
-  - Fields for Product Name, Quantity, and Unit Price.
-  - Automatic calculation of total deal value based on line items.
-- **AI Features**:
-  - "🤖 AI Assist" button providing realistic suggestions for value, products, and timeline based on contact profile.
-- **Save Actions**:
-  - "Save Deal" and "Save & Add Another" buttons.
-  - Success toast notifications using `react-hot-toast`.
+### Deal Forecast Page (Third tab in Pipeline)
+- **Forecast Header**: 
+  - Time period selector (This Month, This Quarter, This Year, Custom).
+  - Grouping toggle (By Stage, By Owner, By Month).
+  - AI Confidence toggle switch to adjust forecast visualization.
+- **Forecast Table**:
+  - Detailed breakdown of deals by category (Qualified, Discovery, Proposal, Negotiation).
+  - Metrics: Count, Value, Weighted Value, and AI Adjusted Value.
+  - Performance indicators for Won (MTD) and Lost (MTD).
+- **AI Forecast Insights Panel**:
+  - AI-generated trends and performance analysis.
+  - Stalled deal alerts with risk assessment.
+  - Strategic recommendations for hitting targets.
+  - Forecast prediction with confidence score.
+- **Data Visualizations**:
+  - **Revenue Forecast (Stacked Bar)**: Monthly revenue breakdown by stage with quota reference.
+  - **Sales Funnel Efficiency**: Visual funnel showing conversion rates between stages and AI-detected bottlenecks.
+  - **Revenue Trend & Predictions**: Historical performance trend with AI-predicted future range and confidence bands.
 
-### Deal Detail View (Frontend)
-- Updated `DealDetailDrawer` to display new fields:
-  - Competitors list.
-  - Products/Line Items table with total value.
+### Backend & API
+- **New API Endpoint**: `GET /deals/forecast` implemented in Hono.js.
+- **Service Layer**: Added `getForecastData` to frontend `deal.service.ts` and `getForecast` to backend `dealService.ts`.
+- **API Specification**: Updated `frontend/API_SPECIFICATION.md` with the new forecast route.
 
-### Backend Updates
-- **Prisma Schema**:
-  - Added `competitors` (String array) to `Deal` model.
-  - Created `LineItem` model with relation to `Deal`.
-- **Deal Service**:
-  - Updated `createDeal` and `updateDeal` to handle line items correctly.
-  - Implemented soft-delete for line items during updates to ensure data integrity and compliance with soft-delete rules.
-  - Updated `getDeals` and `getDealById` to include line items.
-
-## Prerequisite Prgress
-- [x] Pre-load CRM with demo data
-- [x] Fix 404 error in email service
-- [x] Contacts Page implementation
-- [x] Site-wide name change to Avalon
-- [x] Add Contact Modal implementation
-- [x] Contact Detail Page implementation
-- [x] AI Contact Enrichment feature
-- [x] Index.html updates (Title & Favicon)
-- [x] Deal Pipeline (Kanban Board) implementation
-- [x] Add Deal Modal/Drawer implementation (Current)
+### Technical Updates
+- **Charting Library**: Integrated `recharts` for interactive and responsive data visualization.
+- **Type Safety**: Ensured complete TypeScript compatibility across new components and services.
+- **Build Verification**: Verified both frontend and backend builds pass without errors.

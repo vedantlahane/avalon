@@ -22,6 +22,7 @@
 - `GET /deals/:id` - Get a deal by id
 - `PATCH /deals/:id` - Update a deal
 - `DELETE /deals/:id` - Soft delete a deal
+- `GET /deals/forecast` - Get deal forecast data based on time period (this_month, this_quarter, this_year) and category (stage, owner, month)
 
 ## Activities
 - `GET /activities` - List all activities

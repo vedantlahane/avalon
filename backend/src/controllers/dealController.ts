@@ -32,5 +32,14 @@ export const dealController = {
     const id = parseInt(c.req.param('id'));
     await dealService.deleteDeal(id);
     return c.json({ message: 'Deal deleted successfully' });
+  }),
+
+  getForecast: catchAsync(async (c: Context) => {
+    const timePeriod = c.req.query('timePeriod') || 'this_quarter';
+    const category = c.req.query('category') || 'stage';
+    const aiConfidence = c.req.query('aiConfidence') === 'true';
+    
+    const forecast = await dealService.getForecast(timePeriod, category, aiConfidence);
+    return c.json(forecast);
   })
 };

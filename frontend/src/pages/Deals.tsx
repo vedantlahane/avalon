@@ -45,6 +45,7 @@ import { cn } from '../lib/utils';
 import { format } from 'date-fns';
 import { DealModal } from '../components/deals/DealModal';
 import { DealDetailDrawer } from '../components/deals/DealDetailDrawer';
+import { DealForecast } from '../components/deals/DealForecast';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
   { id: 'Lead', label: 'Lead', borderColor: 'border-t-[#9CA3AF]', color: 'text-[#9CA3AF]' },
@@ -316,33 +317,109 @@ export const Deals: React.FC = () => {
         </button>
       </div>
 
-      {/* Kanban Board */}
-      <div className="flex-1 overflow-x-auto pb-4 -mx-6 px-6">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="flex gap-4 h-full min-w-max pb-2">
-            {STAGES.map(stage => (
-              <Column 
-                key={stage.id} 
-                stage={stage} 
-                deals={filteredDeals.filter(d => d.stage === stage.id)} 
-                onAddDeal={() => openAddModal(stage.id)}
-                onCardClick={openDrawer}
-              />
-            ))}
-          </div>
+      {/* Main Pipeline View */}
+      <div className={cn(
+        "flex-1 overflow-x-auto pb-4",
+        view === 'Kanban' ? "-mx-6 px-6" : ""
+      )}>
+        {view === 'Kanban' && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="flex gap-4 h-full min-w-max pb-2">
+              {STAGES.map(stage => (
+                <Column 
+                  key={stage.id} 
+                  stage={stage} 
+                  deals={filteredDeals.filter(d => d.stage === stage.id)} 
+                  onAddDeal={() => openAddModal(stage.id)}
+                  onCardClick={openDrawer}
+                />
+              ))}
+            </div>
 
-          <DragOverlay dropAnimation={dropAnimation}>
-            {activeId ? (
-              <DealCard deal={deals.find(d => d.id === activeId)!} isOverlay />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+            <DragOverlay dropAnimation={dropAnimation}>
+              {activeId ? (
+                <DealCard deal={deals.find(d => d.id === activeId)!} isOverlay />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        )}
+
+        {view === 'List' && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Deal Name</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Company</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Stage</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Value</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Owner</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Close Date</th>
+                  <th className="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredDeals.map((deal) => (
+                  <tr 
+                    key={deal.id} 
+                    className="hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => openDrawer(deal.id)}
+                  >
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-gray-900">{deal.name}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <Building2 size={14} className="text-gray-400" />
+                        <span className="text-sm text-gray-600">{deal.company?.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className={cn(
+                          "w-2 h-2 rounded-full",
+                          STAGES.find(s => s.id === deal.stage)?.color.replace('text', 'bg')
+                        )} />
+                        <span className="text-sm font-medium text-gray-700">{deal.stage}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-gray-900">${deal.value.toLocaleString()}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600 uppercase">
+                          {deal.owner?.charAt(0) || 'U'}
+                        </div>
+                        <span className="text-sm text-gray-600">{deal.owner || 'Unassigned'}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500">
+                        {deal.expectedCloseDate ? format(new Date(deal.expectedCloseDate), 'MMM d, yyyy') : 'TBD'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="p-1 text-gray-400 hover:text-gray-600" onClick={(e) => { e.stopPropagation(); /* handle actions */ }}>
+                        <MoreHorizontal size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {view === 'Forecast' && (
+          <DealForecast onDealClick={openDrawer} />
+        )}
       </div>
 
       {/* Modal & Drawer */}

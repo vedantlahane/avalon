@@ -26,6 +26,7 @@ crmRoutes.patch('/companies/:id', companyController.updateCompany);
 crmRoutes.delete('/companies/:id', companyController.deleteCompany);
 // Deals
 crmRoutes.get('/deals', dealController.getDeals);
+crmRoutes.get('/deals/forecast', dealController.getForecast);
 crmRoutes.get('/deals/:id', dealController.getDealById);
 crmRoutes.post('/deals', dealController.createDeal);
 crmRoutes.patch('/deals/:id', dealController.updateDeal);

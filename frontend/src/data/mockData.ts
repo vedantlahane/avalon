@@ -368,20 +368,25 @@ export const MOCK_DEALS: Deal[] = [
   {
     id: 1,
     name: 'Acme Technologies - Enterprise Plan',
-    value: 95000,
+    value: 120000,
     currency: 'USD',
-    stage: 'Closed Won',
+    stage: 'Proposal',
+    probability: 72,
     contactId: 1,
     contact: MOCK_CONTACTS[0],
     companyId: 1,
     company: MOCK_COMPANIES[0],
-    expectedCloseDate: '2026-03-01',
-    actualCloseDate: '2026-03-05',
+    expectedCloseDate: '2026-03-24',
     priority: 'Critical',
-    competitors: [],
+    competitors: ['Competitor X', 'Global Solutions'],
     owner: 'Me',
-    createdAt: new Date(Date.now() - 86400000 * 45).toISOString(),
+    notes: 'Decision maker is Sarah Chen. They are interested in our ROI calculations and technical scalability.',
+    createdAt: '2026-01-15T10:00:00.000Z',
     updatedAt: new Date().toISOString(),
+    lineItems: [
+      { id: 1, dealId: 1, productName: 'Enterprise License', quantity: 1, unitPrice: 100000, total: 100000, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 2, dealId: 1, productName: 'Premium Support', quantity: 1, unitPrice: 20000, total: 20000, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+    ]
   },
   {
     id: 2,
@@ -389,6 +394,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 45000,
     currency: 'USD',
     stage: 'Closed Lost',
+    probability: 0,
     contactId: 2,
     contact: MOCK_CONTACTS[1],
     companyId: 2,
@@ -408,6 +414,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 80000,
     currency: 'USD',
     stage: 'Negotiation',
+    probability: 80,
     contactId: 3,
     contact: MOCK_CONTACTS[2],
     companyId: 3,
@@ -425,6 +432,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 55000,
     currency: 'USD',
     stage: 'Proposal',
+    probability: 60,
     contactId: 4,
     contact: MOCK_CONTACTS[3],
     companyId: 4,
@@ -442,6 +450,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 120000,
     currency: 'USD',
     stage: 'Proposal',
+    probability: 60,
     contactId: 5,
     contact: MOCK_CONTACTS[4],
     companyId: 5,
@@ -459,6 +468,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 60000,
     currency: 'USD',
     stage: 'Qualified',
+    probability: 25,
     contactId: 6,
     contact: MOCK_CONTACTS[5],
     companyId: 6,
@@ -476,6 +486,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 25000,
     currency: 'USD',
     stage: 'Qualified',
+    probability: 25,
     contactId: 7,
     contact: MOCK_CONTACTS[6],
     companyId: 7,
@@ -493,6 +504,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 30000,
     currency: 'USD',
     stage: 'Lead',
+    probability: 10,
     contactId: 8,
     contact: MOCK_CONTACTS[7],
     companyId: 8,
@@ -510,6 +522,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 15000,
     currency: 'USD',
     stage: 'Lead',
+    probability: 10,
     contactId: 9,
     contact: MOCK_CONTACTS[8],
     companyId: 1,
@@ -527,6 +540,7 @@ export const MOCK_DEALS: Deal[] = [
     value: 20000,
     currency: 'USD',
     stage: 'Lead',
+    probability: 10,
     contactId: 10,
     contact: MOCK_CONTACTS[9],
     companyId: 2,
@@ -569,6 +583,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'High',
     status: 'To Do',
     contactId: 1,
+    dealId: 1,
     aiGenerated: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -580,6 +595,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'Medium',
     status: 'In Progress',
     contactId: 2,
+    dealId: 2,
     aiGenerated: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -591,6 +607,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'High',
     status: 'To Do',
     contactId: 4,
+    dealId: 4,
     aiGenerated: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -602,6 +619,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'Medium',
     status: 'To Do',
     contactId: 5,
+    dealId: 5,
     aiGenerated: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -613,6 +631,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'High',
     status: 'To Do',
     contactId: 3,
+    dealId: 3,
     aiGenerated: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -624,6 +643,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'Medium',
     status: 'To Do',
     contactId: 7,
+    dealId: 7,
     aiGenerated: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -635,6 +655,7 @@ export const MOCK_TASKS: Task[] = [
     priority: 'Low',
     status: 'To Do',
     contactId: 8,
+    dealId: 8,
     aiGenerated: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -646,10 +667,23 @@ export const MOCK_TASKS: Task[] = [
     priority: 'Medium',
     status: 'To Do',
     contactId: 6,
+    dealId: 6,
     aiGenerated: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   },
+  {
+    id: 9,
+    title: 'Schedule meeting with CTO',
+    dueDate: new Date(Date.now() + 86400000 * 2).toISOString(),
+    priority: 'High',
+    status: 'To Do',
+    dealId: 1,
+    contactId: 1,
+    aiGenerated: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
 ];
 
 export const MOCK_ACTIVITIES: Activity[] = [
@@ -659,7 +693,8 @@ export const MOCK_ACTIVITIES: Activity[] = [
     title: 'Introductory Call',
     description: 'Discussed overall needs and budget.',
     contactId: 1,
-    date: new Date(Date.now() - 86400000).toISOString(),
+    dealId: 1,
+    date: new Date(Date.now() - 86400000 * 30).toISOString(),
     outcome: 'Completed',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -671,7 +706,43 @@ export const MOCK_ACTIVITIES: Activity[] = [
     description: 'Showed the enterprise dashboard and analytics.',
     contactId: 1,
     dealId: 1,
-    date: new Date(Date.now() - 86400000 * 5).toISOString(),
+    date: new Date(Date.now() - 86400000 * 25).toISOString(),
+    outcome: 'Completed',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 3,
+    type: 'Email',
+    title: 'Sent Proposal',
+    description: 'Sent the enterprise plan proposal with pricing options.',
+    contactId: 1,
+    dealId: 1,
+    date: new Date(Date.now() - 86400000 * 15).toISOString(),
+    outcome: 'Completed',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 4,
+    type: 'Call',
+    title: 'Technical Review',
+    description: 'Answered questions about API integration and security.',
+    contactId: 1,
+    dealId: 1,
+    date: new Date(Date.now() - 86400000 * 10).toISOString(),
+    outcome: 'Completed',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 5,
+    type: 'Email',
+    title: 'Follow up on technical review',
+    description: 'Sent additional documentation on security protocols.',
+    contactId: 1,
+    dealId: 1,
+    date: new Date(Date.now() - 86400000 * 2).toISOString(),
     outcome: 'Completed',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
