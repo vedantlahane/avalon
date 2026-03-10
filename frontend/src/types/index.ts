@@ -131,12 +131,26 @@ export interface EmailTemplate {
 export interface Email {
   id: number;
   sender: string;
+  senderName?: string;
+  senderAvatar?: string;
   subject: string;
   content: string;
   timestamp: string;
   isRead: boolean;
+  isStarred: boolean;
+  isAIFlagged: boolean;
+  folder: 'Inbox' | 'Sent' | 'Drafts' | 'Starred' | 'Trash' | 'AI Generated';
   contactId?: number;
+  contact?: Contact;
+  dealId?: number;
+  dealName?: string;
+  sentiment?: 'Positive' | 'Neutral' | 'Negative' | 'Urgent';
+  sentimentScore?: number;
+  attachments?: { name: string; size: string; type: string }[];
   summary?: string;
+  keyPoints?: string[];
+  intent?: string;
+  suggestedActions?: string[];
 }
 
 export interface DashboardStats {

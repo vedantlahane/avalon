@@ -558,21 +558,90 @@ export const MOCK_EMAILS: Email[] = [
   {
     id: 1,
     sender: 'sarah.chen@acme-tech.com',
-    subject: 'Follow up on proposal',
-    content: 'Hi, we have reviewed the proposal and it looks good. Let\'s schedule a call for next week.',
-    timestamp: new Date().toISOString(),
+    senderName: 'Sarah Chen',
+    senderAvatar: 'SC',
+    subject: 'Enterprise Plan Proposal',
+    content: `Hi team,
+
+Thanks for the detailed proposal. We've reviewed it internally and the Enterprise Plan looks like a great fit for our current needs.
+
+We have a few questions about the implementation timeline and would like to involve our CTO in the next technical deep-dive.
+
+Also, good news - the budget for Q1 has been officially approved!
+
+Looking forward to our next meeting.
+
+Best,
+Sarah`,
+    timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
     isRead: false,
+    isStarred: true,
+    isAIFlagged: true,
+    folder: 'Inbox',
     contactId: 1,
+    dealId: 1,
+    dealName: 'Acme Enterprise',
+    sentiment: 'Positive',
+    sentimentScore: 87,
+    attachments: [
+      { name: 'Requirements.pdf', size: '1.2 MB', type: 'application/pdf' },
+      { name: 'Architecture_Draft.png', size: '2.4 MB', type: 'image/png' }
+    ],
+    keyPoints: [
+      'They liked the proposal overall',
+      'Concerned about implementation timeline',
+      'Want to involve their CTO',
+      'Budget approved for Q1'
+    ],
+    intent: 'Moving forward but needs technical validation before final sign-off',
+    suggestedActions: [
+      'Schedule technical deep-dive meeting',
+      'Prepare implementation timeline doc',
+      'Update deal stage to "Negotiation"'
+    ]
   },
   {
     id: 2,
     sender: 'm.rodriguez@brightpath.health',
-    subject: 'Question about pricing',
-    content: 'Can you provide more details on the volume discounts?',
+    senderName: 'Michael Rodriguez',
+    senderAvatar: 'MR',
+    subject: 'Pricing clarification',
+    content: 'Hi, can you provide more details on the volume discounts? We are looking at expanding to 3 more regions by EOY.',
     timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
     isRead: true,
+    isStarred: false,
+    isAIFlagged: false,
+    folder: 'Inbox',
     contactId: 2,
+    sentiment: 'Neutral',
   },
+  {
+    id: 3,
+    sender: 'j.williams@retailmax.com',
+    senderName: 'Jessica Williams',
+    senderAvatar: 'JW',
+    subject: 'Urgent: Contract signature needed',
+    content: 'Hi, we are ready to sign but need one final clause updated in the SLA section. Please check the attached document.',
+    timestamp: new Date(Date.now() - 3600000 * 24).toISOString(),
+    isRead: false,
+    isStarred: true,
+    isAIFlagged: true,
+    folder: 'Inbox',
+    contactId: 5,
+    sentiment: 'Urgent',
+  },
+  {
+    id: 4,
+    sender: 'me@nexuscrm.com',
+    senderName: 'Me',
+    subject: 'Re: Enterprise Plan Proposal',
+    content: 'Hi Sarah, glad to hear the budget is approved! I will send over some possible times for the technical deep-dive.',
+    timestamp: new Date(Date.now() - 3600000 * 1).toISOString(),
+    isRead: true,
+    isStarred: false,
+    isAIFlagged: false,
+    folder: 'Sent',
+  }
 ];
 
 export const MOCK_TASKS: Task[] = [

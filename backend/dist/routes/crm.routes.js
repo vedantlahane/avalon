@@ -53,4 +53,7 @@ crmRoutes.get('/emails', emailController.getEmails);
 crmRoutes.get('/emails/:id', emailController.getEmailById);
 crmRoutes.patch('/emails/:id', emailController.updateEmail);
 crmRoutes.delete('/emails/:id', emailController.deleteEmail);
+crmRoutes.patch('/emails/:id/star', emailController.toggleStar);
+crmRoutes.patch('/emails/:id/read', emailController.markAsRead);
+crmRoutes.post('/emails/:id/generate-reply', emailController.generateAiReply);
 export default crmRoutes;

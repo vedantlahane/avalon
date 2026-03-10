@@ -1903,12 +1903,14 @@ export namespace Prisma {
     lineItems: number
     activities: number
     tasks: number
+    emails: number
   }
 
   export type DealCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lineItems?: boolean | DealCountOutputTypeCountLineItemsArgs
     activities?: boolean | DealCountOutputTypeCountActivitiesArgs
     tasks?: boolean | DealCountOutputTypeCountTasksArgs
+    emails?: boolean | DealCountOutputTypeCountEmailsArgs
   }
 
   // Custom InputTypes
@@ -1941,6 +1943,13 @@ export namespace Prisma {
    */
   export type DealCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskWhereInput
+  }
+
+  /**
+   * DealCountOutputType without action
+   */
+  export type DealCountOutputTypeCountEmailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailWhereInput
   }
 
 
@@ -6683,23 +6692,35 @@ export namespace Prisma {
   export type EmailAvgAggregateOutputType = {
     id: number | null
     contactId: number | null
+    dealId: number | null
+    sentimentScore: number | null
   }
 
   export type EmailSumAggregateOutputType = {
     id: number | null
     contactId: number | null
+    dealId: number | null
+    sentimentScore: number | null
   }
 
   export type EmailMinAggregateOutputType = {
     id: number | null
     sender: string | null
+    senderName: string | null
+    senderAvatar: string | null
     subject: string | null
     content: string | null
     timestamp: Date | null
     isRead: boolean | null
+    isStarred: boolean | null
+    isAIFlagged: boolean | null
+    folder: string | null
     contactId: number | null
+    dealId: number | null
     summary: string | null
     sentiment: string | null
+    sentimentScore: number | null
+    intent: string | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -6708,13 +6729,21 @@ export namespace Prisma {
   export type EmailMaxAggregateOutputType = {
     id: number | null
     sender: string | null
+    senderName: string | null
+    senderAvatar: string | null
     subject: string | null
     content: string | null
     timestamp: Date | null
     isRead: boolean | null
+    isStarred: boolean | null
+    isAIFlagged: boolean | null
+    folder: string | null
     contactId: number | null
+    dealId: number | null
     summary: string | null
     sentiment: string | null
+    sentimentScore: number | null
+    intent: string | null
     createdAt: Date | null
     updatedAt: Date | null
     isDeleted: boolean | null
@@ -6723,13 +6752,24 @@ export namespace Prisma {
   export type EmailCountAggregateOutputType = {
     id: number
     sender: number
+    senderName: number
+    senderAvatar: number
     subject: number
     content: number
     timestamp: number
     isRead: number
+    isStarred: number
+    isAIFlagged: number
+    folder: number
     contactId: number
+    dealId: number
     summary: number
     sentiment: number
+    sentimentScore: number
+    attachments: number
+    keyPoints: number
+    intent: number
+    suggestedActions: number
     createdAt: number
     updatedAt: number
     isDeleted: number
@@ -6740,23 +6780,35 @@ export namespace Prisma {
   export type EmailAvgAggregateInputType = {
     id?: true
     contactId?: true
+    dealId?: true
+    sentimentScore?: true
   }
 
   export type EmailSumAggregateInputType = {
     id?: true
     contactId?: true
+    dealId?: true
+    sentimentScore?: true
   }
 
   export type EmailMinAggregateInputType = {
     id?: true
     sender?: true
+    senderName?: true
+    senderAvatar?: true
     subject?: true
     content?: true
     timestamp?: true
     isRead?: true
+    isStarred?: true
+    isAIFlagged?: true
+    folder?: true
     contactId?: true
+    dealId?: true
     summary?: true
     sentiment?: true
+    sentimentScore?: true
+    intent?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -6765,13 +6817,21 @@ export namespace Prisma {
   export type EmailMaxAggregateInputType = {
     id?: true
     sender?: true
+    senderName?: true
+    senderAvatar?: true
     subject?: true
     content?: true
     timestamp?: true
     isRead?: true
+    isStarred?: true
+    isAIFlagged?: true
+    folder?: true
     contactId?: true
+    dealId?: true
     summary?: true
     sentiment?: true
+    sentimentScore?: true
+    intent?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -6780,13 +6840,24 @@ export namespace Prisma {
   export type EmailCountAggregateInputType = {
     id?: true
     sender?: true
+    senderName?: true
+    senderAvatar?: true
     subject?: true
     content?: true
     timestamp?: true
     isRead?: true
+    isStarred?: true
+    isAIFlagged?: true
+    folder?: true
     contactId?: true
+    dealId?: true
     summary?: true
     sentiment?: true
+    sentimentScore?: true
+    attachments?: true
+    keyPoints?: true
+    intent?: true
+    suggestedActions?: true
     createdAt?: true
     updatedAt?: true
     isDeleted?: true
@@ -6882,13 +6953,24 @@ export namespace Prisma {
   export type EmailGroupByOutputType = {
     id: number
     sender: string
+    senderName: string | null
+    senderAvatar: string | null
     subject: string
     content: string
     timestamp: Date
     isRead: boolean
+    isStarred: boolean
+    isAIFlagged: boolean
+    folder: string
     contactId: number | null
+    dealId: number | null
     summary: string | null
     sentiment: string | null
+    sentimentScore: number | null
+    attachments: JsonValue | null
+    keyPoints: string[]
+    intent: string | null
+    suggestedActions: string[]
     createdAt: Date
     updatedAt: Date
     isDeleted: boolean
@@ -6916,92 +6998,154 @@ export namespace Prisma {
   export type EmailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     sender?: boolean
+    senderName?: boolean
+    senderAvatar?: boolean
     subject?: boolean
     content?: boolean
     timestamp?: boolean
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: boolean
     contactId?: boolean
+    dealId?: boolean
     summary?: boolean
     sentiment?: boolean
+    sentimentScore?: boolean
+    attachments?: boolean
+    keyPoints?: boolean
+    intent?: boolean
+    suggestedActions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
     contact?: boolean | Email$contactArgs<ExtArgs>
+    deal?: boolean | Email$dealArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
 
   export type EmailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     sender?: boolean
+    senderName?: boolean
+    senderAvatar?: boolean
     subject?: boolean
     content?: boolean
     timestamp?: boolean
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: boolean
     contactId?: boolean
+    dealId?: boolean
     summary?: boolean
     sentiment?: boolean
+    sentimentScore?: boolean
+    attachments?: boolean
+    keyPoints?: boolean
+    intent?: boolean
+    suggestedActions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
     contact?: boolean | Email$contactArgs<ExtArgs>
+    deal?: boolean | Email$dealArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
 
   export type EmailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     sender?: boolean
+    senderName?: boolean
+    senderAvatar?: boolean
     subject?: boolean
     content?: boolean
     timestamp?: boolean
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: boolean
     contactId?: boolean
+    dealId?: boolean
     summary?: boolean
     sentiment?: boolean
+    sentimentScore?: boolean
+    attachments?: boolean
+    keyPoints?: boolean
+    intent?: boolean
+    suggestedActions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
     contact?: boolean | Email$contactArgs<ExtArgs>
+    deal?: boolean | Email$dealArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
 
   export type EmailSelectScalar = {
     id?: boolean
     sender?: boolean
+    senderName?: boolean
+    senderAvatar?: boolean
     subject?: boolean
     content?: boolean
     timestamp?: boolean
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: boolean
     contactId?: boolean
+    dealId?: boolean
     summary?: boolean
     sentiment?: boolean
+    sentimentScore?: boolean
+    attachments?: boolean
+    keyPoints?: boolean
+    intent?: boolean
+    suggestedActions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     isDeleted?: boolean
   }
 
-  export type EmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sender" | "subject" | "content" | "timestamp" | "isRead" | "contactId" | "summary" | "sentiment" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["email"]>
+  export type EmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sender" | "senderName" | "senderAvatar" | "subject" | "content" | "timestamp" | "isRead" | "isStarred" | "isAIFlagged" | "folder" | "contactId" | "dealId" | "summary" | "sentiment" | "sentimentScore" | "attachments" | "keyPoints" | "intent" | "suggestedActions" | "createdAt" | "updatedAt" | "isDeleted", ExtArgs["result"]["email"]>
   export type EmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | Email$contactArgs<ExtArgs>
+    deal?: boolean | Email$dealArgs<ExtArgs>
   }
   export type EmailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | Email$contactArgs<ExtArgs>
+    deal?: boolean | Email$dealArgs<ExtArgs>
   }
   export type EmailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contact?: boolean | Email$contactArgs<ExtArgs>
+    deal?: boolean | Email$dealArgs<ExtArgs>
   }
 
   export type $EmailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Email"
     objects: {
       contact: Prisma.$ContactPayload<ExtArgs> | null
+      deal: Prisma.$DealPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       sender: string
+      senderName: string | null
+      senderAvatar: string | null
       subject: string
       content: string
       timestamp: Date
       isRead: boolean
+      isStarred: boolean
+      isAIFlagged: boolean
+      folder: string
       contactId: number | null
+      dealId: number | null
       summary: string | null
       sentiment: string | null
+      sentimentScore: number | null
+      attachments: Prisma.JsonValue | null
+      keyPoints: string[]
+      intent: string | null
+      suggestedActions: string[]
       createdAt: Date
       updatedAt: Date
       isDeleted: boolean
@@ -7400,6 +7544,7 @@ export namespace Prisma {
   export interface Prisma__EmailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     contact<T extends Email$contactArgs<ExtArgs> = {}>(args?: Subset<T, Email$contactArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    deal<T extends Email$dealArgs<ExtArgs> = {}>(args?: Subset<T, Email$dealArgs<ExtArgs>>): Prisma__DealClient<$Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7431,13 +7576,24 @@ export namespace Prisma {
   interface EmailFieldRefs {
     readonly id: FieldRef<"Email", 'Int'>
     readonly sender: FieldRef<"Email", 'String'>
+    readonly senderName: FieldRef<"Email", 'String'>
+    readonly senderAvatar: FieldRef<"Email", 'String'>
     readonly subject: FieldRef<"Email", 'String'>
     readonly content: FieldRef<"Email", 'String'>
     readonly timestamp: FieldRef<"Email", 'DateTime'>
     readonly isRead: FieldRef<"Email", 'Boolean'>
+    readonly isStarred: FieldRef<"Email", 'Boolean'>
+    readonly isAIFlagged: FieldRef<"Email", 'Boolean'>
+    readonly folder: FieldRef<"Email", 'String'>
     readonly contactId: FieldRef<"Email", 'Int'>
+    readonly dealId: FieldRef<"Email", 'Int'>
     readonly summary: FieldRef<"Email", 'String'>
     readonly sentiment: FieldRef<"Email", 'String'>
+    readonly sentimentScore: FieldRef<"Email", 'Int'>
+    readonly attachments: FieldRef<"Email", 'Json'>
+    readonly keyPoints: FieldRef<"Email", 'String[]'>
+    readonly intent: FieldRef<"Email", 'String'>
+    readonly suggestedActions: FieldRef<"Email", 'String[]'>
     readonly createdAt: FieldRef<"Email", 'DateTime'>
     readonly updatedAt: FieldRef<"Email", 'DateTime'>
     readonly isDeleted: FieldRef<"Email", 'Boolean'>
@@ -7853,6 +8009,25 @@ export namespace Prisma {
      */
     include?: ContactInclude<ExtArgs> | null
     where?: ContactWhereInput
+  }
+
+  /**
+   * Email.deal
+   */
+  export type Email$dealArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Deal
+     */
+    select?: DealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Deal
+     */
+    omit?: DealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DealInclude<ExtArgs> | null
+    where?: DealWhereInput
   }
 
   /**
@@ -9429,6 +9604,7 @@ export namespace Prisma {
     lineItems?: boolean | Deal$lineItemsArgs<ExtArgs>
     activities?: boolean | Deal$activitiesArgs<ExtArgs>
     tasks?: boolean | Deal$tasksArgs<ExtArgs>
+    emails?: boolean | Deal$emailsArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["deal"]>
 
@@ -9506,6 +9682,7 @@ export namespace Prisma {
     lineItems?: boolean | Deal$lineItemsArgs<ExtArgs>
     activities?: boolean | Deal$activitiesArgs<ExtArgs>
     tasks?: boolean | Deal$tasksArgs<ExtArgs>
+    emails?: boolean | Deal$emailsArgs<ExtArgs>
     _count?: boolean | DealCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DealIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9525,6 +9702,7 @@ export namespace Prisma {
       lineItems: Prisma.$LineItemPayload<ExtArgs>[]
       activities: Prisma.$ActivityPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
+      emails: Prisma.$EmailPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -9944,6 +10122,7 @@ export namespace Prisma {
     lineItems<T extends Deal$lineItemsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$lineItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activities<T extends Deal$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, Deal$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tasks<T extends Deal$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Deal$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    emails<T extends Deal$emailsArgs<ExtArgs> = {}>(args?: Subset<T, Deal$emailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10494,6 +10673,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Deal.emails
+   */
+  export type Deal$emailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Email
+     */
+    select?: EmailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Email
+     */
+    omit?: EmailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailInclude<ExtArgs> | null
+    where?: EmailWhereInput
+    orderBy?: EmailOrderByWithRelationInput | EmailOrderByWithRelationInput[]
+    cursor?: EmailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmailScalarFieldEnum | EmailScalarFieldEnum[]
   }
 
   /**
@@ -15334,13 +15537,24 @@ export namespace Prisma {
   export const EmailScalarFieldEnum: {
     id: 'id',
     sender: 'sender',
+    senderName: 'senderName',
+    senderAvatar: 'senderAvatar',
     subject: 'subject',
     content: 'content',
     timestamp: 'timestamp',
     isRead: 'isRead',
+    isStarred: 'isStarred',
+    isAIFlagged: 'isAIFlagged',
+    folder: 'folder',
     contactId: 'contactId',
+    dealId: 'dealId',
     summary: 'summary',
     sentiment: 'sentiment',
+    sentimentScore: 'sentimentScore',
+    attachments: 'attachments',
+    keyPoints: 'keyPoints',
+    intent: 'intent',
+    suggestedActions: 'suggestedActions',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     isDeleted: 'isDeleted'
@@ -15955,33 +16169,57 @@ export namespace Prisma {
     NOT?: EmailWhereInput | EmailWhereInput[]
     id?: IntFilter<"Email"> | number
     sender?: StringFilter<"Email"> | string
+    senderName?: StringNullableFilter<"Email"> | string | null
+    senderAvatar?: StringNullableFilter<"Email"> | string | null
     subject?: StringFilter<"Email"> | string
     content?: StringFilter<"Email"> | string
     timestamp?: DateTimeFilter<"Email"> | Date | string
     isRead?: BoolFilter<"Email"> | boolean
+    isStarred?: BoolFilter<"Email"> | boolean
+    isAIFlagged?: BoolFilter<"Email"> | boolean
+    folder?: StringFilter<"Email"> | string
     contactId?: IntNullableFilter<"Email"> | number | null
+    dealId?: IntNullableFilter<"Email"> | number | null
     summary?: StringNullableFilter<"Email"> | string | null
     sentiment?: StringNullableFilter<"Email"> | string | null
+    sentimentScore?: IntNullableFilter<"Email"> | number | null
+    attachments?: JsonNullableFilter<"Email">
+    keyPoints?: StringNullableListFilter<"Email">
+    intent?: StringNullableFilter<"Email"> | string | null
+    suggestedActions?: StringNullableListFilter<"Email">
     createdAt?: DateTimeFilter<"Email"> | Date | string
     updatedAt?: DateTimeFilter<"Email"> | Date | string
     isDeleted?: BoolFilter<"Email"> | boolean
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
+    deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
   }
 
   export type EmailOrderByWithRelationInput = {
     id?: SortOrder
     sender?: SortOrder
+    senderName?: SortOrderInput | SortOrder
+    senderAvatar?: SortOrderInput | SortOrder
     subject?: SortOrder
     content?: SortOrder
     timestamp?: SortOrder
     isRead?: SortOrder
+    isStarred?: SortOrder
+    isAIFlagged?: SortOrder
+    folder?: SortOrder
     contactId?: SortOrderInput | SortOrder
+    dealId?: SortOrderInput | SortOrder
     summary?: SortOrderInput | SortOrder
     sentiment?: SortOrderInput | SortOrder
+    sentimentScore?: SortOrderInput | SortOrder
+    attachments?: SortOrderInput | SortOrder
+    keyPoints?: SortOrder
+    intent?: SortOrderInput | SortOrder
+    suggestedActions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
     contact?: ContactOrderByWithRelationInput
+    deal?: DealOrderByWithRelationInput
   }
 
   export type EmailWhereUniqueInput = Prisma.AtLeast<{
@@ -15990,29 +16228,52 @@ export namespace Prisma {
     OR?: EmailWhereInput[]
     NOT?: EmailWhereInput | EmailWhereInput[]
     sender?: StringFilter<"Email"> | string
+    senderName?: StringNullableFilter<"Email"> | string | null
+    senderAvatar?: StringNullableFilter<"Email"> | string | null
     subject?: StringFilter<"Email"> | string
     content?: StringFilter<"Email"> | string
     timestamp?: DateTimeFilter<"Email"> | Date | string
     isRead?: BoolFilter<"Email"> | boolean
+    isStarred?: BoolFilter<"Email"> | boolean
+    isAIFlagged?: BoolFilter<"Email"> | boolean
+    folder?: StringFilter<"Email"> | string
     contactId?: IntNullableFilter<"Email"> | number | null
+    dealId?: IntNullableFilter<"Email"> | number | null
     summary?: StringNullableFilter<"Email"> | string | null
     sentiment?: StringNullableFilter<"Email"> | string | null
+    sentimentScore?: IntNullableFilter<"Email"> | number | null
+    attachments?: JsonNullableFilter<"Email">
+    keyPoints?: StringNullableListFilter<"Email">
+    intent?: StringNullableFilter<"Email"> | string | null
+    suggestedActions?: StringNullableListFilter<"Email">
     createdAt?: DateTimeFilter<"Email"> | Date | string
     updatedAt?: DateTimeFilter<"Email"> | Date | string
     isDeleted?: BoolFilter<"Email"> | boolean
     contact?: XOR<ContactNullableScalarRelationFilter, ContactWhereInput> | null
+    deal?: XOR<DealNullableScalarRelationFilter, DealWhereInput> | null
   }, "id">
 
   export type EmailOrderByWithAggregationInput = {
     id?: SortOrder
     sender?: SortOrder
+    senderName?: SortOrderInput | SortOrder
+    senderAvatar?: SortOrderInput | SortOrder
     subject?: SortOrder
     content?: SortOrder
     timestamp?: SortOrder
     isRead?: SortOrder
+    isStarred?: SortOrder
+    isAIFlagged?: SortOrder
+    folder?: SortOrder
     contactId?: SortOrderInput | SortOrder
+    dealId?: SortOrderInput | SortOrder
     summary?: SortOrderInput | SortOrder
     sentiment?: SortOrderInput | SortOrder
+    sentimentScore?: SortOrderInput | SortOrder
+    attachments?: SortOrderInput | SortOrder
+    keyPoints?: SortOrder
+    intent?: SortOrderInput | SortOrder
+    suggestedActions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -16029,13 +16290,24 @@ export namespace Prisma {
     NOT?: EmailScalarWhereWithAggregatesInput | EmailScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Email"> | number
     sender?: StringWithAggregatesFilter<"Email"> | string
+    senderName?: StringNullableWithAggregatesFilter<"Email"> | string | null
+    senderAvatar?: StringNullableWithAggregatesFilter<"Email"> | string | null
     subject?: StringWithAggregatesFilter<"Email"> | string
     content?: StringWithAggregatesFilter<"Email"> | string
     timestamp?: DateTimeWithAggregatesFilter<"Email"> | Date | string
     isRead?: BoolWithAggregatesFilter<"Email"> | boolean
+    isStarred?: BoolWithAggregatesFilter<"Email"> | boolean
+    isAIFlagged?: BoolWithAggregatesFilter<"Email"> | boolean
+    folder?: StringWithAggregatesFilter<"Email"> | string
     contactId?: IntNullableWithAggregatesFilter<"Email"> | number | null
+    dealId?: IntNullableWithAggregatesFilter<"Email"> | number | null
     summary?: StringNullableWithAggregatesFilter<"Email"> | string | null
     sentiment?: StringNullableWithAggregatesFilter<"Email"> | string | null
+    sentimentScore?: IntNullableWithAggregatesFilter<"Email"> | number | null
+    attachments?: JsonNullableWithAggregatesFilter<"Email">
+    keyPoints?: StringNullableListFilter<"Email">
+    intent?: StringNullableWithAggregatesFilter<"Email"> | string | null
+    suggestedActions?: StringNullableListFilter<"Email">
     createdAt?: DateTimeWithAggregatesFilter<"Email"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Email"> | Date | string
     isDeleted?: BoolWithAggregatesFilter<"Email"> | boolean
@@ -16168,6 +16440,7 @@ export namespace Prisma {
     lineItems?: LineItemListRelationFilter
     activities?: ActivityListRelationFilter
     tasks?: TaskListRelationFilter
+    emails?: EmailListRelationFilter
   }
 
   export type DealOrderByWithRelationInput = {
@@ -16194,6 +16467,7 @@ export namespace Prisma {
     lineItems?: LineItemOrderByRelationAggregateInput
     activities?: ActivityOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
+    emails?: EmailOrderByRelationAggregateInput
   }
 
   export type DealWhereUniqueInput = Prisma.AtLeast<{
@@ -16223,6 +16497,7 @@ export namespace Prisma {
     lineItems?: LineItemListRelationFilter
     activities?: ActivityListRelationFilter
     tasks?: TaskListRelationFilter
+    emails?: EmailListRelationFilter
   }, "id">
 
   export type DealOrderByWithAggregationInput = {
@@ -17044,28 +17319,50 @@ export namespace Prisma {
 
   export type EmailCreateInput = {
     sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
     subject: string
     content: string
     timestamp?: Date | string
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
     summary?: string | null
     sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
     contact?: ContactCreateNestedOneWithoutEmailsInput
+    deal?: DealCreateNestedOneWithoutEmailsInput
   }
 
   export type EmailUncheckedCreateInput = {
     id?: number
     sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
     subject: string
     content: string
     timestamp?: Date | string
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
     contactId?: number | null
+    dealId?: number | null
     summary?: string | null
     sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -17073,28 +17370,50 @@ export namespace Prisma {
 
   export type EmailUpdateInput = {
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     contact?: ContactUpdateOneWithoutEmailsNestedInput
+    deal?: DealUpdateOneWithoutEmailsNestedInput
   }
 
   export type EmailUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
     contactId?: NullableIntFieldUpdateOperationsInput | number | null
+    dealId?: NullableIntFieldUpdateOperationsInput | number | null
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17103,13 +17422,24 @@ export namespace Prisma {
   export type EmailCreateManyInput = {
     id?: number
     sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
     subject: string
     content: string
     timestamp?: Date | string
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
     contactId?: number | null
+    dealId?: number | null
     summary?: string | null
     sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -17117,12 +17447,22 @@ export namespace Prisma {
 
   export type EmailUpdateManyMutationInput = {
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17131,13 +17471,24 @@ export namespace Prisma {
   export type EmailUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
     contactId?: NullableIntFieldUpdateOperationsInput | number | null
+    dealId?: NullableIntFieldUpdateOperationsInput | number | null
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -17281,6 +17632,7 @@ export namespace Prisma {
     lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
+    emails?: EmailCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateInput = {
@@ -17305,6 +17657,7 @@ export namespace Prisma {
     lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+    emails?: EmailUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealUpdateInput = {
@@ -17328,6 +17681,7 @@ export namespace Prisma {
     lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
+    emails?: EmailUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateInput = {
@@ -17352,6 +17706,7 @@ export namespace Prisma {
     lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealCreateManyInput = {
@@ -18300,16 +18655,32 @@ export namespace Prisma {
     isNot?: ContactWhereInput | null
   }
 
+  export type DealNullableScalarRelationFilter = {
+    is?: DealWhereInput | null
+    isNot?: DealWhereInput | null
+  }
+
   export type EmailCountOrderByAggregateInput = {
     id?: SortOrder
     sender?: SortOrder
+    senderName?: SortOrder
+    senderAvatar?: SortOrder
     subject?: SortOrder
     content?: SortOrder
     timestamp?: SortOrder
     isRead?: SortOrder
+    isStarred?: SortOrder
+    isAIFlagged?: SortOrder
+    folder?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
     summary?: SortOrder
     sentiment?: SortOrder
+    sentimentScore?: SortOrder
+    attachments?: SortOrder
+    keyPoints?: SortOrder
+    intent?: SortOrder
+    suggestedActions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -18318,18 +18689,28 @@ export namespace Prisma {
   export type EmailAvgOrderByAggregateInput = {
     id?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
+    sentimentScore?: SortOrder
   }
 
   export type EmailMaxOrderByAggregateInput = {
     id?: SortOrder
     sender?: SortOrder
+    senderName?: SortOrder
+    senderAvatar?: SortOrder
     subject?: SortOrder
     content?: SortOrder
     timestamp?: SortOrder
     isRead?: SortOrder
+    isStarred?: SortOrder
+    isAIFlagged?: SortOrder
+    folder?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
     summary?: SortOrder
     sentiment?: SortOrder
+    sentimentScore?: SortOrder
+    intent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -18338,13 +18719,21 @@ export namespace Prisma {
   export type EmailMinOrderByAggregateInput = {
     id?: SortOrder
     sender?: SortOrder
+    senderName?: SortOrder
+    senderAvatar?: SortOrder
     subject?: SortOrder
     content?: SortOrder
     timestamp?: SortOrder
     isRead?: SortOrder
+    isStarred?: SortOrder
+    isAIFlagged?: SortOrder
+    folder?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
     summary?: SortOrder
     sentiment?: SortOrder
+    sentimentScore?: SortOrder
+    intent?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isDeleted?: SortOrder
@@ -18353,6 +18742,8 @@ export namespace Prisma {
   export type EmailSumOrderByAggregateInput = {
     id?: SortOrder
     contactId?: SortOrder
+    dealId?: SortOrder
+    sentimentScore?: SortOrder
   }
 
   export type ContactListRelationFilter = {
@@ -18590,11 +18981,6 @@ export namespace Prisma {
     quantity?: SortOrder
     unitPrice?: SortOrder
     total?: SortOrder
-  }
-
-  export type DealNullableScalarRelationFilter = {
-    is?: DealWhereInput | null
-    isNot?: DealWhereInput | null
   }
 
   export type ActivityCountOrderByAggregateInput = {
@@ -19049,10 +19435,34 @@ export namespace Prisma {
     deleteMany?: EmailScalarWhereInput | EmailScalarWhereInput[]
   }
 
+  export type EmailCreatekeyPointsInput = {
+    set: string[]
+  }
+
+  export type EmailCreatesuggestedActionsInput = {
+    set: string[]
+  }
+
   export type ContactCreateNestedOneWithoutEmailsInput = {
     create?: XOR<ContactCreateWithoutEmailsInput, ContactUncheckedCreateWithoutEmailsInput>
     connectOrCreate?: ContactCreateOrConnectWithoutEmailsInput
     connect?: ContactWhereUniqueInput
+  }
+
+  export type DealCreateNestedOneWithoutEmailsInput = {
+    create?: XOR<DealCreateWithoutEmailsInput, DealUncheckedCreateWithoutEmailsInput>
+    connectOrCreate?: DealCreateOrConnectWithoutEmailsInput
+    connect?: DealWhereUniqueInput
+  }
+
+  export type EmailUpdatekeyPointsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type EmailUpdatesuggestedActionsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type ContactUpdateOneWithoutEmailsNestedInput = {
@@ -19063,6 +19473,16 @@ export namespace Prisma {
     delete?: ContactWhereInput | boolean
     connect?: ContactWhereUniqueInput
     update?: XOR<XOR<ContactUpdateToOneWithWhereWithoutEmailsInput, ContactUpdateWithoutEmailsInput>, ContactUncheckedUpdateWithoutEmailsInput>
+  }
+
+  export type DealUpdateOneWithoutEmailsNestedInput = {
+    create?: XOR<DealCreateWithoutEmailsInput, DealUncheckedCreateWithoutEmailsInput>
+    connectOrCreate?: DealCreateOrConnectWithoutEmailsInput
+    upsert?: DealUpsertWithoutEmailsInput
+    disconnect?: DealWhereInput | boolean
+    delete?: DealWhereInput | boolean
+    connect?: DealWhereUniqueInput
+    update?: XOR<XOR<DealUpdateToOneWithWhereWithoutEmailsInput, DealUpdateWithoutEmailsInput>, DealUncheckedUpdateWithoutEmailsInput>
   }
 
   export type ContactCreateNestedManyWithoutCompanyInput = {
@@ -19186,6 +19606,13 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
+  export type EmailCreateNestedManyWithoutDealInput = {
+    create?: XOR<EmailCreateWithoutDealInput, EmailUncheckedCreateWithoutDealInput> | EmailCreateWithoutDealInput[] | EmailUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: EmailCreateOrConnectWithoutDealInput | EmailCreateOrConnectWithoutDealInput[]
+    createMany?: EmailCreateManyDealInputEnvelope
+    connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+  }
+
   export type LineItemUncheckedCreateNestedManyWithoutDealInput = {
     create?: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput> | LineItemCreateWithoutDealInput[] | LineItemUncheckedCreateWithoutDealInput[]
     connectOrCreate?: LineItemCreateOrConnectWithoutDealInput | LineItemCreateOrConnectWithoutDealInput[]
@@ -19205,6 +19632,13 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutDealInput | TaskCreateOrConnectWithoutDealInput[]
     createMany?: TaskCreateManyDealInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type EmailUncheckedCreateNestedManyWithoutDealInput = {
+    create?: XOR<EmailCreateWithoutDealInput, EmailUncheckedCreateWithoutDealInput> | EmailCreateWithoutDealInput[] | EmailUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: EmailCreateOrConnectWithoutDealInput | EmailCreateOrConnectWithoutDealInput[]
+    createMany?: EmailCreateManyDealInputEnvelope
+    connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -19282,6 +19716,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type EmailUpdateManyWithoutDealNestedInput = {
+    create?: XOR<EmailCreateWithoutDealInput, EmailUncheckedCreateWithoutDealInput> | EmailCreateWithoutDealInput[] | EmailUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: EmailCreateOrConnectWithoutDealInput | EmailCreateOrConnectWithoutDealInput[]
+    upsert?: EmailUpsertWithWhereUniqueWithoutDealInput | EmailUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: EmailCreateManyDealInputEnvelope
+    set?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    disconnect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    delete?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    update?: EmailUpdateWithWhereUniqueWithoutDealInput | EmailUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: EmailUpdateManyWithWhereWithoutDealInput | EmailUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: EmailScalarWhereInput | EmailScalarWhereInput[]
+  }
+
   export type LineItemUncheckedUpdateManyWithoutDealNestedInput = {
     create?: XOR<LineItemCreateWithoutDealInput, LineItemUncheckedCreateWithoutDealInput> | LineItemCreateWithoutDealInput[] | LineItemUncheckedCreateWithoutDealInput[]
     connectOrCreate?: LineItemCreateOrConnectWithoutDealInput | LineItemCreateOrConnectWithoutDealInput[]
@@ -19322,6 +19770,20 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutDealInput | TaskUpdateWithWhereUniqueWithoutDealInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutDealInput | TaskUpdateManyWithWhereWithoutDealInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type EmailUncheckedUpdateManyWithoutDealNestedInput = {
+    create?: XOR<EmailCreateWithoutDealInput, EmailUncheckedCreateWithoutDealInput> | EmailCreateWithoutDealInput[] | EmailUncheckedCreateWithoutDealInput[]
+    connectOrCreate?: EmailCreateOrConnectWithoutDealInput | EmailCreateOrConnectWithoutDealInput[]
+    upsert?: EmailUpsertWithWhereUniqueWithoutDealInput | EmailUpsertWithWhereUniqueWithoutDealInput[]
+    createMany?: EmailCreateManyDealInputEnvelope
+    set?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    disconnect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    delete?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+    update?: EmailUpdateWithWhereUniqueWithoutDealInput | EmailUpdateWithWhereUniqueWithoutDealInput[]
+    updateMany?: EmailUpdateManyWithWhereWithoutDealInput | EmailUpdateManyWithWhereWithoutDealInput[]
+    deleteMany?: EmailScalarWhereInput | EmailScalarWhereInput[]
   }
 
   export type DealCreateNestedOneWithoutLineItemsInput = {
@@ -19897,6 +20359,7 @@ export namespace Prisma {
     lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
+    emails?: EmailCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutContactInput = {
@@ -19920,6 +20383,7 @@ export namespace Prisma {
     lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+    emails?: EmailUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutContactInput = {
@@ -19934,26 +20398,48 @@ export namespace Prisma {
 
   export type EmailCreateWithoutContactInput = {
     sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
     subject: string
     content: string
     timestamp?: Date | string
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
     summary?: string | null
     sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
+    deal?: DealCreateNestedOneWithoutEmailsInput
   }
 
   export type EmailUncheckedCreateWithoutContactInput = {
     id?: number
     sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
     subject: string
     content: string
     timestamp?: Date | string
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
+    dealId?: number | null
     summary?: string | null
     sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -20144,13 +20630,24 @@ export namespace Prisma {
     NOT?: EmailScalarWhereInput | EmailScalarWhereInput[]
     id?: IntFilter<"Email"> | number
     sender?: StringFilter<"Email"> | string
+    senderName?: StringNullableFilter<"Email"> | string | null
+    senderAvatar?: StringNullableFilter<"Email"> | string | null
     subject?: StringFilter<"Email"> | string
     content?: StringFilter<"Email"> | string
     timestamp?: DateTimeFilter<"Email"> | Date | string
     isRead?: BoolFilter<"Email"> | boolean
+    isStarred?: BoolFilter<"Email"> | boolean
+    isAIFlagged?: BoolFilter<"Email"> | boolean
+    folder?: StringFilter<"Email"> | string
     contactId?: IntNullableFilter<"Email"> | number | null
+    dealId?: IntNullableFilter<"Email"> | number | null
     summary?: StringNullableFilter<"Email"> | string | null
     sentiment?: StringNullableFilter<"Email"> | string | null
+    sentimentScore?: IntNullableFilter<"Email"> | number | null
+    attachments?: JsonNullableFilter<"Email">
+    keyPoints?: StringNullableListFilter<"Email">
+    intent?: StringNullableFilter<"Email"> | string | null
+    suggestedActions?: StringNullableListFilter<"Email">
     createdAt?: DateTimeFilter<"Email"> | Date | string
     updatedAt?: DateTimeFilter<"Email"> | Date | string
     isDeleted?: BoolFilter<"Email"> | boolean
@@ -20214,6 +20711,58 @@ export namespace Prisma {
   export type ContactCreateOrConnectWithoutEmailsInput = {
     where: ContactWhereUniqueInput
     create: XOR<ContactCreateWithoutEmailsInput, ContactUncheckedCreateWithoutEmailsInput>
+  }
+
+  export type DealCreateWithoutEmailsInput = {
+    name: string
+    value: number
+    currency?: string
+    stage: string
+    probability?: number | null
+    expectedCloseDate?: Date | string | null
+    actualCloseDate?: Date | string | null
+    lossReason?: string | null
+    priority: string
+    notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
+    owner?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    contact?: ContactCreateNestedOneWithoutDealsInput
+    company?: CompanyCreateNestedOneWithoutDealsInput
+    lineItems?: LineItemCreateNestedManyWithoutDealInput
+    activities?: ActivityCreateNestedManyWithoutDealInput
+    tasks?: TaskCreateNestedManyWithoutDealInput
+  }
+
+  export type DealUncheckedCreateWithoutEmailsInput = {
+    id?: number
+    name: string
+    value: number
+    currency?: string
+    stage: string
+    probability?: number | null
+    contactId?: number | null
+    companyId?: number | null
+    expectedCloseDate?: Date | string | null
+    actualCloseDate?: Date | string | null
+    lossReason?: string | null
+    priority: string
+    notes?: string | null
+    competitors?: DealCreatecompetitorsInput | string[]
+    owner?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+  }
+
+  export type DealCreateOrConnectWithoutEmailsInput = {
+    where: DealWhereUniqueInput
+    create: XOR<DealCreateWithoutEmailsInput, DealUncheckedCreateWithoutEmailsInput>
   }
 
   export type ContactUpsertWithoutEmailsInput = {
@@ -20280,6 +20829,64 @@ export namespace Prisma {
     activities?: ActivityUncheckedUpdateManyWithoutContactNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutContactNestedInput
     deals?: DealUncheckedUpdateManyWithoutContactNestedInput
+  }
+
+  export type DealUpsertWithoutEmailsInput = {
+    update: XOR<DealUpdateWithoutEmailsInput, DealUncheckedUpdateWithoutEmailsInput>
+    create: XOR<DealCreateWithoutEmailsInput, DealUncheckedCreateWithoutEmailsInput>
+    where?: DealWhereInput
+  }
+
+  export type DealUpdateToOneWithWhereWithoutEmailsInput = {
+    where?: DealWhereInput
+    data: XOR<DealUpdateWithoutEmailsInput, DealUncheckedUpdateWithoutEmailsInput>
+  }
+
+  export type DealUpdateWithoutEmailsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    value?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    probability?: NullableIntFieldUpdateOperationsInput | number | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lossReason?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
+    owner?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    contact?: ContactUpdateOneWithoutDealsNestedInput
+    company?: CompanyUpdateOneWithoutDealsNestedInput
+    lineItems?: LineItemUpdateManyWithoutDealNestedInput
+    activities?: ActivityUpdateManyWithoutDealNestedInput
+    tasks?: TaskUpdateManyWithoutDealNestedInput
+  }
+
+  export type DealUncheckedUpdateWithoutEmailsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    value?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    probability?: NullableIntFieldUpdateOperationsInput | number | null
+    contactId?: NullableIntFieldUpdateOperationsInput | number | null
+    companyId?: NullableIntFieldUpdateOperationsInput | number | null
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lossReason?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    competitors?: DealUpdatecompetitorsInput | string[]
+    owner?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type ContactCreateWithoutCompanyInput = {
@@ -20367,6 +20974,7 @@ export namespace Prisma {
     lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
+    emails?: EmailCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutCompanyInput = {
@@ -20390,6 +20998,7 @@ export namespace Prisma {
     lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+    emails?: EmailUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutCompanyInput = {
@@ -20667,6 +21276,65 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type EmailCreateWithoutDealInput = {
+    sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
+    subject: string
+    content: string
+    timestamp?: Date | string
+    isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
+    summary?: string | null
+    sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+    contact?: ContactCreateNestedOneWithoutEmailsInput
+  }
+
+  export type EmailUncheckedCreateWithoutDealInput = {
+    id?: number
+    sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
+    subject: string
+    content: string
+    timestamp?: Date | string
+    isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
+    contactId?: number | null
+    summary?: string | null
+    sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type EmailCreateOrConnectWithoutDealInput = {
+    where: EmailWhereUniqueInput
+    create: XOR<EmailCreateWithoutDealInput, EmailUncheckedCreateWithoutDealInput>
+  }
+
+  export type EmailCreateManyDealInputEnvelope = {
+    data: EmailCreateManyDealInput | EmailCreateManyDealInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ContactUpsertWithoutDealsInput = {
     update: XOR<ContactUpdateWithoutDealsInput, ContactUncheckedUpdateWithoutDealsInput>
     create: XOR<ContactCreateWithoutDealsInput, ContactUncheckedCreateWithoutDealsInput>
@@ -20840,6 +21508,22 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutDealInput>
   }
 
+  export type EmailUpsertWithWhereUniqueWithoutDealInput = {
+    where: EmailWhereUniqueInput
+    update: XOR<EmailUpdateWithoutDealInput, EmailUncheckedUpdateWithoutDealInput>
+    create: XOR<EmailCreateWithoutDealInput, EmailUncheckedCreateWithoutDealInput>
+  }
+
+  export type EmailUpdateWithWhereUniqueWithoutDealInput = {
+    where: EmailWhereUniqueInput
+    data: XOR<EmailUpdateWithoutDealInput, EmailUncheckedUpdateWithoutDealInput>
+  }
+
+  export type EmailUpdateManyWithWhereWithoutDealInput = {
+    where: EmailScalarWhereInput
+    data: XOR<EmailUpdateManyMutationInput, EmailUncheckedUpdateManyWithoutDealInput>
+  }
+
   export type DealCreateWithoutLineItemsInput = {
     name: string
     value: number
@@ -20860,6 +21544,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutDealsInput
     activities?: ActivityCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
+    emails?: EmailCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutLineItemsInput = {
@@ -20883,6 +21568,7 @@ export namespace Prisma {
     isDeleted?: boolean
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+    emails?: EmailUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutLineItemsInput = {
@@ -20921,6 +21607,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutDealsNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
+    emails?: EmailUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutLineItemsInput = {
@@ -20944,6 +21631,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type ContactCreateWithoutActivitiesInput = {
@@ -21026,6 +21714,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutDealsInput
     lineItems?: LineItemCreateNestedManyWithoutDealInput
     tasks?: TaskCreateNestedManyWithoutDealInput
+    emails?: EmailCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutActivitiesInput = {
@@ -21049,6 +21738,7 @@ export namespace Prisma {
     isDeleted?: boolean
     lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     tasks?: TaskUncheckedCreateNestedManyWithoutDealInput
+    emails?: EmailUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutActivitiesInput = {
@@ -21153,6 +21843,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutDealsNestedInput
     lineItems?: LineItemUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
+    emails?: EmailUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutActivitiesInput = {
@@ -21176,6 +21867,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type ContactCreateWithoutTasksInput = {
@@ -21258,6 +21950,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutDealsInput
     lineItems?: LineItemCreateNestedManyWithoutDealInput
     activities?: ActivityCreateNestedManyWithoutDealInput
+    emails?: EmailCreateNestedManyWithoutDealInput
   }
 
   export type DealUncheckedCreateWithoutTasksInput = {
@@ -21281,6 +21974,7 @@ export namespace Prisma {
     isDeleted?: boolean
     lineItems?: LineItemUncheckedCreateNestedManyWithoutDealInput
     activities?: ActivityUncheckedCreateNestedManyWithoutDealInput
+    emails?: EmailUncheckedCreateNestedManyWithoutDealInput
   }
 
   export type DealCreateOrConnectWithoutTasksInput = {
@@ -21385,6 +22079,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutDealsNestedInput
     lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
+    emails?: EmailUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutTasksInput = {
@@ -21408,6 +22103,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type UserIdentityCreateManyUserInput = {
@@ -21502,12 +22198,23 @@ export namespace Prisma {
   export type EmailCreateManyContactInput = {
     id?: number
     sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
     subject: string
     content: string
     timestamp?: Date | string
     isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
+    dealId?: number | null
     summary?: string | null
     sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -21618,6 +22325,7 @@ export namespace Prisma {
     lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
+    emails?: EmailUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutContactInput = {
@@ -21641,6 +22349,7 @@ export namespace Prisma {
     lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutContactInput = {
@@ -21665,26 +22374,48 @@ export namespace Prisma {
 
   export type EmailUpdateWithoutContactInput = {
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deal?: DealUpdateOneWithoutEmailsNestedInput
   }
 
   export type EmailUncheckedUpdateWithoutContactInput = {
     id?: IntFieldUpdateOperationsInput | number
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
+    dealId?: NullableIntFieldUpdateOperationsInput | number | null
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21693,12 +22424,23 @@ export namespace Prisma {
   export type EmailUncheckedUpdateManyWithoutContactInput = {
     id?: IntFieldUpdateOperationsInput | number
     sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
+    dealId?: NullableIntFieldUpdateOperationsInput | number | null
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21847,6 +22589,7 @@ export namespace Prisma {
     lineItems?: LineItemUpdateManyWithoutDealNestedInput
     activities?: ActivityUpdateManyWithoutDealNestedInput
     tasks?: TaskUpdateManyWithoutDealNestedInput
+    emails?: EmailUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateWithoutCompanyInput = {
@@ -21870,6 +22613,7 @@ export namespace Prisma {
     lineItems?: LineItemUncheckedUpdateManyWithoutDealNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutDealNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutDealNestedInput
+    emails?: EmailUncheckedUpdateManyWithoutDealNestedInput
   }
 
   export type DealUncheckedUpdateManyWithoutCompanyInput = {
@@ -21927,6 +22671,31 @@ export namespace Prisma {
     status: string
     contactId?: number | null
     aiGenerated?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isDeleted?: boolean
+  }
+
+  export type EmailCreateManyDealInput = {
+    id?: number
+    sender: string
+    senderName?: string | null
+    senderAvatar?: string | null
+    subject: string
+    content: string
+    timestamp?: Date | string
+    isRead?: boolean
+    isStarred?: boolean
+    isAIFlagged?: boolean
+    folder?: string
+    contactId?: number | null
+    summary?: string | null
+    sentiment?: string | null
+    sentimentScore?: number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailCreatekeyPointsInput | string[]
+    intent?: string | null
+    suggestedActions?: EmailCreatesuggestedActionsInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
     isDeleted?: boolean
@@ -22044,6 +22813,80 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     contactId?: NullableIntFieldUpdateOperationsInput | number | null
     aiGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type EmailUpdateWithoutDealInput = {
+    sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    contact?: ContactUpdateOneWithoutEmailsNestedInput
+  }
+
+  export type EmailUncheckedUpdateWithoutDealInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
+    contactId?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type EmailUncheckedUpdateManyWithoutDealInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    sender?: StringFieldUpdateOperationsInput | string
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    senderAvatar?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    isStarred?: BoolFieldUpdateOperationsInput | boolean
+    isAIFlagged?: BoolFieldUpdateOperationsInput | boolean
+    folder?: StringFieldUpdateOperationsInput | string
+    contactId?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sentiment?: NullableStringFieldUpdateOperationsInput | string | null
+    sentimentScore?: NullableIntFieldUpdateOperationsInput | number | null
+    attachments?: NullableJsonNullValueInput | InputJsonValue
+    keyPoints?: EmailUpdatekeyPointsInput | string[]
+    intent?: NullableStringFieldUpdateOperationsInput | string | null
+    suggestedActions?: EmailUpdatesuggestedActionsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean

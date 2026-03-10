@@ -3,7 +3,8 @@ import catchAsync from '../utils/catchAsync.js';
 import ApiError from '../utils/ApiError.js';
 export const emailController = {
     getEmails: catchAsync(async (c) => {
-        const emails = await emailService.getEmails();
+        const folder = c.req.query('folder');
+        const emails = await emailService.getEmails(folder);
         return c.json(emails);
     }),
     getEmailById: catchAsync(async (c) => {
@@ -13,6 +14,21 @@ export const emailController = {
             throw new ApiError(404, 'Email not found');
         }
         return c.json(email);
+    }),
+    toggleStar: catchAsync(async (c) => {
+        const id = parseInt(c.req.param('id'));
+        const email = await emailService.toggleStar(id);
+        return c.json(email);
+    }),
+    markAsRead: catchAsync(async (c) => {
+        const id = parseInt(c.req.param('id'));
+        const email = await emailService.markAsRead(id);
+        return c.json(email);
+    }),
+    generateAiReply: catchAsync(async (c) => {
+        const id = parseInt(c.req.param('id'));
+        const reply = await emailService.generateAiReply(id);
+        return c.json({ reply });
     }),
     updateEmail: catchAsync(async (c) => {
         const id = parseInt(c.req.param('id'));

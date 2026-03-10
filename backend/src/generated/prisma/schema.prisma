@@ -134,6 +134,10 @@ model Email {
 
   sender String
 
+  senderName String?
+
+  senderAvatar String?
+
   subject String
 
   content String
@@ -142,13 +146,33 @@ model Email {
 
   isRead Boolean @default(false)
 
+  isStarred Boolean @default(false)
+
+  isAIFlagged Boolean @default(false)
+
+  folder String @default("Inbox")
+
   contactId Int?
 
   contact Contact? @relation(fields: [contactId], references: [id])
 
+  dealId Int?
+
+  deal Deal? @relation(fields: [dealId], references: [id])
+
   summary String?
 
   sentiment String?
+
+  sentimentScore Int?
+
+  attachments Json?
+
+  keyPoints String[] @default([])
+
+  intent String?
+
+  suggestedActions String[] @default([])
 
   createdAt DateTime @default(now())
 
@@ -229,6 +253,8 @@ model Deal {
   activities Activity[]
 
   tasks Task[]
+
+  emails Email[]
 
   createdAt DateTime @default(now())
 
