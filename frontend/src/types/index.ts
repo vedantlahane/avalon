@@ -157,11 +157,72 @@ export interface Email {
 }
 
 export interface DashboardStats {
-  totalRevenue: number;
-  activeDeals: number;
-  newLeads: number;
-  conversionRate: number;
   pipelineValue: number;
+  pipelineChange: number;
+  dealsWon: number;
+  dealsWonChange: number;
+  dealsWonTarget: number;
+  winRate: number;
+  winRateChange: number;
+  winRateIndustry: number;
+  avgDealSize: number;
+  avgDealSizeChange: number;
+}
+
+export interface RevenueForecastPoint {
+  month: string;
+  actual: number;
+  predicted: number;
+  target: number;
+  confidenceHigh: number;
+  confidenceLow: number;
+}
+
+export interface PipelineStageStats {
+  stage: DealStage;
+  count: number;
+  value: number;
+  color: string;
+}
+
+export interface AIDailyBriefing {
+  goodNews: {
+    id: string;
+    text: string;
+    type: 'success' | 'info';
+  }[];
+  needsAttention: {
+    id: string;
+    text: string;
+    type: 'warning' | 'danger';
+    sentiment?: string;
+  }[];
+  priorities: {
+    id: string;
+    text: string;
+    actionLabel: string;
+    actionType: 'call' | 'email' | 'meeting';
+    target?: string;
+  }[];
+}
+
+export interface LeadScoreDistribution {
+  category: 'Hot' | 'Warm' | 'Cool' | 'Cold';
+  count: number;
+  color: string;
+  range: string;
+}
+
+export interface DashboardData {
+  stats: DashboardStats;
+  revenueForecast: RevenueForecastPoint[];
+  pipelineByStage: PipelineStageStats[];
+  aiBriefing: AIDailyBriefing;
+  activities: Activity[];
+  dealsAtRisk: Deal[];
+  upcomingTasks: Task[];
+  upcomingMeetings: Activity[];
+  leadScoreDistribution: LeadScoreDistribution[];
 }
 
 export interface EnrichmentResult {
