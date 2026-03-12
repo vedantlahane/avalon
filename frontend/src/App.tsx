@@ -139,6 +139,8 @@ const AnimatedRoutes: React.FC<{ user: User | null }> = ({ user }) => {
 import { HelpDrawer } from './components/layout/HelpDrawer';
 import { ShortcutsOverlay } from './components/layout/ShortcutsOverlay';
 import { useHelpStore } from './lib/help-store';
+import { ChangelogModal } from './components/layout/ChangelogModal';
+import { Info } from 'lucide-react';
 
 const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShowOnboarding: (show: boolean) => void; setUser: (user: User | null) => void }> = ({ user, showOnboarding, setShowOnboarding, setUser }) => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
@@ -222,15 +224,29 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
       {/* Accent Line */}
       <div className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-primary to-secondary z-[60]"></div>
       
+      {/* Demo Mode Banner */}
+      <div className="fixed top-[3px] left-0 right-0 bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 py-1.5 px-4 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest z-[55] backdrop-blur-md">
+        <Info size={12} />
+        <span>This is a demo of NexusCRM AI - All data is pre-loaded for demonstration purposes</span>
+      </div>
+
       <Sidebar />
       
-      <div className="flex-1 flex flex-col min-w-0 relative h-full">
+      <div className="flex-1 flex flex-col min-w-0 relative h-full pt-[31px]">
         <Header />
         <Breadcrumbs />
         
         <main className="flex-1 overflow-y-auto custom-scrollbar relative bg-background">
           <div className="h-full">
             <AnimatedRoutes user={user} />
+          </div>
+          
+          {/* Subtle Watermark */}
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 pointer-events-none opacity-10 select-none hidden md:block z-0">
+            <div className="flex items-center gap-2 text-slate-900 dark:text-white">
+              <span className="text-xl font-black uppercase tracking-[0.3em]">NexusCRM</span>
+              <span className="text-xs font-medium bg-foreground text-background px-1.5 py-0.5 rounded">AI POWERED</span>
+            </div>
           </div>
         </main>
         
@@ -261,6 +277,7 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
       <CommandPalette />
       <ShortcutsOverlay />
       <HelpDrawer />
+      <ChangelogModal />
       
       {/* Global Modals */}
       <ContactModal 

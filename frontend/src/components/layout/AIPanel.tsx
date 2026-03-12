@@ -8,6 +8,7 @@ import { useHelpStore } from '@/lib/help-store';
 import { useNavigate } from 'react-router-dom';
 import { composerStore } from '@/lib/composer-store';
 import { useModalStore } from '@/lib/modal-store';
+import confetti from 'canvas-confetti';
 
 interface AIPanelProps {
   isOpen: boolean;
@@ -45,6 +46,20 @@ export const AIPanel: React.FC<AIPanelProps> = ({ isOpen, onClose }) => {
     if (!input.trim() || status !== 'ready') return;
     
     const lowerInput = input.trim().toLowerCase();
+    
+    if (lowerInput === 'party') {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#4f46e5', '#818cf8', '#c7d2fe', '#ffffff']
+      });
+      // Still send to AI or just clear? User says "Type party in AI assistant -> confetti animation"
+      // I'll clear and add a system message or just clear.
+      setInput('');
+      return;
+    }
+
     if (lowerInput === 'help' || lowerInput.startsWith('how do i')) {
       openHelp();
       setInput('');

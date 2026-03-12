@@ -148,7 +148,25 @@ export const Dashboard: React.FC = () => {
   }, [contactModal.isOpen, dealModal.isOpen, taskModal.isOpen]);
 
   const greeting = useMemo(() => {
-    const hour = new Date().getHours();
+    const now = new Date();
+    const month = now.getMonth(); // 0-indexed
+    const date = now.getDate();
+    const hour = now.getHours();
+
+    // Seasonal Greetings
+    if (month === 11 && date >= 20) return 'Happy Holidays! 🎄';
+    if (month === 0 && date === 1) return 'Happy New Year! 🎆';
+    if (month === 1 && date === 14) return 'Happy Valentine\'s Day! ❤️';
+    if (month === 9 && date === 31) return 'Happy Halloween! 🎃';
+    
+    // Spring (March, April, May)
+    if (month >= 2 && month <= 4) {
+      if (hour < 12) return 'Good morning! 🌸';
+      if (hour < 18) return 'Good afternoon! ☀️';
+      return 'Good evening! 🌙';
+    }
+
+    // Default time-based greetings
     if (hour < 12) return 'Good morning! 👋';
     if (hour < 18) return 'Good afternoon! 👋';
     return 'Good evening! 👋';

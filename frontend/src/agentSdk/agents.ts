@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { AgentConfig } from './types';
+import { z } from 'zod';
 
 export const AGENT_CONFIGS: AgentConfig[] = [
   {
@@ -9,24 +9,24 @@ export const AGENT_CONFIGS: AgentConfig[] = [
     "triggerEvents": [
       {
         "name": "new_lead_captured",
-        "description": "When a new contact or lead is added to the CRM, the agent should analyze their profile and provide a suggested personalized outreach script.",
         "type": "sync",
+        "description": "When a new contact or lead is added to the CRM, the agent should analyze their profile and provide a suggested personalized outreach script.",
         "outputSchema": z.object({
-          suggestion: z.string()
+          suggestedOutreach: z.string().describe('The personalized outreach script suggested by the AI.')
         })
       },
       {
         "name": "deal_stagnation_alert",
-        "description": "When a deal remains in the same pipeline stage for more than 5 days, the agent should notify the user with a risk assessment and a recommended action plan.",
-        "type": "async"
+        "type": "async",
+        "description": "When a deal remains in the same pipeline stage for more than 5 days, the agent should notify the user with a risk assessment and a recommended action plan."
       },
       {
         "name": "incoming_email_analysis",
-        "description": "When a new email is received in the Inbox, the agent should automatically summarize the content and update the contact's sentiment score.",
         "type": "sync",
+        "description": "When a new email is received in the Inbox, the agent should automatically summarize the content and update the contact's sentiment score.",
         "outputSchema": z.object({
-          summary: z.string(),
-          sentiment: z.number()
+          summary: z.string().describe('A brief summary of the email content.'),
+          sentiment: z.enum(['Positive', 'Neutral', 'Negative']).describe('The detected sentiment of the email.')
         })
       }
     ],
