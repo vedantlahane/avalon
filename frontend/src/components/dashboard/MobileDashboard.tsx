@@ -108,16 +108,26 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
       >
         <div className="space-y-3">
           {data.aiBriefing.needsAttention.slice(0, 2).map((item, i) => (
-            <div key={i} className="flex items-start gap-3 p-3 bg-red-500/5 rounded-xl border border-red-500/10">
+            <div 
+              key={i} 
+              onClick={() => navigate('/ai-insights')}
+              className="flex items-start gap-3 p-3 bg-red-500/5 rounded-xl border border-red-500/10 active:bg-red-500/10 transition-colors"
+            >
               <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
               <p className="text-xs font-medium text-foreground leading-tight">{item.text}</p>
             </div>
           ))}
-          <div className="flex items-start gap-3 p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10">
+          <div 
+            onClick={() => navigate('/contacts')}
+            className="flex items-start gap-3 p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10 active:bg-emerald-500/10 transition-colors"
+          >
             <RefreshCw className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
             <p className="text-xs font-medium text-foreground leading-tight">{data.aiBriefing.goodNews[0]?.text || "2 new hot leads this week"}</p>
           </div>
-          <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10">
+          <div 
+            onClick={() => navigate('/contacts')}
+            className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10 active:bg-blue-500/10 transition-colors"
+          >
             <Users className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
             <p className="text-xs font-medium text-foreground leading-tight">Call Sarah Chen (urgent)</p>
           </div>
@@ -133,7 +143,11 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
       >
         <div className="space-y-2">
           {data.upcomingTasks.slice(0, 3).map((task, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
+            <div 
+              key={i} 
+              onClick={() => navigate('/tasks')}
+              className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl active:bg-muted/50 transition-colors"
+            >
               <div className={cn(
                 "w-2 h-2 rounded-full",
                 i === 0 ? "bg-red-500" : i === 1 ? "bg-orange-500" : "bg-yellow-500"
@@ -176,24 +190,28 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
         color="red"
       >
         <div className="space-y-3">
-          {[
-            { name: 'Quantum Finance', value: '$80K', prob: '45%', status: 'red' },
-            { name: 'Beta Inc Growth', value: '$55K', prob: '38%', status: 'orange' },
-          ].map((deal, i) => (
-            <div key={i} className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "w-2 h-2 rounded-full",
-                  deal.status === 'red' ? "bg-red-500" : "bg-orange-500"
-                )} />
-                <span className="text-xs font-bold text-foreground">{deal.name}</span>
+          {data.dealsAtRisk && data.dealsAtRisk.length > 0 ? (
+            data.dealsAtRisk.slice(0, 3).map((deal, i) => (
+              <div 
+                key={i} 
+                onClick={() => navigate(`/deals/${deal.id}`)}
+                className="flex items-center justify-between p-3 bg-rose-500/5 border border-rose-500/10 rounded-xl active:scale-95 transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-red-500" />
+                  <span className="text-xs font-bold text-foreground truncate max-w-[150px]">{deal.name}</span>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-bold text-foreground">{formatCurrency(deal.value)}</p>
+                  <p className="text-[10px] text-rose-500 font-bold">{deal.probability}% probability</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-xs font-bold text-foreground">{deal.value}</p>
-                <p className="text-[10px] text-muted-foreground">{deal.prob}</p>
-              </div>
+            ))
+          ) : (
+            <div className="text-center py-4 text-muted-foreground text-[10px] font-medium">
+              No deals currently at risk.
             </div>
-          ))}
+          )}
         </div>
       </DashboardSection>
     </div>

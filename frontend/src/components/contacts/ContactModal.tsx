@@ -26,6 +26,7 @@ import { cn } from '../../lib/utils';
 import { Contact, Company, LeadSource, LeadStatus, Industry, CompanySize, EnrichmentResult } from '../../types';
 import { companyService } from '../../services/company.service';
 import { contactService } from '../../services/contact.service';
+import { toastStore } from '../../lib/toast-store';
 
 const contactSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -244,15 +245,18 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
 
       if (contact) {
         await contactService.updateContact(contact.id, contactData);
+        toastStore.add({ type: 'success', title: 'Contact saved', message: '✅ Contact saved successfully' });
       } else {
         await contactService.createContact(contactData);
         localStorage.removeItem('contact_draft');
+        toastStore.add({ type: 'success', title: 'Contact created', message: '✅ Contact created successfully' });
       }
       
       onSuccess();
       onClose();
     } catch (error) {
       console.error('Error saving contact:', error);
+      toastStore.add({ type: 'error', title: 'Error', message: '❌ Error: Could not save. Please try again.' });
     }
   };
 
@@ -321,6 +325,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
     setEnrichmentResults(null);
     setShowAiToast(true);
     setTimeout(() => setShowAiToast(false), 3000);
+    toastStore.add({ type: 'ai', title: 'AI Enrichment', message: '✨ Contact data enriched with AI' });
   };
 
   const toggleField = (field: string) => {
@@ -366,6 +371,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
     setEnrichmentResults(null);
     setShowAiToast(true);
     setTimeout(() => setShowAiToast(false), 3000);
+    toastStore.add({ type: 'ai', title: 'AI Enrichment', message: '✨ Contact data enriched with AI' });
   };
 
   const addTag = () => {
@@ -388,10 +394,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
     if (confirm('Are you sure you want to delete this contact?')) {
       try {
         await contactService.deleteContact(contact.id);
+        toastStore.add({ type: 'success', title: 'Contact deleted', message: '🗑️ Contact deleted successfully' });
         onSuccess();
         onClose();
       } catch (error) {
         console.error('Error deleting contact:', error);
+        toastStore.add({ type: 'error', title: 'Error', message: '❌ Error: Could not delete. Please try again.' });
       }
     }
   };

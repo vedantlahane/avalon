@@ -597,10 +597,14 @@ export const ContactDetail: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {deals.map((deal) => (
-                        <div key={deal.id} className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                        <div 
+                          key={deal.id} 
+                          onClick={() => navigate(`/deals/${deal.id}`)}
+                          className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                        >
                           <div className="flex justify-between items-start mb-4">
                             <div>
-                              <h4 className="text-sm font-black text-gray-900">{deal.name}</h4>
+                              <h4 className="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition-colors">{deal.name}</h4>
                               <p className="text-2xl font-black text-indigo-600 mt-1">${deal.value.toLocaleString()}</p>
                             </div>
                             <span className={cn(
@@ -644,7 +648,10 @@ export const ContactDetail: React.FC = () => {
                     className="space-y-6"
                   >
                     <div className="flex justify-end">
-                      <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95">
+                      <button 
+                        onClick={() => useModalStore.getState().taskModal.open()}
+                        className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95"
+                      >
                         <Plus size={18} />
                         <span>Add Task</span>
                       </button>
@@ -652,7 +659,11 @@ export const ContactDetail: React.FC = () => {
 
                     <div className="bg-white border border-gray-200 rounded-2xl divide-y divide-gray-100 shadow-sm overflow-hidden">
                       {tasks.map((task) => (
-                        <div key={task.id} className="p-4 flex items-center gap-4 hover:bg-gray-50 transition-all group">
+                        <div 
+                          key={task.id} 
+                          onClick={() => useModalStore.getState().taskModal.open(task.id)}
+                          className="p-4 flex items-center gap-4 hover:bg-gray-50 transition-all group cursor-pointer"
+                        >
                           <button className="w-6 h-6 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white hover:border-indigo-600 transition-all">
                             <Check size={14} strokeWidth={4} className="opacity-0 group-hover:opacity-20 transition-opacity" />
                           </button>
@@ -731,6 +742,36 @@ export const ContactDetail: React.FC = () => {
             contact={contact} 
             onRefresh={(updated) => setContact(prev => prev ? { ...prev, ...updated } : null)} 
           />
+
+          {/* AI Suggested Actions */}
+          <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-xl shadow-indigo-200 space-y-4">
+            <div className="flex items-center gap-2">
+              <Brain size={20} />
+              <h3 className="text-lg font-black tracking-tight">AI Suggestions</h3>
+            </div>
+            <div className="space-y-3">
+              <button 
+                onClick={() => useModalStore.getState().taskModal.open(undefined, { title: `Follow up with ${contact.firstName}`, contactId: contact.id })}
+                className="w-full flex items-center justify-between p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl transition-all group"
+              >
+                <span className="text-xs font-bold">Create follow-up task</span>
+                <PlusCircle size={16} className="text-white/40 group-hover:text-white transition-colors" />
+              </button>
+              <button 
+                onClick={() => composerStore.open({ contact })}
+                className="w-full flex items-center justify-between p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl transition-all group"
+              >
+                <span className="text-xs font-bold">Draft re-engagement email</span>
+                <Mail size={16} className="text-white/40 group-hover:text-white transition-colors" />
+              </button>
+              <button 
+                className="w-full flex items-center justify-between p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl transition-all group"
+              >
+                <span className="text-xs font-bold">Schedule introductory meeting</span>
+                <Calendar size={16} className="text-white/40 group-hover:text-white transition-colors" />
+              </button>
+            </div>
+          </div>
 
           {/* Contact Information Card */}
           <div className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm space-y-6">

@@ -5,6 +5,7 @@ import { cn } from '../../lib/utils';
 import { MOCK_CONTACTS, MOCK_COMPANIES, MOCK_DEALS } from '../../data/mockData';
 import { useNavigate } from 'react-router-dom';
 import { composerStore } from '../../lib/composer-store';
+import { useModalStore } from '../../lib/modal-store';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CommandResult {
@@ -62,9 +63,9 @@ export const CommandPalette: React.FC = () => {
   ).slice(0, 5) : [];
 
   const quickActions = [
-    { icon: <Plus size={16} />, label: 'New Contact', action: () => navigate('/contacts') },
-    { icon: <Plus size={16} />, label: 'New Deal', action: () => navigate('/deals') },
-    { icon: <Plus size={16} />, label: 'New Task', action: () => navigate('/tasks') },
+    { icon: <Plus size={16} />, label: 'New Contact', action: () => useModalStore.getState().contactModal.open() },
+    { icon: <Plus size={16} />, label: 'New Deal', action: () => useModalStore.getState().dealModal.open() },
+    { icon: <Plus size={16} />, label: 'New Task', action: () => useModalStore.getState().taskModal.open() },
     { icon: <Mail size={16} />, label: 'Compose Email', action: () => composerStore.open() },
     { icon: <MessageSquare size={16} />, label: 'Ask AI', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
   ];
@@ -78,9 +79,9 @@ export const CommandPalette: React.FC = () => {
   const aiCommands = [
     { icon: <Mail size={16} />, command: '/email', description: 'Open email composer', action: () => composerStore.open() },
     { icon: <Zap size={16} />, command: '/call', description: 'Log a call', action: () => window.dispatchEvent(new CustomEvent('toggle-ai-panel')) },
-    { icon: <DollarSign size={16} />, command: '/deal', description: 'Create or find deal', action: () => navigate('/deals') },
-    { icon: <ListCheck size={16} />, command: '/task', description: 'Create task', action: () => navigate('/tasks') },
-    { icon: <BarChart3 size={16} />, command: '/report', description: 'Generate report', action: () => navigate('/reports') },
+    { icon: <DollarSign size={16} />, command: '/deal', description: 'Create new deal', action: () => useModalStore.getState().dealModal.open() },
+    { icon: <ListCheck size={16} />, command: '/task', description: 'Create task', action: () => useModalStore.getState().taskModal.open() },
+    { icon: <BarChart3 size={16} />, command: '/report', description: 'View reports', action: () => navigate('/reports') },
   ];
 
   const results: CommandResult[] = [];
@@ -127,7 +128,7 @@ export const CommandPalette: React.FC = () => {
             type: 'item', 
             icon: <Building2 size={16} className="text-orange-500" />, 
             label: c.name, 
-            action: () => navigate('/companies')
+            action: () => navigate(`/companies/${c.id}`)
         }));
         }
 

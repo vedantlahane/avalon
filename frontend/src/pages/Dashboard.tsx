@@ -91,7 +91,7 @@ export const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState('This Month');
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
-  const { contactModal, dealModal } = useModalStore();
+  const { contactModal, dealModal, taskModal } = useModalStore();
   const navigate = useNavigate();
 
   const triggerFireworks = () => {
@@ -142,10 +142,10 @@ export const Dashboard: React.FC = () => {
 
   // Listen for modal success to refresh data
   useEffect(() => {
-    if (!contactModal.isOpen && !dealModal.isOpen) {
+    if (!contactModal.isOpen && !dealModal.isOpen && !taskModal.isOpen) {
       fetchData();
     }
-  }, [contactModal.isOpen, dealModal.isOpen]);
+  }, [contactModal.isOpen, dealModal.isOpen, taskModal.isOpen]);
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -298,65 +298,109 @@ export const Dashboard: React.FC = () => {
 
       {/* AI Briefing & Leaderboard */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-primary text-primary-foreground rounded-2xl p-6 shadow-xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4 transition-transform group-hover:scale-110">
-            <Brain size={120} />
-          </div>
-          <div className="relative z-10 space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <Brain size={24} />
-                AI Daily Briefing
-              </h3>
-              <span className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-sm">
-                3 Priority Actions
-              </span>
-            </div>
-            
-            <div className="space-y-4">
-              {data.aiBriefing.needsAttention.slice(0, 2).map((item) => (
-                <div key={item.id} className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10">
-                  <p className="text-sm font-medium">{item.text}</p>
-                </div>
-              ))}
-              <div className="bg-emerald-400/20 backdrop-blur-md rounded-xl p-4 border border-emerald-400/20">
-                <p className="text-sm font-medium">{data.aiBriefing.goodNews[0].text}</p>
-              </div>
-            </div>
-
-            <button className="w-full py-3 bg-white text-primary font-bold rounded-xl shadow-lg hover:bg-indigo-50 transition-all ripple">
-              Review Priority Tasks
-            </button>
-          </div>
-        </div>
-
-        <SalesLeaderboard data={data.salesLeaderboard} />
-      </div>
-
-      {/* Activity & Lead Scoring */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <ActivityTimeline 
-            onLogClick={() => setIsActivityModalOpen(true)}
-          />
-        </div>
-
-        <div className="lg:col-span-4 space-y-6">
-          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-            <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
-              <Calendar size={20} className="text-primary" />
-              Upcoming Tasks
-            </h3>
-            <div className="space-y-3">
-              {data.upcomingTasks.slice(0, 5).map(task => (
-                <div key={task.id} className="flex items-center gap-3 p-3 rounded-xl border border-border/50 hover:bg-muted/50 transition-colors group cursor-pointer">
-                  <div className="w-5 h-5 rounded border-2 border-border flex-shrink-0 group-hover:border-primary transition-colors"></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-foreground truncate">{task.title}</p>
-                    <p className="text-[10px] text-muted-foreground font-medium">Due: {task.dueDate ? format(new Date(task.dueDate), 'MMM d') : 'No date'}</p>
+                  <div className="bg-primary text-primary-foreground rounded-2xl p-6 shadow-xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4 transition-transform group-hover:scale-110">
+                    <Brain size={120} />
+                  </div>
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold flex items-center gap-2">
+                        <Brain size={24} />
+                        AI Daily Briefing
+                      </h3>
+                      <span className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-sm">
+                        3 Priority Actions
+                      </span>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {data.aiBriefing.needsAttention.slice(0, 2).map((item) => (
+                        <div 
+                          key={item.id} 
+                          className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 cursor-pointer hover:bg-white/20 transition-colors"
+                          onClick={() => navigate('/ai-insights')}
+                        >
+                          <p className="text-sm font-medium">{item.text}</p>
+                        </div>
+                      ))}
+                      <div 
+                        className="bg-emerald-400/20 backdrop-blur-md rounded-xl p-4 border border-emerald-400/20 cursor-pointer hover:bg-emerald-400/30 transition-colors"
+                        onClick={() => navigate('/contacts')}
+                      >
+                        <p className="text-sm font-medium">{data.aiBriefing.goodNews[0].text}</p>
+                      </div>
+                    </div>
+        
+                    <button 
+                      onClick={() => navigate('/tasks')}
+                      className="w-full py-3 bg-white text-primary font-bold rounded-xl shadow-lg hover:bg-indigo-50 transition-all ripple"
+                    >
+                      Review Priority Tasks
+                    </button>
                   </div>
                 </div>
-              ))}
+        
+                <SalesLeaderboard data={data.salesLeaderboard} />
+              </div>
+        
+              {/* Activity & Lead Scoring */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-8 bg-card p-6 rounded-2xl border border-border shadow-sm">
+                  <ActivityTimeline 
+                    onLogClick={() => setIsActivityModalOpen(true)}
+                  />
+                </div>
+        
+                <div className="lg:col-span-4 space-y-6">
+                  <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
+                    <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+                      <Calendar size={20} className="text-primary" />
+                      Upcoming Tasks
+                    </h3>
+                    <div className="space-y-3">
+                      {data.upcomingTasks.slice(0, 5).map(task => (
+                        <div 
+                          key={task.id} 
+                          onClick={() => navigate('/tasks')}
+                          className="flex items-center gap-3 p-3 rounded-xl border border-border/50 hover:bg-muted/50 transition-colors group cursor-pointer"
+                        >
+                          <div className="w-5 h-5 rounded border-2 border-border flex-shrink-0 group-hover:border-primary transition-colors"></div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-foreground truncate">{task.title}</p>
+                            <p className="text-[10px] text-muted-foreground font-medium">Due: {task.dueDate ? format(new Date(task.dueDate), 'MMM d') : 'No date'}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
+            <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+              <AlertTriangle size={20} className="text-rose-500" />
+              Deals at Risk
+            </h3>
+            <div className="space-y-3">
+              {data.dealsAtRisk && data.dealsAtRisk.length > 0 ? (
+                data.dealsAtRisk.slice(0, 3).map(deal => (
+                  <div 
+                    key={deal.id} 
+                    onClick={() => navigate(`/deals/${deal.id}`)}
+                    className="flex items-center justify-between p-3 rounded-xl border border-rose-100 bg-rose-50/30 hover:bg-rose-50 transition-colors group cursor-pointer"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-gray-900 truncate">{deal.name}</p>
+                      <p className="text-[10px] text-rose-600 font-medium">{deal.stage} • {deal.probability}% probability</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-gray-900">{formatCurrency(deal.value)}</p>
+                      <ChevronRight size={14} className="text-rose-300 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-6 text-muted-foreground text-xs font-medium">
+                  No deals currently at risk. Good job!
+                </div>
+              )}
             </div>
           </div>
 

@@ -25,6 +25,7 @@ import { Deal, DealStage, DealPriority, Company, Contact } from '../../types';
 import { companyService } from '../../services/company.service';
 import { contactService } from '../../services/contact.service';
 import { dealService } from '../../services/deal.service';
+import { toastStore } from '../../lib/toast-store';
 import { format, addDays } from 'date-fns';
 
 const lineItemSchema = z.object({
@@ -188,7 +189,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
 
   const handleAiAssist = () => {
     if (!watchedContactId) {
-      toast.error('Please select a contact first for AI Assist');
+      toastStore.add({ type: 'error', title: 'Error', message: 'Please select a contact first for AI Assist' });
       return;
     }
 
@@ -202,17 +203,11 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
       const suggestedValue = 105000;
       const suggestedDate = format(addDays(new Date(), 45), 'yyyy-MM-dd');
       
-      toast.success(
-        <div className="flex flex-col gap-1">
-          <p className="font-bold">🤖 AI Suggestions for {contact.firstName}:</p>
-          <ul className="text-xs space-y-1 mt-1 opacity-90">
-            <li>• Value: $80k - $150k (Avg: $105k)</li>
-            <li>• Products: Enterprise Plan, API Access</li>
-            <li>• Timeline: 45-60 days</li>
-          </ul>
-        </div>,
-        { duration: 5000 }
-      );
+      toastStore.add({ 
+        type: 'ai', 
+        title: 'AI Suggestions', 
+        message: `🤖 AI Suggested: Value $105k, Products: Enterprise Plan, API Access, Timeline: 45 days`
+      });
 
       setValue('value', suggestedValue);
       setValue('expectedCloseDate', suggestedDate);
@@ -240,10 +235,10 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
 
       if (deal) {
         await dealService.updateDeal(deal.id, dealData as any);
-        toast.success('Deal updated successfully');
+        toastStore.add({ type: 'success', title: 'Deal updated', message: '✅ Deal updated successfully' });
       } else {
         await dealService.createDeal(dealData as any);
-        toast.success('Deal created successfully');
+        toastStore.add({ type: 'success', title: 'Deal created', message: '✅ Deal created successfully' });
       }
       
       onSuccess();
@@ -269,7 +264,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
       }
     } catch (error) {
       console.error('Error saving deal:', error);
-      toast.error('Failed to save deal');
+      toastStore.add({ type: 'error', title: 'Error', message: '❌ Error: Could not save. Please try again.' });
     }
   };
 
@@ -747,9 +742,14 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                     type="button"
                     onClick={async () => {
                       if (confirm('Delete this deal?')) {
-                        await dealService.deleteDeal(deal.id);
-                        onSuccess();
-                        onClose();
+                        try {
+                          await dealService.deleteDeal(deal.id);
+                          toastStore.add({ type: 'success', title: 'Deal deleted', message: '🗑️ Deal deleted successfully' });
+                          onSuccess();
+                          onClose();
+                        } catch (error) {
+                          toastStore.add({ type: 'error', title: 'Error', message: '❌ Error: Could not delete. Please try again.' });
+                        }
                       }
                     }}
                     className="flex items-center gap-2 text-rose-600 hover:text-rose-700 font-bold text-sm transition-colors"

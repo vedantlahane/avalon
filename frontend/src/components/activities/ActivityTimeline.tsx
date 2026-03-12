@@ -3,13 +3,14 @@ import {
   Mail, Phone, Calendar, Monitor, FileText, 
   Check, Sparkles, ChevronDown, ChevronRight,
   Filter, Plus, Smile, Meh, Frown, AlertTriangle,
-  ExternalLink, MessageSquare, Clock, User, TrendingUp
+  ExternalLink, MessageSquare, Clock, User, TrendingUp, Building2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { activityService } from '@/services/activity.service';
 import { Activity, ActivityType } from '@/types';
 import { Skeleton } from '@/components/common/Skeletons';
+import { useNavigate } from 'react-router-dom';
 
 interface ActivityTimelineProps {
   contactId?: number;
@@ -43,6 +44,7 @@ export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadActivities();
@@ -218,6 +220,24 @@ export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
                               <Clock className="w-3 h-3" />
                               {new Date(activity.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
+                            {activity.contactId && !contactId && (
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); navigate(`/contacts/${activity.contactId}`); }}
+                                className="flex items-center gap-1 hover:text-indigo-600 transition-colors"
+                              >
+                                <User className="w-3 h-3" />
+                                Contact
+                              </button>
+                            )}
+                            {activity.dealId && !dealId && (
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); navigate(`/deals/${activity.dealId}`); }}
+                                className="flex items-center gap-1 hover:text-indigo-600 transition-colors"
+                              >
+                                <TrendingUp className="w-3 h-3" />
+                                Deal
+                              </button>
+                            )}
                             {activity.durationMinutes && (
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />

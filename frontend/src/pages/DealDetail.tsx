@@ -439,7 +439,11 @@ export const DealDetail: React.FC = () => {
                     </div>
                     <div className="bg-white border border-gray-100 rounded-3xl divide-y divide-gray-50 overflow-hidden shadow-sm">
                       {tasks.map(task => (
-                        <div key={task.id} className="p-5 flex items-center gap-4 hover:bg-gray-50 transition-all group">
+                        <div 
+                          key={task.id} 
+                          onClick={() => useModalStore.getState().taskModal.open(task.id)}
+                          className="p-5 flex items-center gap-4 hover:bg-gray-50 transition-all group cursor-pointer"
+                        >
                           <button className="w-6 h-6 rounded-lg border-2 border-gray-200 flex items-center justify-center text-white hover:border-indigo-600 transition-all">
                             <Check size={14} strokeWidth={4} className="opacity-0 group-hover:opacity-20 transition-opacity" />
                           </button>
@@ -608,11 +612,17 @@ export const DealDetail: React.FC = () => {
                     <Target size={12} className="text-indigo-600" /> Next Best Actions
                   </label>
                   <div className="space-y-2">
-                    <button className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 transition-all group/btn">
+                    <button 
+                      onClick={() => useModalStore.getState().taskModal.open(undefined, { title: 'Schedule meeting with CTO', dealId: deal.id, contactId: deal.contactId })}
+                      className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 transition-all group/btn"
+                    >
                       <span className="text-xs font-bold text-gray-700">1. Schedule meeting with CTO</span>
                       <PlusCircle size={14} className="text-gray-300 group-hover/btn:text-indigo-500 transition-colors" />
                     </button>
-                    <button className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 transition-all group/btn">
+                    <button 
+                      onClick={() => composerStore.open({ deal, contact: deal.contact })}
+                      className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 transition-all group/btn"
+                    >
                       <span className="text-xs font-bold text-gray-700">2. Send competitive comparison</span>
                       <Mail size={14} className="text-gray-300 group-hover/btn:text-indigo-500 transition-colors" />
                     </button>

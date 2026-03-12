@@ -17,7 +17,8 @@ interface ModalStore {
   taskModal: {
     isOpen: boolean;
     taskId?: number;
-    open: (id?: number) => void;
+    initialData?: any;
+    open: (id?: number, initialData?: any) => void;
     close: () => void;
   };
 }
@@ -47,11 +48,12 @@ export const useModalStore = create<ModalStore>((set) => ({
   taskModal: {
     isOpen: false,
     taskId: undefined,
-    open: (id) => set((state) => ({ 
-      taskModal: { ...state.taskModal, isOpen: true, taskId: id } 
+    initialData: undefined,
+    open: (id, initialData) => set((state) => ({ 
+      taskModal: { ...state.taskModal, isOpen: true, taskId: id, initialData } 
     })),
     close: () => set((state) => ({ 
-      taskModal: { ...state.taskModal, isOpen: false, taskId: undefined } 
+      taskModal: { ...state.taskModal, isOpen: false, taskId: undefined, initialData: undefined } 
     })),
   },
 }));

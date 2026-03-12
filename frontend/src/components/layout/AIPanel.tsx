@@ -5,6 +5,9 @@ import { DefaultChatTransport } from 'ai';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useHelpStore } from '@/lib/help-store';
+import { useNavigate } from 'react-router-dom';
+import { composerStore } from '@/lib/composer-store';
+import { useModalStore } from '@/lib/modal-store';
 
 interface AIPanelProps {
   isOpen: boolean;
@@ -16,6 +19,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({ isOpen, onClose }) => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const { messages, sendMessage, status, stop, setMessages } = useChat({
     transport: new DefaultChatTransport({
@@ -164,12 +168,24 @@ export const AIPanel: React.FC<AIPanelProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
                 {message.role !== 'user' && (
-                  <div className="mt-2 flex gap-2">
-                    <button className="px-3 py-1.5 bg-muted rounded-full text-[10px] font-bold text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
-                      Email Sarah
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button 
+                      onClick={() => composerStore.open()}
+                      className="px-3 py-1.5 bg-muted rounded-full text-[10px] font-bold text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      Draft Email
                     </button>
-                    <button className="px-3 py-1.5 bg-muted rounded-full text-[10px] font-bold text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
-                      View Quantum Deal
+                    <button 
+                      onClick={() => navigate('/deals')}
+                      className="px-3 py-1.5 bg-muted rounded-full text-[10px] font-bold text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      View Deals
+                    </button>
+                    <button 
+                      onClick={() => useModalStore.getState().taskModal.open()}
+                      className="px-3 py-1.5 bg-muted rounded-full text-[10px] font-bold text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      Create Task
                     </button>
                   </div>
                 )}

@@ -7,15 +7,18 @@ import { dealService } from '../../services/deal.service';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils';
+import { toastStore } from '../../lib/toast-store';
+import { useModalStore } from '../../lib/modal-store';
 
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   taskId?: number;
+  initialData?: any;
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess, taskId }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess, taskId, initialData }) => {
   const [task, setTask] = useState<Task | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -60,11 +63,18 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
         } else {
           setTask(null);
           resetForm();
+          if (initialData) {
+            if (initialData.title) setTitle(initialData.title);
+            if (initialData.description) setDescription(initialData.description);
+            if (initialData.contactId) setContactId(initialData.contactId);
+            if (initialData.dealId) setDealId(initialData.dealId);
+            if (initialData.priority) setPriority(initialData.priority);
+          }
         }
       }
     };
     loadData();
-  }, [isOpen, taskId]);
+  }, [isOpen, taskId, initialData]);
 
   const resetForm = () => {
     setTitle('');
@@ -103,14 +113,25 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
 
       if (task) {
         await taskService.updateTask(task.id, taskData);
+        if (status === 'Completed' && task.status !== 'Completed') {
+          toastStore.add({ type: 'success', title: 'Task completed', message: '✅ Task completed' });
+        } else {
+          toastStore.add({ type: 'success', title: 'Task updated', message: '✅ Task updated' });
+        }
       } else {
         await taskService.createTask(taskData);
+        if (status === 'Completed') {
+            toastStore.add({ type: 'success', title: 'Task completed', message: '✅ Task completed' });
+        } else {
+            toastStore.add({ type: 'success', title: 'Task created', message: '✅ Task created' });
+        }
       }
       
       onSuccess();
       onClose();
     } catch (error) {
       console.error('Error saving task:', error);
+      toastStore.add({ type: 'error', title: 'Error', message: '❌ Error: Could not save. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -62,6 +62,16 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; user: User | null }>
   return <>{children}</>;
 };
 
+const HelpRedirect = () => {
+  const { openHelp } = useHelpStore();
+  const navigate = useNavigate();
+  useEffect(() => {
+    openHelp();
+    navigate('/', { replace: true });
+  }, [openHelp, navigate]);
+  return null;
+};
+
 const AnimatedRoutes: React.FC<{ user: User | null }> = ({ user }) => {
   const location = useLocation();
   
@@ -113,8 +123,10 @@ const AnimatedRoutes: React.FC<{ user: User | null }> = ({ user }) => {
             <Route path="/tasks" element={<ProtectedRoute user={user}><Tasks /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute user={user}><Reports /></ProtectedRoute>} />
             <Route path="/ai-insights" element={<ProtectedRoute user={user}><AIInsights /></ProtectedRoute>} />
+            <Route path="/insights" element={<Navigate to="/ai-insights" replace />} />
             <Route path="/automations" element={<ProtectedRoute user={user}><Automations /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute user={user}><Settings /></ProtectedRoute>} />
+            <Route path="/help" element={<ProtectedRoute user={user}><HelpRedirect /></ProtectedRoute>} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
@@ -268,6 +280,7 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
         isOpen={taskModal.isOpen} 
         onClose={taskModal.close} 
         taskId={taskModal.taskId}
+        initialData={taskModal.initialData}
         onSuccess={() => {}}
       />
       
