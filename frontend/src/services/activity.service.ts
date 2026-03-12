@@ -3,12 +3,12 @@ import { Activity } from '../types';
 import { MOCK_ACTIVITIES } from '../data/mockData';
 
 export const activityService = {
-  getActivities: async (filters: { contactId?: number; dealId?: number } = {}): Promise<Activity[]> => {
+  getActivities: async (filters: { contactId?: string | number; dealId?: string | number } = {}): Promise<Activity[]> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       let filtered = [...MOCK_ACTIVITIES];
-      if (filters.contactId) filtered = filtered.filter(a => a.contactId === filters.contactId);
-      if (filters.dealId) filtered = filtered.filter(a => a.dealId === filters.dealId);
-      return filtered;
+      if (filters.contactId) filtered = filtered.filter(a => a.contactId.toString() === filters.contactId.toString());
+      if (filters.dealId) filtered = filtered.filter(a => a.dealId?.toString() === filters.dealId.toString());
+      return filtered as Activity[];
     }
     const response = await api.get('/crm/activities', { params: filters });
     return response.data;
@@ -17,7 +17,7 @@ export const activityService = {
   createActivity: async (activityData: Partial<Activity>): Promise<Activity> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       const newActivity = {
-        id: Math.floor(Math.random() * 1000) + 100,
+        id: Math.random().toString(36).substr(2, 9),
         ...activityData,
         date: activityData.date || new Date().toISOString(),
         createdAt: new Date().toISOString(),
@@ -66,18 +66,18 @@ export const activityService = {
     return response.data;
   },
 
-  updateActivity: async (id: number, activityData: Partial<Activity>): Promise<Activity> => {
+  updateActivity: async (id: string | number, activityData: Partial<Activity>): Promise<Activity> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
-      const index = MOCK_ACTIVITIES.findIndex(a => a.id === id);
+      const index = MOCK_ACTIVITIES.findIndex(a => a.id.toString() === id.toString());
       if (index === -1) throw new Error('Activity not found');
       const updatedActivity = { ...MOCK_ACTIVITIES[index], ...activityData, updatedAt: new Date().toISOString() };
-      return updatedActivity;
+      return updatedActivity as Activity;
     }
     const response = await api.patch(`/crm/activities/${id}`, activityData);
     return response.data;
   },
 
-  deleteActivity: async (id: number): Promise<void> => {
+  deleteActivity: async (id: string | number): Promise<void> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }

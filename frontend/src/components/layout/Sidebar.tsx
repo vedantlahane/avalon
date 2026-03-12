@@ -1,237 +1,119 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Users, 
   Building2, 
-  BadgeDollarSign, 
-  Inbox, 
+  TrendingUp, 
+  Mail, 
   CheckSquare, 
   BarChart3, 
-  Bot, 
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  Brain,
-  TrendingUp,
-  Circle,
-  Zap,
-  HelpCircle
+  Brain, 
+  Zap, 
+  Settings, 
+  HelpCircle 
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { useHelpStore } from '@/lib/help-store';
 
-interface NavItem {
-  icon: any;
-  label: string;
-  path: string;
-  badge?: number;
-  section?: string;
-}
-
-const navItems: NavItem[] = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/', section: 'Navigation' },
-  { icon: Users, label: 'Contacts', path: '/contacts', badge: 15, section: 'Navigation' },
-  { icon: Building2, label: 'Companies', path: '/companies', badge: 8, section: 'Navigation' },
-  { icon: BadgeDollarSign, label: 'Deals', path: '/deals', badge: 10, section: 'Navigation' },
-  { icon: Inbox, label: 'Inbox', path: '/inbox', badge: 12, section: 'Navigation' },
-  { icon: CheckSquare, label: 'Tasks', path: '/tasks', badge: 5, section: 'Navigation' },
-  { icon: BarChart3, label: 'Reports', path: '/reports', section: 'Navigation' },
-  { icon: Zap, label: 'Automations', path: '/automations', section: 'Navigation' },
-  
-  { icon: Bot, label: 'AI Assistant', path: '/ai', section: 'AI' },
-  { icon: Brain, label: 'AI Insights', path: '/ai-insights', section: 'AI' },
-  { icon: TrendingUp, label: 'Sentiment', path: '/sentiment', section: 'AI' },
-  
-  { icon: Settings, label: 'Settings', path: '/settings', section: 'Settings' },
+const navItems = [
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: Users, label: "Contacts", path: "/contacts" },
+  { icon: Building2, label: "Companies", path: "/companies" },
+  { icon: TrendingUp, label: "Deals", path: "/deals" },
+  { icon: Mail, label: "Inbox", path: "/inbox", count: "3" },
+  { icon: CheckSquare, label: "Tasks", path: "/tasks" },
+  { icon: BarChart3, label: "Reports", path: "/reports" },
+  { icon: Brain, label: "AI Insights", path: "/insights" },
+  { icon: Zap, label: "Automations", path: "/automations" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 export const Sidebar: React.FC = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
-  const { openHelp } = useHelpStore();
-
-  useEffect(() => {
-    const handleToggle = () => setIsMobileOpen(prev => !prev);
-    window.addEventListener('toggle-sidebar', handleToggle);
-    return () => window.removeEventListener('toggle-sidebar', handleToggle);
-  }, []);
-
-  // Close mobile sidebar on route change
-  useEffect(() => {
-    setIsMobileOpen(false);
-  }, [location]);
-
-  const sections = ['Navigation', 'AI', 'Settings'];
-
-  const renderNavItems = (sectionName: string) => {
-    return navItems
-      .filter(item => item.section === sectionName)
-      .map((item) => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          className={({ isActive }) => cn(
-            "group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all relative overflow-hidden",
-            isActive 
-              ? "bg-primary/10 text-primary" 
-              : "text-muted-foreground hover:text-foreground hover:bg-muted",
-            isCollapsed && "justify-center px-2"
-          )}
-          title={isCollapsed ? item.label : undefined}
-        >
-          {({ isActive }) => (
-            <>
-              {isActive && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full" />
-              )}
-              <item.icon className={cn(
-                "h-6 w-6 shrink-0 transition-colors",
-                isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
-                !isCollapsed && "mr-3"
-              )} />
-              {!isCollapsed && (
-                <span className="truncate flex-1">{item.label}</span>
-              )}
-              {!isCollapsed && item.badge && (
-                <span className={cn(
-                  "ml-auto px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-colors",
-                  isActive ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
-                )}>
-                  {item.badge}
-                </span>
-              )}
-              {isCollapsed && item.badge && (
-                <div className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full border-2 border-sidebar" />
-              )}
-            </>
-          )}
-        </NavLink>
-      ));
-  };
 
   return (
-    <>
-      {/* Backdrop for mobile */}
-      {isMobileOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-[45] md:hidden animate-in fade-in duration-200"
-          onClick={() => setIsMobileOpen(false)}
-        />
+    <aside 
+      className={cn(
+        "fixed left-4 top-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-in-out flex items-center",
+        isHovered ? "w-[240px]" : "w-[64px]"
       )}
-
-      {/* Desktop/Tablet Sidebar */}
-      <aside 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Sidebar Capsule */}
+      <div 
         className={cn(
-          "fixed md:sticky top-0 left-0 bottom-0 z-[46] md:z-20 bg-card border-r border-border transition-all duration-300 ease-in-out flex flex-col h-screen",
-          isCollapsed ? "w-[60px]" : "w-[240px]",
-          isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          "h-[60vh] w-full bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-[32px] shadow-2xl overflow-hidden flex flex-col transition-all duration-300 backdrop-blur-md",
+          "dark:bg-black/80 light:bg-white/80"
         )}
       >
-        <div className="p-4 flex items-center h-[56px] border-b border-border/50">
-          {!isCollapsed && (
-            <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-sm">
-                N
-              </div>
-              <span className="text-lg font-bold tracking-tight text-foreground">NexusCRM</span>
-            </div>
-          )}
-          {isCollapsed && (
-            <div className="mx-auto h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-sm">
-              N
-            </div>
-          )}
-        </div>
-
-        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6 custom-scrollbar">
-          {sections.map(section => (
-            <div key={section} className="space-y-1">
-              {!isCollapsed && (
-                <p className="px-3 text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 opacity-50">
-                  {section}
-                </p>
-              )}
-              {isCollapsed && (
-                <div className="h-px bg-border mx-2 mb-4 opacity-50" />
-              )}
-              {renderNavItems(section)}
-            </div>
-          ))}
-
-          {!isCollapsed && (
-            <div className="pt-4 border-t border-border mt-4">
-              <p className="px-3 text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3 opacity-50">
-                Quick Stats
-              </p>
-              <div className="px-3 space-y-3">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Pipeline</span>
-                    <span className="font-bold text-foreground">$1.24M</span>
-                  </div>
-                  <div className="h-1 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-primary rounded-full w-[65%]" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Won MTD</span>
-                  <span className="font-bold text-emerald-500">$95K</span>
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Tasks Due</span>
-                  <span className="font-bold text-amber-500">5</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-auto border-t border-border">
-          <button 
-            onClick={() => openHelp()}
-            className={cn(
-              "w-full flex items-center px-4 py-3 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border-b border-border",
-              isCollapsed && "justify-center px-2"
-            )}
-            title={isCollapsed ? "Help & Documentation" : undefined}
-          >
-            <HelpCircle size={18} className={cn(!isCollapsed && "mr-3")} />
-            {!isCollapsed && <span>Help & Docs</span>}
-          </button>
-          <button 
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className={cn(
-              "w-full flex items-center px-4 py-3 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors",
-              isCollapsed && "justify-center px-2"
-            )}
-          >
-            {isCollapsed ? (
-              <ChevronRight size={18} />
-            ) : (
-              <>
-                <ChevronLeft size={18} className="mr-3" />
-                <span>Collapse</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        {!isCollapsed && (
-          <div className="p-4 bg-muted/30 border-t border-border">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-indigo-500 flex items-center justify-center text-white font-bold text-xs shadow-sm">
-                AR
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-foreground truncate">Alex Rivera</p>
-                <p className="text-[10px] text-muted-foreground truncate uppercase font-bold tracking-tighter opacity-70">Sales Leader</p>
-              </div>
-            </div>
+        {/* Logo Section */}
+        <div className="flex items-center justify-center h-[64px] flex-shrink-0">
+          <div className="w-[32px] h-[32px] bg-[var(--accent)] rounded-[8px] flex items-center justify-center text-white font-bold text-lg">
+            N
           </div>
-        )}
-      </aside>
-    </>
+          {isHovered && (
+            <span className="ml-3 font-semibold text-[var(--text-primary)] text-lg whitespace-nowrap overflow-hidden">
+              NexusCRM
+            </span>
+          )}
+        </div>
+
+        {/* Navigation Items */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 flex flex-col gap-2 scrollbar-none">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  "flex items-center min-h-[44px] rounded-full transition-all duration-200 group px-2.5",
+                  isActive 
+                    ? "bg-[var(--accent-glow)] text-[var(--accent)]" 
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-secondary)]"
+                )}
+              >
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                  <item.icon size={20} />
+                </div>
+                {isHovered && (
+                  <div className="ml-3 flex items-center flex-1 justify-between overflow-hidden">
+                    <span className="text-sm font-medium whitespace-nowrap">
+                      {item.label}
+                    </span>
+                    {item.count && (
+                      <span className="bg-[var(--accent)] text-white text-[10px] px-1.5 py-0.5 rounded-full font-mono">
+                        {item.count}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </NavLink>
+            );
+          })}
+        </div>
+
+        {/* Bottom Section */}
+        <div className="p-3 border-t border-[var(--border-color)] flex flex-col gap-2">
+          <button className="flex items-center h-[44px] rounded-full text-[var(--text-muted)] hover:bg-[var(--bg-hover)] transition-all px-2.5 group">
+            <HelpCircle size={20} />
+            {isHovered && <span className="ml-3 text-sm font-medium whitespace-nowrap">Help</span>}
+          </button>
+          <div className="flex items-center h-[44px] rounded-full px-2">
+            <div className="w-8 h-8 rounded-full bg-[var(--accent)] flex items-center justify-center text-[12px] font-semibold text-white flex-shrink-0">
+              JD
+            </div>
+            {isHovered && (
+              <div className="ml-3 flex flex-col overflow-hidden">
+                <span className="text-sm font-medium text-[var(--text-primary)] whitespace-nowrap">John Doe</span>
+                <span className="text-[10px] text-[var(--text-muted)] whitespace-nowrap">Admin</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </aside>
   );
 };

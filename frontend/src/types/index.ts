@@ -1,33 +1,37 @@
-export type LeadSource = 'Website' | 'LinkedIn' | 'Referral' | 'Cold Outreach' | 'Event' | 'Advertisement' | 'Other';
-export type LeadStatus = 'New' | 'Contacted' | 'Qualified' | 'Unqualified' | 'Nurturing';
-export type Industry = 'Technology' | 'Healthcare' | 'Finance' | 'Education' | 'Retail' | 'Manufacturing' | 'Consulting' | 'Real Estate' | 'Other';
+export type LeadSource = 'website' | 'linkedin' | 'referral' | 'cold-outreach' | 'event' | 'inbound' | 'Website' | 'LinkedIn' | 'Referral' | 'Cold Outreach' | 'Event' | 'Advertisement' | 'Other';
+export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'unqualified' | 'New' | 'Contacted' | 'Qualified' | 'Unqualified' | 'Nurturing';
+export type Industry = 'Technology' | 'Healthcare' | 'Finance' | 'Education' | 'Retail' | 'Manufacturing' | 'Consulting' | 'Energy' | 'Other' | 'Real Estate';
 export type CompanySize = '1-10' | '11-50' | '51-200' | '201-500' | '501-1000' | '1000+';
-export type DealStage = 'Lead' | 'Qualified' | 'Discovery' | 'Proposal' | 'Negotiation' | 'Closed Won' | 'Closed Lost';
+export type DealStage = 'lead' | 'qualified' | 'discovery' | 'proposal' | 'negotiation' | 'closed-won' | 'closed-lost' | 'Lead' | 'Qualified' | 'Discovery' | 'Proposal' | 'Negotiation' | 'Closed Won' | 'Closed Lost';
 export type DealPriority = 'Low' | 'Medium' | 'High' | 'Critical';
-export type ActivityType = 'Email' | 'Call' | 'Meeting' | 'Note' | 'Task' | 'Demo' | 'Follow-up' | 'Other';
-export type ActivityOutcome = 'Completed' | 'Pending' | 'Cancelled' | 'No-show' | 'Connected' | 'Left Voicemail' | 'No Answer' | 'Busy' | 'Wrong Number';
-export type TaskPriority = 'Low' | 'Medium' | 'High' | 'Urgent';
-export type TaskStatus = 'To Do' | 'In Progress' | 'Completed';
+export type ActivityType = 'email' | 'call' | 'meeting' | 'note' | 'demo' | 'Email' | 'Call' | 'Meeting' | 'Note' | 'Task' | 'Demo' | 'Follow-up' | 'Other';
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent' | 'Low' | 'Medium' | 'High' | 'Urgent';
+export type TaskStatus = 'todo' | 'in-progress' | 'completed' | 'To Do' | 'In Progress' | 'Completed';
 export type EmailTemplateCategory = 'Follow-up' | 'Introduction' | 'Proposal' | 'Thank You' | 'Re-engagement' | 'Custom';
+export type ActivityOutcome = 'Completed' | 'Pending' | 'Cancelled' | 'No-show' | 'Connected' | 'Left Voicemail' | 'No Answer' | 'Busy' | 'Wrong Number';
+export type NotificationType = 'AI' | 'Deal' | 'Task' | 'Email' | 'Contact' | 'System' | 'ai-insight' | 'deal-update' | 'task-due' | 'system';
 
 export interface Company {
-  id: number;
+  id: string | number;
   name: string;
-  domain?: string;
-  industry?: Industry;
-  size?: CompanySize;
-  revenue?: string;
-  location?: string;
-  website?: string;
-  linkedinUrl?: string;
-  description?: string;
-  healthScore?: number;
+  industry: string;
+  size: string;
+  revenue: string;
+  website: string;
+  healthScore: number;
+  contactCount: number;
+  dealCount: number;
+  totalValue: number;
   createdAt: string;
   updatedAt: string;
+  logo?: string;
+  domain?: string;
+  location?: string;
+  linkedinUrl?: string;
+  description?: string;
 }
 
 export interface CompanyWithStats extends Company {
-  contactCount: number;
   activeDealCount: number;
   activeDealValue: number;
   wonDealCount: number;
@@ -40,57 +44,46 @@ export interface CompanyInsight {
   keyInsights: string[];
   opportunityScore: number;
   recommendedStrategy: string;
-  similarCompanies: { id: number; name: string }[];
+  similarCompanies: { id: number | string; name: string }[];
 }
 
 export interface Contact {
-  id: number;
+  id: string | number;
   firstName: string;
   lastName: string;
   email: string;
-  phone?: string;
+  phone: string;
+  company: string | Company;
+  companyId: string | number;
+  title: string;
   jobTitle?: string;
-  companyId?: number;
-  company?: Company;
-  leadSource?: LeadSource;
-  leadStatus?: LeadStatus;
   leadScore: number;
-  leadCategory?: string;
+  leadStatus: LeadStatus;
+  source: LeadSource;
+  leadSource?: LeadSource;
+  lastContacted: string;
+  createdAt: string;
+  updatedAt: string;
+  avatar?: string;
+  avatarUrl?: string;
+  tags: string[];
+  owner: string;
   demographicScore: number;
   behavioralScore: number;
-  scoreBreakdown?: {
-    demographic: {
-      jobTitle: number;
-      companySize: number;
-      industry: number;
-      location: number;
-    };
-    behavioral: {
-      emailEngagement: number;
-      meetingAttendance: number;
-      responseTime: number;
-      recency: number;
-    };
-    negative: number;
-  };
   scoreTrend: number;
+  scoreBreakdown?: any;
   aiNote?: string;
-  tags: string[];
   address?: string;
   linkedinUrl?: string;
   twitterUrl?: string;
   website?: string;
   notes?: string;
-  lastContacted?: string;
-  owner: string;
-  avatarUrl?: string;
-  createdAt: string;
-  updatedAt: string;
+  leadCategory?: string;
 }
 
 export interface LeadScoreHistory {
-  id: number;
-  contactId: number;
+  id: number | string;
+  contactId: number | string;
   score: number;
   change: number;
   reason: string;
@@ -98,31 +91,37 @@ export interface LeadScoreHistory {
 }
 
 export interface Deal {
-  id: number;
+  id: string | number;
+  title: string;
   name: string;
+  company: string | Company;
+  companyId: string | number;
+  contactId: string | number;
+  contactName: string;
+  contact?: Contact;
   value: number;
   currency: string;
   stage: DealStage;
-  probability?: number;
-  contactId?: number;
-  contact?: Contact;
-  companyId?: number;
-  company?: Company;
-  expectedCloseDate?: string;
+  probability: number;
+  expectedCloseDate: string;
   actualCloseDate?: string;
-  lossReason?: string;
-  priority: DealPriority;
-  notes?: string;
-  competitors: string[];
-  lineItems?: LineItem[];
-  owner: string;
   createdAt: string;
   updatedAt: string;
+  lastActivity: string;
+  daysInStage: number;
+  tags: string[];
+  priority: DealPriority;
+  competitors: string[];
+  owner: string;
+  notes?: string;
+  aiRiskScore?: number;
+  aiInsight?: string;
+  lineItems?: LineItem[];
 }
 
 export interface LineItem {
-  id: number;
-  dealId: number;
+  id: number | string;
+  dealId: number | string;
   productName: string;
   quantity: number;
   unitPrice: number;
@@ -132,44 +131,100 @@ export interface LineItem {
 }
 
 export interface Activity {
-  id: number;
+  id: string | number;
   type: ActivityType;
   title: string;
-  description?: string;
-  contactId?: number;
+  description: string;
+  contactId: string | number;
+  contactName: string;
   contact?: Contact;
-  dealId?: number;
+  dealId?: string | number;
   deal?: Deal;
   date: string;
-  durationMinutes?: number;
-  outcome?: ActivityOutcome;
-  nextSteps?: string;
-  sentiment?: 'Positive' | 'Neutral' | 'Negative' | 'Cautious';
-  metadata?: Record<string, any>;
-  keyPoints?: string[];
+  sentiment?: "positive" | "negative" | "neutral" | "urgent" | "Positive" | "Neutral" | "Negative" | "Cautious";
   aiSummary?: string;
+  outcome?: ActivityOutcome;
+  durationMinutes?: number;
+  nextSteps?: string;
+  metadata?: any;
+  keyPoints?: string[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface Task {
-  id: number;
+  id: string | number;
   title: string;
   description?: string;
-  dueDate?: string;
-  priority: TaskPriority;
   status: TaskStatus;
-  contactId?: number;
+  priority: TaskPriority;
+  dueDate: string;
+  contactId?: string | number;
+  contactName?: string;
   contact?: Contact;
-  dealId?: number;
+  dealId?: string | number;
+  dealTitle?: string;
   deal?: Deal;
+  isAiSuggested: boolean;
   aiGenerated: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
+export interface Email {
+  id: string | number;
+  from: string;
+  fromName: string;
+  to: string;
+  subject: string;
+  body: string;
+  content: string;
+  sender: string;
+  senderName: string;
+  senderAvatar?: string;
+  timestamp: string;
+  date: string;
+  read: boolean;
+  isRead: boolean;
+  sentiment: "positive" | "negative" | "neutral" | "urgent" | "Positive" | "Neutral" | "Negative" | "Urgent";
+  contactId?: string | number;
+  contact?: Contact;
+  dealId?: string | number;
+  dealName?: string;
+  threadId: string;
+  aiSummary?: string;
+  summary?: string;
+  isStarred: boolean;
+  isAIFlagged: boolean;
+  folder: string;
+  sentimentScore?: number;
+  attachments?: any[];
+  keyPoints?: string[];
+  intent?: string;
+  suggestedActions?: string[];
+}
+
+export interface Notification {
+  id: string | number;
+  type: NotificationType;
+  title: string;
+  message: string;
+  read: boolean;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
+  timestamp: string;
+  actionUrl?: string;
+  link?: string;
+  actionLabel?: string;
+  actionLink?: string;
+  secondaryActionLabel?: string;
+  secondaryActionLink?: string;
+  metadata?: any;
+}
+
 export interface EmailTemplate {
-  id: number;
+  id: number | string;
   name: string;
   subject: string;
   body: string;
@@ -182,29 +237,30 @@ export interface EmailTemplate {
   updatedAt: string;
 }
 
-export interface Email {
-  id: number;
-  sender: string;
-  senderName?: string;
-  senderAvatar?: string;
-  subject: string;
-  content: string;
-  timestamp: string;
-  isRead: boolean;
-  isStarred: boolean;
-  isAIFlagged: boolean;
-  folder: 'Inbox' | 'Sent' | 'Drafts' | 'Starred' | 'Trash' | 'AI Generated';
-  contactId?: number;
-  contact?: Contact;
-  dealId?: number;
-  dealName?: string;
-  sentiment?: 'Positive' | 'Neutral' | 'Negative' | 'Urgent';
-  sentimentScore?: number;
-  attachments?: { name: string; size: string; type: string }[];
-  summary?: string;
-  keyPoints?: string[];
-  intent?: string;
-  suggestedActions?: string[];
+export interface Automation {
+  id: number | string;
+  name: string;
+  description?: string;
+  status: string;
+  trigger: any;
+  conditions: any[];
+  actions: any[];
+  triggeredCount: number;
+  lastRun?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  avatar?: string;
+  company?: string;
+  isOnboarded: boolean;
+  role?: string;
+  teamSize?: string;
+  revenueTarget?: number;
 }
 
 export interface DashboardStats {
@@ -238,24 +294,9 @@ export interface PipelineStageStats {
 }
 
 export interface AIDailyBriefing {
-  goodNews: {
-    id: string;
-    text: string;
-    type: 'success' | 'info';
-  }[];
-  needsAttention: {
-    id: string;
-    text: string;
-    type: 'warning' | 'danger';
-    sentiment?: string;
-  }[];
-  priorities: {
-    id: string;
-    text: string;
-    actionLabel: string;
-    actionType: 'call' | 'email' | 'meeting';
-    target?: string;
-  }[];
+  goodNews: { id: string; text: string; type: 'success' | 'info' }[];
+  needsAttention: { id: string; text: string; type: 'warning' | 'danger'; sentiment?: string }[];
+  priorities: { id: string; text: string; actionLabel: string; actionType: 'call' | 'email' | 'meeting'; target?: string }[];
 }
 
 export interface LeadScoreDistribution {
@@ -266,7 +307,7 @@ export interface LeadScoreDistribution {
 }
 
 export interface LeaderboardRep {
-  id: number;
+  id: number | string;
   rank: number;
   name: string;
   revenue: number;
@@ -276,50 +317,12 @@ export interface LeaderboardRep {
   status: 'success' | 'warning' | 'info';
 }
 
-export interface AchievementBadge {
-  id: string;
-  icon: string;
-  title: string;
-  description: string;
-}
-
 export interface SalesLeaderboard {
   title: string;
   period: 'This Week' | 'This Month' | 'This Quarter' | 'All Time';
   reps: LeaderboardRep[];
-  achievements: AchievementBadge[];
+  achievements: any[];
   aiCoaching: string;
-}
-
-export type NotificationType = 'AI' | 'Deal' | 'Task' | 'Email' | 'Contact' | 'System';
-
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-  avatar?: string;
-  company?: string;
-  isOnboarded: boolean;
-  role?: string;
-  teamSize?: string;
-  revenueTarget?: number;
-}
-
-export interface Notification {
-  id: number;
-  type: NotificationType;
-  title: string;
-  message: string;
-  isRead: boolean;
-  timestamp: string;
-  link?: string;
-  actionLabel?: string;
-  actionLink?: string;
-  secondaryActionLabel?: string;
-  secondaryActionLink?: string;
-  metadata?: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface DashboardData {
@@ -353,56 +356,4 @@ export interface EnrichmentResult {
   suggestedTags?: string[];
   recentNews?: string;
   technologies?: string[];
-}
-
-export type AutomationStatus = 'Active' | 'Paused' | 'Draft';
-export type AutomationTriggerType =
-  | 'Contact Created'
-  | 'Deal Stage Changed'
-  | 'Time-based'
-  | 'Email Received'
-  | 'Lead Score Changed'
-  | 'Task Overdue'
-  | 'AI Detects Risk'
-  | 'Metric Threshold';
-
-export interface AutomationTrigger {
-  type: AutomationTriggerType;
-  config: Record<string, any>;
-}
-
-export interface AutomationCondition {
-  field: string;
-  operator: string;
-  value: string;
-  logic?: 'AND' | 'OR';
-}
-
-export interface AutomationAction {
-  id: string;
-  type: string;
-  config: Record<string, any>;
-}
-
-export interface Automation {
-  id: number;
-  name: string;
-  description?: string;
-  status: AutomationStatus;
-  trigger: AutomationTrigger;
-  conditions: AutomationCondition[];
-  actions: AutomationAction[];
-  triggeredCount: number;
-  lastRun?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AutomationLog {
-  id: number;
-  automationId: number;
-  status: 'Success' | 'Failure';
-  message: string;
-  details?: Record<string, any>;
-  timestamp: string;
 }

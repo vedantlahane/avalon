@@ -51,7 +51,7 @@ export const CommandPalette: React.FC = () => {
 
   const filteredContacts = query ? MOCK_CONTACTS.filter(c => 
     `${c.firstName} ${c.lastName}`.toLowerCase().includes(query.toLowerCase()) ||
-    c.company?.name.toLowerCase().includes(query.toLowerCase())
+    (typeof c.company === 'string' ? c.company : c.company?.name || '').toLowerCase().includes(query.toLowerCase())
   ).slice(0, 5) : [];
 
   const filteredCompanies = query ? MOCK_COMPANIES.filter(c => 
@@ -59,7 +59,7 @@ export const CommandPalette: React.FC = () => {
   ).slice(0, 5) : [];
 
   const filteredDeals = query ? MOCK_DEALS.filter(d => 
-    d.name.toLowerCase().includes(query.toLowerCase())
+    (d.name || d.title).toLowerCase().includes(query.toLowerCase())
   ).slice(0, 5) : [];
 
   const quickActions = [
@@ -117,7 +117,7 @@ export const CommandPalette: React.FC = () => {
             type: 'item', 
             icon: <User size={16} className="text-blue-500" />, 
             label: `${c.firstName} ${c.lastName}`, 
-            sublabel: c.jobTitle + ' at ' + c.company?.name,
+            sublabel: (c.title || c.jobTitle) + ' at ' + (typeof c.company === 'string' ? c.company : c.company?.name || ''),
             action: () => navigate(`/contacts/${c.id}`)
         }));
         }
@@ -137,7 +137,7 @@ export const CommandPalette: React.FC = () => {
         filteredDeals.forEach(d => results.push({ 
             type: 'item', 
             icon: <DollarSign size={16} className="text-green-500" />, 
-            label: d.name, 
+            label: d.name || d.title, 
             sublabel: `$${d.value.toLocaleString()}`,
             action: () => navigate(`/deals/${d.id}`)
         }));

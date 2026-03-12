@@ -24,17 +24,24 @@ import { format, differenceInDays } from 'date-fns';
 
 interface DealListViewProps {
   deals: Deal[];
-  onDealClick: (id: number) => void;
-  onUpdateDeal: (id: number, data: Partial<Deal>) => Promise<void>;
-  onDeleteDeals: (ids: number[]) => Promise<void>;
-  onBulkUpdateDeals: (ids: number[], data: Partial<Deal>) => Promise<void>;
-  onMouseEnterRow?: (id: number) => void;
+  onDealClick: (id: string) => void;
+  onUpdateDeal: (id: string, data: Partial<Deal>) => Promise<void>;
+  onDeleteDeals: (ids: string[]) => Promise<void>;
+  onBulkUpdateDeals: (ids: string[], data: Partial<Deal>) => Promise<void>;
+  onMouseEnterRow?: (id: string) => void;
 }
 
-const STAGES: DealStage[] = ['Lead', 'Qualified', 'Discovery', 'Proposal', 'Negotiation', 'Closed Won', 'Closed Lost'];
+const STAGES: DealStage[] = ['lead', 'qualified', 'discovery', 'proposal', 'negotiation', 'closed-won', 'closed-lost'];
 const PRIORITIES: DealPriority[] = ['Low', 'Medium', 'High', 'Critical'];
 
-const STAGE_COLORS: Record<DealStage, string> = {
+const STAGE_COLORS: Record<string, string> = {
+  'lead': 'bg-gray-100 text-gray-700',
+  'qualified': 'bg-blue-100 text-blue-700',
+  'discovery': 'bg-indigo-100 text-indigo-700',
+  'proposal': 'bg-violet-100 text-violet-700',
+  'negotiation': 'bg-amber-100 text-amber-700',
+  'closed-won': 'bg-emerald-100 text-emerald-700',
+  'closed-lost': 'bg-red-100 text-red-700',
   'Lead': 'bg-gray-100 text-gray-700',
   'Qualified': 'bg-blue-100 text-blue-700',
   'Discovery': 'bg-indigo-100 text-indigo-700',
@@ -56,8 +63,8 @@ export const DealListView: React.FC<DealListViewProps> = ({ deals, onDealClick, 
     key: 'priority',
     direction: 'desc'
   });
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [editingField, setEditingField] = useState<{ id: number; field: keyof Deal } | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [editingField, setEditingField] = useState<{ id: string; field: keyof Deal } | null>(null);
   const [editValue, setEditValue] = useState<any>(null);
 
   // Quick Filters
@@ -67,7 +74,7 @@ export const DealListView: React.FC<DealListViewProps> = ({ deals, onDealClick, 
   const [closingThisMonth, setClosingThisMonth] = useState(false);
 
   const getDaysInStage = (deal: Deal) => {
-    return differenceInDays(new Date(), new Date(deal.updatedAt)) || 1;
+    return deal.daysInStage || 1;
   };
 
   const filteredDeals = useMemo(() => {
@@ -153,9 +160,9 @@ export const DealListView: React.FC<DealListViewProps> = ({ deals, onDealClick, 
   const exportToCSV = () => {
     const headers = ['Deal Name', 'Company', 'Contact', 'Value', 'Stage', 'Probability', 'Priority', 'Expected Close', 'Days in Stage', 'Owner'];
     const rows = filteredDeals.map(d => [
-      d.name,
-      d.company?.name || '',
-      d.contact ? `${d.contact.firstName} ${d.contact.lastName}` : '',
+      d.name || d.title,
+      typeof d.company === 'string' ? d.company : d.company?.name || '',
+      d.contactName || (d.contact ? `${d.contact.firstName} ${d.contact.lastName}` : ''),
       `$${d.value.toLocaleString()}`,
       d.stage,
       `${d.probability}%`,
@@ -184,8 +191,8 @@ export const DealListView: React.FC<DealListViewProps> = ({ deals, onDealClick, 
   const renderAISignal = (deal: Deal) => {
     if (deal.probability && deal.probability > 80) return <Flame className="text-orange-500" size={16} />;
     if (deal.probability && deal.probability < 30) return <AlertTriangle className="text-red-500" size={16} />;
-    if (deal.id % 4 === 0) return <TrendingUp className="text-emerald-500" size={16} />;
-    if (deal.id % 5 === 0) return <TrendingDown className="text-amber-500" size={16} />;
+    if (parseInt(deal.id) % 4 === 0) return <TrendingUp className="text-emerald-500" size={16} />;
+    if (parseInt(deal.id) % 5 === 0) return <TrendingDown className="text-amber-500" size={16} />;
     return <Snowflake className="text-blue-300" size={16} />;
   };
 
@@ -405,20 +412,22 @@ export const DealListView: React.FC<DealListViewProps> = ({ deals, onDealClick, 
                       onClick={() => onDealClick(deal.id)}
                       className="font-bold text-foreground hover:text-primary text-sm text-left truncate max-w-[200px]"
                     >
-                      {deal.name}
+                      {deal.name || deal.title}
                     </button>
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 min-w-[120px]">
                       <Building2 size={14} className="text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground truncate">{deal.company?.name || 'No Company'}</span>
+                      <span className="text-sm text-muted-foreground truncate">
+                        {typeof deal.company === 'string' ? deal.company : deal.company?.name || 'No Company'}
+                      </span>
                     </div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 min-w-[120px]">
                       <User size={14} className="text-muted-foreground" />
                       <span className="text-sm text-muted-foreground truncate">
-                        {deal.contact ? `${deal.contact.firstName} ${deal.contact.lastName}` : 'No Contact'}
+                        {deal.contactName || (deal.contact ? `${deal.contact.firstName} ${deal.contact.lastName}` : 'No Contact')}
                       </span>
                     </div>
                   </td>
