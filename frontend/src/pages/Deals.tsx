@@ -48,6 +48,7 @@ import { EmptyState } from '../components/common/EmptyState';
 import { ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
 import { useDebounce } from '../hooks/useDebounce';
+import { useModalStore } from '../lib/modal-store';
 import confetti from 'canvas-confetti';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
@@ -199,9 +200,8 @@ export const Deals: React.FC = () => {
     priority: 'All',
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { dealModal } = useModalStore();
   const [isExportOpen, setIsExportOpen] = useState(false);
-  const [initialStage, setInitialStage] = useState<DealStage | undefined>(undefined);
 
   const fetchData = async () => {
     try {
@@ -219,6 +219,13 @@ export const Deals: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Listen for modal success to refresh data
+  useEffect(() => {
+    if (!dealModal.isOpen) {
+      fetchData();
+    }
+  }, [dealModal.isOpen]);
 
   const totalPipelineValue = useMemo(() => {
     return deals.reduce((sum, d) => sum + d.value, 0);
@@ -395,7 +402,7 @@ export const Deals: React.FC = () => {
             <span className="hidden sm:inline">Export</span>
           </button>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => dealModal.open()}
             className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-md btn-hover ripple"
           >
             <Plus size={18} />
@@ -462,7 +469,7 @@ export const Deals: React.FC = () => {
                       key={stage.id} 
                       stage={stage} 
                       deals={filteredDeals.filter(d => d.stage === stage.id)} 
-                      onAddDeal={() => { setInitialStage(stage.id); setIsModalOpen(true); }}
+                      onAddDeal={() => { dealModal.open(undefined, stage.id); }}
                       onCardClick={(id) => navigate(`/deals/${id}`)}
                       onMouseEnterCard={prefetchDeal}
                     />
@@ -538,12 +545,6 @@ export const Deals: React.FC = () => {
         )}
       </div>
 
-      <DealModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={fetchData}
-        initialStage={initialStage}
-      />
       <ExportModal 
         isOpen={isExportOpen} 
         onClose={() => setIsExportOpen(false)} 

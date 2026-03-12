@@ -57,10 +57,12 @@ interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  contact?: Contact | null;
+  contactId?: number;
 }
 
-export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSuccess, contact }) => {
+export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSuccess, contactId }) => {
+  const [contact, setContact] = useState<Contact | null>(null);
+  const [isLoadingContact, setIsLoadingContact] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [isCreatingCompany, setIsCreatingCompany] = useState(false);
   const [isAiEnriching, setIsAiEnriching] = useState(false);
@@ -91,23 +93,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
     formState: { errors, isSubmitting, isDirty },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
-    defaultValues: contact ? {
-      firstName: contact.firstName,
-      lastName: contact.lastName,
-      email: contact.email,
-      phone: contact.phone || '',
-      jobTitle: contact.jobTitle || '',
-      companyId: contact.companyId || null,
-      leadSource: contact.leadSource || '',
-      leadStatus: contact.leadStatus || '',
-      tags: contact.tags || [],
-      owner: contact.owner || 'Me',
-      linkedinUrl: contact.linkedinUrl || '',
-      twitterUrl: contact.twitterUrl || '',
-      website: contact.website || '',
-      address: contact.address || '',
-      notes: contact.notes || '',
-    } : {
+    defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
@@ -128,6 +114,62 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
 
   const watchedValues = watch();
 
+  // Load contact if ID is provided
+  useEffect(() => {
+    const loadContact = async () => {
+      if (contactId && isOpen) {
+        setIsLoadingContact(true);
+        try {
+          const data = await contactService.getContactById(contactId);
+          if (data) {
+            setContact(data);
+            reset({
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              phone: data.phone || '',
+              jobTitle: data.jobTitle || '',
+              companyId: data.companyId || null,
+              leadSource: data.leadSource || '',
+              leadStatus: data.leadStatus || '',
+              tags: data.tags || [],
+              owner: data.owner || 'Me',
+              linkedinUrl: data.linkedinUrl || '',
+              twitterUrl: data.twitterUrl || '',
+              website: data.website || '',
+              address: data.address || '',
+              notes: data.notes || '',
+            });
+          }
+        } catch (error) {
+          console.error('Error loading contact:', error);
+        } finally {
+          setIsLoadingContact(false);
+        }
+      } else if (!contactId && isOpen) {
+        setContact(null);
+        reset({
+          firstName: '',
+          lastName: '',
+          email: '',
+          tags: [],
+          owner: 'Me',
+          phone: '',
+          jobTitle: '',
+          companyId: null,
+          leadSource: '',
+          leadStatus: '',
+          linkedinUrl: '',
+          twitterUrl: '',
+          website: '',
+          address: '',
+          notes: '',
+        });
+      }
+    };
+    loadContact();
+  }, [contactId, isOpen, reset]);
+
   // Load companies
   useEffect(() => {
     const loadCompanies = async () => {
@@ -143,7 +185,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
 
   // Pre-fill from draft
   useEffect(() => {
-    if (!contact && isOpen) {
+    if (!contactId && isOpen) {
       const draft = localStorage.getItem('contact_draft');
       if (draft) {
         try {
@@ -154,11 +196,11 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
         }
       }
     }
-  }, [isOpen, contact, reset]);
+  }, [isOpen, contactId, reset]);
 
   // Auto-save draft
   useEffect(() => {
-    if (!contact && isDirty && isOpen) {
+    if (!contactId && isDirty && isOpen) {
       const timer = setTimeout(() => {
         localStorage.setItem('contact_draft', JSON.stringify(watchedValues));
         setShowDraftToast(true);
@@ -166,7 +208,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [watchedValues, isDirty, contact, isOpen]);
+  }, [watchedValues, isDirty, contactId, isOpen]);
 
   // Keyboard shortcut Ctrl+Enter
   useEffect(() => {

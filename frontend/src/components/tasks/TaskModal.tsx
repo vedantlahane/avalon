@@ -10,10 +10,11 @@ interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  task?: Task;
+  taskId?: number;
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess, task }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess, taskId }) => {
+  const [task, setTask] = useState<Task | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -31,27 +32,37 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      contactService.getContacts().then(setContacts);
-      dealService.getDeals().then(setDeals);
-      
-      if (task) {
-        setTitle(task.title);
-        setDescription(task.description || '');
-        if (task.dueDate) {
-          const date = new Date(task.dueDate);
-          setDueDate(format(date, 'yyyy-MM-dd'));
-          setDueTime(format(date, 'HH:mm'));
+    const loadData = async () => {
+      if (isOpen) {
+        contactService.getContacts().then(setContacts);
+        dealService.getDeals().then(setDeals);
+        
+        if (taskId) {
+          try {
+            const data = await taskService.getTaskById(taskId);
+            setTask(data);
+            setTitle(data.title);
+            setDescription(data.description || '');
+            if (data.dueDate) {
+              const date = new Date(data.dueDate);
+              setDueDate(format(date, 'yyyy-MM-dd'));
+              setDueTime(format(date, 'HH:mm'));
+            }
+            setPriority(data.priority);
+            setStatus(data.status);
+            setContactId(data.contactId);
+            setDealId(data.dealId);
+          } catch (error) {
+            console.error('Error loading task:', error);
+          }
+        } else {
+          setTask(null);
+          resetForm();
         }
-        setPriority(task.priority);
-        setStatus(task.status);
-        setContactId(task.contactId);
-        setDealId(task.dealId);
-      } else {
-        resetForm();
       }
-    }
-  }, [isOpen, task]);
+    };
+    loadData();
+  }, [isOpen, taskId]);
 
   const resetForm = () => {
     setTitle('');

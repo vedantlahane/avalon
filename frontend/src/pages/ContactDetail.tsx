@@ -51,6 +51,7 @@ import { LeadScoreBadge } from '../components/contacts/LeadScoreBadge';
 import { LeadScoreDetails } from '../components/contacts/LeadScoreDetails';
 import { EnrichmentResult } from '../types';
 import { composerStore } from '../lib/composer-store';
+import { useModalStore } from '../lib/modal-store';
 
 import { ActivityTimeline } from '../components/activities/ActivityTimeline';
 import { LogActivityModal } from '../components/activities/LogActivityModal';
@@ -67,7 +68,7 @@ export const ContactDetail: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('Activity Timeline');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { contactModal } = useModalStore();
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   
   const [isEnriching, setIsEnriching] = useState(false);
@@ -88,6 +89,13 @@ export const ContactDetail: React.FC = () => {
       loadContactData(parseInt(id));
     }
   }, [id]);
+
+  // Listen for modal success to refresh data
+  useEffect(() => {
+    if (!contactModal.isOpen && id) {
+      loadContactData(parseInt(id));
+    }
+  }, [contactModal.isOpen, id]);
 
   const handleEnrich = async () => {
     if (!contact) return;
@@ -332,7 +340,7 @@ export const ContactDetail: React.FC = () => {
                     <span>Enrich</span>
                   </button>
                   <button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => contact && contactModal.open(contact.id)}
                     className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-gray-50 transition-all shadow-sm active:scale-95 ml-auto"
                   >
                     <Edit2 size={18} />
@@ -835,13 +843,6 @@ export const ContactDetail: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <ContactModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={() => id && loadContactData(parseInt(id))}
-        contact={contact}
-      />
 
       <LogActivityModal
         isOpen={isActivityModalOpen}

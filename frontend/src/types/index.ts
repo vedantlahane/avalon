@@ -296,6 +296,8 @@ export interface User {
   id: string;
   email: string;
   name?: string;
+  avatar?: string;
+  company?: string;
   isOnboarded: boolean;
   role?: string;
   teamSize?: string;

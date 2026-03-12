@@ -3,7 +3,11 @@
 ### Auth Endpoints
 - `GET /auth/me` - Get current user profile
 - `POST /auth/register` - Register a new user
+  - Body: `{ email: string, password: string, fullName: string, companyName?: string, teamSize?: string, role?: string }`
 - `POST /auth/login` - Login with email and password
+- `POST /auth/logout` - Logout current user
+- `POST /auth/forgot-password` - Send password reset link
+  - Body: `{ email: string }`
 - `PATCH /auth/onboarding` - Update user onboarding status and personalization data (Authenticated)
   - Body: `{ isOnboarded?: boolean, role?: string, teamSize?: string, revenueTarget?: number }`
 

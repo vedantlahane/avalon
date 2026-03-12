@@ -28,6 +28,7 @@ import { AISuggestTasksModal } from '../components/tasks/AISuggestTasksModal';
 import { EmptyState } from '../components/common/EmptyState';
 import { ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
+import { useModalStore } from '../lib/modal-store';
 
 type ViewMode = 'List' | 'Board' | 'Calendar';
 
@@ -36,7 +37,7 @@ export const Tasks: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('List');
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const { taskModal } = useModalStore();
   const [isAISuggestModalOpen, setIsAISuggestModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,6 +67,13 @@ export const Tasks: React.FC = () => {
     fetchTasks();
   }, []);
 
+  // Listen for modal success to refresh data
+  useEffect(() => {
+    if (!taskModal.isOpen) {
+      fetchTasks();
+    }
+  }, [taskModal.isOpen]);
+
   const handleToggleTask = async (task: Task) => {
     try {
       const newStatus: TaskStatus = task.status === 'Completed' ? 'To Do' : 'Completed';
@@ -77,13 +85,11 @@ export const Tasks: React.FC = () => {
   };
 
   const handleAddTask = () => {
-    setSelectedTask(undefined);
-    setIsTaskModalOpen(true);
+    taskModal.open();
   };
 
   const handleEditTask = (task: Task) => {
-    setSelectedTask(task);
-    setIsTaskModalOpen(true);
+    taskModal.open(task.id);
   };
 
   const filteredTasks = tasks.filter(task => {
@@ -325,7 +331,6 @@ export const Tasks: React.FC = () => {
         )}
       </div>
 
-      <TaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} onSuccess={fetchTasks} task={selectedTask} />
       <AISuggestTasksModal isOpen={isAISuggestModalOpen} onClose={() => setIsAISuggestModalOpen(false)} onAddTasks={handleAddAISuggestedTasks} />
     </div>
   );

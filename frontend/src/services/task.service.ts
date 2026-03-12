@@ -11,6 +11,16 @@ export const taskService = {
     return response.data;
   },
 
+  getTaskById: async (id: number): Promise<Task> => {
+    if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
+      const task = MOCK_TASKS.find(t => t.id === id);
+      if (!task) throw new Error('Task not found');
+      return task;
+    }
+    const response = await api.get(`/tasks/${id}`);
+    return response.data;
+  },
+
   createTask: async (taskData: Partial<Task>): Promise<Task> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       const newTask = {

@@ -2,6 +2,10 @@ export interface User {
     id: string;
     email: string;
     name: string | null;
+    company: string | null;
+    role: string | null;
+    teamSize: string | null;
+    isOnboarded: boolean | null;
     createdAt: Date;
 }
 

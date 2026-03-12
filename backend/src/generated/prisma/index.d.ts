@@ -2385,6 +2385,7 @@ export namespace Prisma {
     id: string | null
     email: string | null
     name: string | null
+    company: string | null
     isOnboarded: boolean | null
     role: string | null
     teamSize: string | null
@@ -2397,6 +2398,7 @@ export namespace Prisma {
     id: string | null
     email: string | null
     name: string | null
+    company: string | null
     isOnboarded: boolean | null
     role: string | null
     teamSize: string | null
@@ -2409,6 +2411,7 @@ export namespace Prisma {
     id: number
     email: number
     name: number
+    company: number
     isOnboarded: number
     role: number
     teamSize: number
@@ -2431,6 +2434,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    company?: true
     isOnboarded?: true
     role?: true
     teamSize?: true
@@ -2443,6 +2447,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    company?: true
     isOnboarded?: true
     role?: true
     teamSize?: true
@@ -2455,6 +2460,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    company?: true
     isOnboarded?: true
     role?: true
     teamSize?: true
@@ -2554,6 +2560,7 @@ export namespace Prisma {
     id: string
     email: string
     name: string | null
+    company: string | null
     isOnboarded: boolean | null
     role: string | null
     teamSize: string | null
@@ -2585,6 +2592,7 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    company?: boolean
     isOnboarded?: boolean
     role?: boolean
     teamSize?: boolean
@@ -2599,6 +2607,7 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    company?: boolean
     isOnboarded?: boolean
     role?: boolean
     teamSize?: boolean
@@ -2611,6 +2620,7 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    company?: boolean
     isOnboarded?: boolean
     role?: boolean
     teamSize?: boolean
@@ -2623,6 +2633,7 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    company?: boolean
     isOnboarded?: boolean
     role?: boolean
     teamSize?: boolean
@@ -2631,7 +2642,7 @@ export namespace Prisma {
     isDeleted?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "isOnboarded" | "role" | "teamSize" | "revenueTarget" | "createdAt" | "isDeleted", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "company" | "isOnboarded" | "role" | "teamSize" | "revenueTarget" | "createdAt" | "isDeleted", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     identities?: boolean | User$identitiesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2648,6 +2659,7 @@ export namespace Prisma {
       id: string
       email: string
       name: string | null
+      company: string | null
       isOnboarded: boolean | null
       role: string | null
       teamSize: string | null
@@ -3081,6 +3093,7 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly company: FieldRef<"User", 'String'>
     readonly isOnboarded: FieldRef<"User", 'Boolean'>
     readonly role: FieldRef<"User", 'String'>
     readonly teamSize: FieldRef<"User", 'String'>
@@ -20826,6 +20839,7 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     name: 'name',
+    company: 'company',
     isOnboarded: 'isOnboarded',
     role: 'role',
     teamSize: 'teamSize',
@@ -21258,6 +21272,7 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
+    company?: StringNullableFilter<"User"> | string | null
     isOnboarded?: BoolNullableFilter<"User"> | boolean | null
     role?: StringNullableFilter<"User"> | string | null
     teamSize?: StringNullableFilter<"User"> | string | null
@@ -21271,6 +21286,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    company?: SortOrderInput | SortOrder
     isOnboarded?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
     teamSize?: SortOrderInput | SortOrder
@@ -21287,6 +21303,7 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    company?: StringNullableFilter<"User"> | string | null
     isOnboarded?: BoolNullableFilter<"User"> | boolean | null
     role?: StringNullableFilter<"User"> | string | null
     teamSize?: StringNullableFilter<"User"> | string | null
@@ -21300,6 +21317,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    company?: SortOrderInput | SortOrder
     isOnboarded?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
     teamSize?: SortOrderInput | SortOrder
@@ -21320,6 +21338,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    company?: StringNullableWithAggregatesFilter<"User"> | string | null
     isOnboarded?: BoolNullableWithAggregatesFilter<"User"> | boolean | null
     role?: StringNullableWithAggregatesFilter<"User"> | string | null
     teamSize?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -22797,6 +22816,7 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    company?: string | null
     isOnboarded?: boolean | null
     role?: string | null
     teamSize?: string | null
@@ -22810,6 +22830,7 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    company?: string | null
     isOnboarded?: boolean | null
     role?: string | null
     teamSize?: string | null
@@ -22823,6 +22844,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
     isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     teamSize?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22836,6 +22858,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
     isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     teamSize?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22849,6 +22872,7 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    company?: string | null
     isOnboarded?: boolean | null
     role?: string | null
     teamSize?: string | null
@@ -22861,6 +22885,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
     isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     teamSize?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22873,6 +22898,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
     isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     teamSize?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24629,6 +24655,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    company?: SortOrder
     isOnboarded?: SortOrder
     role?: SortOrder
     teamSize?: SortOrder
@@ -24645,6 +24672,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    company?: SortOrder
     isOnboarded?: SortOrder
     role?: SortOrder
     teamSize?: SortOrder
@@ -24657,6 +24685,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    company?: SortOrder
     isOnboarded?: SortOrder
     role?: SortOrder
     teamSize?: SortOrder
@@ -27144,6 +27173,7 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    company?: string | null
     isOnboarded?: boolean | null
     role?: string | null
     teamSize?: string | null
@@ -27156,6 +27186,7 @@ export namespace Prisma {
     id?: string
     email: string
     name?: string | null
+    company?: string | null
     isOnboarded?: boolean | null
     role?: string | null
     teamSize?: string | null
@@ -27184,6 +27215,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
     isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     teamSize?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27196,6 +27228,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
     isOnboarded?: NullableBoolFieldUpdateOperationsInput | boolean | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
     teamSize?: NullableStringFieldUpdateOperationsInput | string | null

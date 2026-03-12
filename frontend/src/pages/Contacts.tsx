@@ -28,6 +28,7 @@ import { CardGridSkeleton, ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
 import { EmptyState } from '../components/common/EmptyState';
 import { useDebounce } from '../hooks/useDebounce';
+import { useModalStore } from '../lib/modal-store';
 
 const ITEMS_PER_PAGE = 25;
 
@@ -36,7 +37,7 @@ export const Contacts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'grid' | 'list'>('grid');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { contactModal } = useModalStore();
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,6 +61,13 @@ export const Contacts = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Listen for modal success to refresh data
+  useEffect(() => {
+    if (!contactModal.isOpen) {
+      fetchData();
+    }
+  }, [contactModal.isOpen]);
 
   const filteredContacts = useMemo(() => {
     return contacts.filter(contact => 
@@ -112,7 +120,7 @@ export const Contacts = () => {
             <span className="hidden sm:inline">Export</span>
           </button>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => contactModal.open()}
             className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 btn-hover ripple"
           >
             <Plus size={18} />
@@ -166,7 +174,7 @@ export const Contacts = () => {
           title="No contacts yet"
           description="Start building your network! Add contacts manually or import them from a CSV file."
           actions={[
-            { label: 'Add Contact', onClick: () => setIsModalOpen(true), icon: Plus },
+            { label: 'Add Contact', onClick: () => contactModal.open(), icon: Plus },
             { label: 'Import CSV', onClick: () => setIsImportOpen(true), variant: 'secondary', icon: Upload }
           ]}
           aiTip="Enter just an email and AI will enrich the rest!"
@@ -324,7 +332,6 @@ export const Contacts = () => {
         </>
       )}
 
-      <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={fetchData} />
       <ImportWizard isOpen={isImportOpen} onClose={() => { setIsImportOpen(false); fetchData(); }} resource="contacts" />
       <ExportModal 
         isOpen={isExportOpen} 

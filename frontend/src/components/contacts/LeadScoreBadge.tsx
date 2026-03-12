@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface LeadScoreBadgeProps {
   score: number;
@@ -15,7 +16,7 @@ export const LeadScoreBadge: React.FC<LeadScoreBadgeProps> = ({
   showLabel = true
 }) => {
   const getCategoryInfo = (s: number) => {
-    if (s >= 90) return { label: 'Hot Lead', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', icon: '🔥' };
+    if (s >= 90) return { label: 'Hot Lead', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', icon: '🔥', animate: true };
     if (s >= 70) return { label: 'Warm Lead', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', icon: '🌡️' };
     if (s >= 50) return { label: 'Cool Lead', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', icon: '😐' };
     if (s >= 25) return { label: 'Cold Lead', color: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400', icon: '❄️' };
@@ -37,7 +38,23 @@ export const LeadScoreBadge: React.FC<LeadScoreBadgeProps> = ({
       info.color,
       sizeClasses[size]
     )}>
-      <span>{info.icon}</span>
+      {info.animate ? (
+        <motion.span
+          animate={{ 
+            scale: [1, 1.2, 1],
+            filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"]
+          }}
+          transition={{ 
+            duration: 1.5, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+        >
+          {info.icon}
+        </motion.span>
+      ) : (
+        <span>{info.icon}</span>
+      )}
       {showLabel && <span>{displayLabel}</span>}
       <span className="font-bold ml-0.5">{score}</span>
     </div>

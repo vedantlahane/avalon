@@ -83,11 +83,12 @@ interface DealModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  deal?: Deal | null;
+  dealId?: number;
   initialStage?: DealStage;
 }
 
-export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess, deal, initialStage }) => {
+export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess, dealId, initialStage }) => {
+  const [deal, setDeal] = useState<Deal | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
@@ -133,97 +134,57 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
   const watchedContactId = watch('contactId');
   const watchedCompetitors = watch('competitors') || [];
 
-  // Auto-calculate total deal value from line items
+  // Load deal if ID is provided
   useEffect(() => {
-    if (watchedLineItems && watchedLineItems.length > 0) {
-      const total = (watchedLineItems as any[]).reduce((acc: number, item: any) => acc + (item.quantity * item.unitPrice || 0), 0);
-      setValue('value', total);
-    }
-  }, [watchedLineItems, setValue]);
-
-  // Update probability based on stage
-  useEffect(() => {
-    if (watchedStage && !deal) {
-      setValue('probability', STAGE_PROBABILITIES[watchedStage]);
-    }
-  }, [watchedStage, setValue, deal]);
-
-  // Suggest deal name when company changes
-  useEffect(() => {
-    if (watchedCompanyId && !deal) {
-      const company = companies.find((c: any) => c.id === watchedCompanyId);
-      if (company && !watch('name')) {
-        setValue('name', `${company.name} - Enterprise Package`);
-      }
-    }
-  }, [watchedCompanyId, companies, setValue, deal]);
-
-  // Auto-populate company when contact is selected
-  useEffect(() => {
-    if (watchedContactId && !watchedCompanyId && !deal) {
-      const contact = contacts.find((c: any) => c.id === watchedContactId);
-      if (contact && contact.companyId) {
-        setValue('companyId', contact.companyId);
-      }
-    }
-  }, [watchedContactId, contacts, watchedCompanyId, setValue, deal]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoadingData(true);
-      try {
-        const [companiesData, contactsData] = await Promise.all([
-          companyService.getCompanies(),
-          contactService.getContacts()
-        ]);
-        setCompanies(companiesData);
-        setContacts(contactsData);
-      } catch (error) {
-        console.error('Error loading data:', error);
-      } finally {
-        setIsLoadingData(false);
+    const loadDeal = async () => {
+      if (dealId && isOpen) {
+        setIsLoadingData(true);
+        try {
+          const data = await dealService.getDealById(dealId);
+          if (data) {
+            setDeal(data);
+            reset({
+              name: data.name,
+              value: data.value,
+              currency: data.currency,
+              stage: data.stage,
+              probability: data.probability || 0,
+              contactId: data.contactId || null,
+              companyId: data.companyId || null,
+              expectedCloseDate: data.expectedCloseDate ? new Date(data.expectedCloseDate).toISOString().split('T')[0] : '',
+              priority: data.priority,
+              notes: data.notes || '',
+              competitors: data.competitors || [],
+              lineItems: data.lineItems || [],
+              owner: data.owner || 'Me',
+            });
+          }
+        } catch (error) {
+          console.error('Error loading deal:', error);
+        } finally {
+          setIsLoadingData(false);
+        }
+      } else if (!dealId && isOpen) {
+        setDeal(null);
+        reset({
+          name: '',
+          value: 0,
+          currency: 'USD',
+          stage: initialStage || 'Lead',
+          probability: STAGE_PROBABILITIES[initialStage || 'Lead'],
+          contactId: null,
+          companyId: null,
+          expectedCloseDate: '',
+          priority: 'Medium',
+          notes: '',
+          competitors: [],
+          lineItems: [],
+          owner: 'Me',
+        });
       }
     };
-    if (isOpen) {
-      loadData();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && deal) {
-      reset({
-        name: deal.name,
-        value: deal.value,
-        currency: deal.currency,
-        stage: deal.stage,
-        probability: deal.probability || 0,
-        contactId: deal.contactId || null,
-        companyId: deal.companyId || null,
-        expectedCloseDate: deal.expectedCloseDate ? new Date(deal.expectedCloseDate).toISOString().split('T')[0] : '',
-        priority: deal.priority,
-        notes: deal.notes || '',
-        competitors: deal.competitors || [],
-        lineItems: deal.lineItems || [],
-        owner: deal.owner || 'Me',
-      });
-    } else if (isOpen) {
-      reset({
-        name: '',
-        value: 0,
-        currency: 'USD',
-        stage: initialStage || 'Lead',
-        probability: STAGE_PROBABILITIES[initialStage || 'Lead'],
-        contactId: null,
-        companyId: null,
-        expectedCloseDate: '',
-        priority: 'Medium',
-        notes: '',
-        competitors: [],
-        lineItems: [],
-        owner: 'Me',
-      });
-    }
-  }, [isOpen, deal, initialStage, reset]);
+    loadDeal();
+  }, [dealId, isOpen, initialStage, reset]);
 
   const handleAiAssist = () => {
     if (!watchedContactId) {

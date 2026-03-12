@@ -45,6 +45,18 @@ authRoutes.post('/register', catchAsync(authController.register));
 authRoutes.post('/login', catchAsync(authController.login));
 
 /**
+ * POST /auth/logout
+ * Logout current user
+ */
+authRoutes.post('/logout', catchAsync(authController.logout));
+
+/**
+ * POST /auth/forgot-password
+ * Send password reset link
+ */
+authRoutes.post('/forgot-password', catchAsync(authController.forgotPassword));
+
+/**
  * POST /auth/phone/send-otp
  * Send OTP to phone number via WhatsApp
  * Body: { phone: string }

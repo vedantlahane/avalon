@@ -48,6 +48,7 @@ import { cn } from '../lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { composerStore } from '../lib/composer-store';
+import { useModalStore } from '../lib/modal-store';
 
 import { ActivityTimeline } from '../components/activities/ActivityTimeline';
 import { LogActivityModal } from '../components/activities/LogActivityModal';
@@ -65,6 +66,7 @@ export const DealDetail: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('Activity');
+  const { dealModal } = useModalStore();
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
 
   const triggerConfetti = () => {
@@ -92,6 +94,13 @@ export const DealDetail: React.FC = () => {
       loadDealData(parseInt(id));
     }
   }, [id]);
+
+  // Listen for modal success to refresh data
+  useEffect(() => {
+    if (!dealModal.isOpen && id) {
+      loadDealData(parseInt(id));
+    }
+  }, [dealModal.isOpen, id]);
 
   const loadDealData = async (dealId: number) => {
     setIsLoading(true);
@@ -314,7 +323,10 @@ export const DealDetail: React.FC = () => {
                   <span>Note</span>
                 </button>
                 <div className="flex-1" />
-                <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-gray-50 transition-all shadow-sm active:scale-95">
+                <button 
+                  onClick={() => deal && dealModal.open(deal.id)}
+                  className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-gray-50 transition-all shadow-sm active:scale-95"
+                >
                   <Edit2 size={18} />
                   <span>Edit</span>
                 </button>

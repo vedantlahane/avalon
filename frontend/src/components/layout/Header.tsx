@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Bell, Settings, Bot, Terminal, Menu, Sun, Moon, Laptop, Plus, User, LogOut, ChevronDown, BarChart3, BookOpen, Activity } from 'lucide-react';
 import { NotificationBell } from './NotificationBell';
 import { commandPaletteStore } from '../../lib/command-palette-store';
@@ -7,13 +7,33 @@ import { cn } from '../../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { composerStore } from '../../lib/composer-store';
 import { useActivityStore } from '../../lib/activity-store';
+import { authService } from '../../services/auth.service';
+import { User as UserType } from '../../types';
 
 export const Header: React.FC = () => {
   const { theme, setTheme, isDark } = useTheme();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const navigate = useNavigate();
   const activityStore = useActivityStore();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await authService.getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.error('Failed to fetch user in header', error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleLogout = async () => {
+    await authService.logout();
+    window.location.href = '/auth';
+  };
 
   const toggleTheme = () => {
     if (theme === 'light') setTheme('dark');
@@ -40,8 +60,12 @@ export const Header: React.FC = () => {
     { label: 'My Performance', icon: <BarChart3 size={16} />, action: () => navigate('/reports') },
     { label: 'Toggle Dark Mode', icon: isDark ? <Sun size={16} /> : <Moon size={16} />, action: toggleTheme },
     { label: 'Help & Documentation', icon: <BookOpen size={16} />, action: () => {} },
-    { label: 'Sign Out', icon: <LogOut size={16} />, action: () => {}, danger: true },
+    { label: 'Sign Out', icon: <LogOut size={16} />, action: handleLogout, danger: true },
   ];
+
+  const userInitials = currentUser?.name
+    ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
+    : 'AR';
 
   return (
     <header className="h-[56px] bg-card border-b border-border px-4 flex items-center justify-between sticky top-0 z-30 shrink-0">
@@ -125,7 +149,7 @@ export const Header: React.FC = () => {
             className="flex items-center gap-2 p-1 rounded-xl hover:bg-muted transition-colors group"
           >
             <div className="h-8 w-8 rounded-lg bg-indigo-500 flex items-center justify-center text-white font-bold text-xs shadow-sm ring-2 ring-card group-hover:scale-105 transition-transform">
-              AR
+              {currentUser?.avatar || userInitials}
             </div>
             <ChevronDown size={14} className={cn("text-muted-foreground transition-transform duration-200", isUserMenuOpen && "rotate-180")} />
           </button>
@@ -135,8 +159,8 @@ export const Header: React.FC = () => {
               <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
               <div className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="px-4 py-3 border-b border-border mb-1.5">
-                  <p className="text-sm font-bold text-foreground">Alex Rivera</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">alex@nexus-crm.ai</p>
+                  <p className="text-sm font-bold text-foreground truncate">{currentUser?.name || 'Alex Rivera'}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 truncate">{currentUser?.email || 'alex@nexus-crm.ai'}</p>
                 </div>
                 {userMenuItems.map((item, idx) => (
                   <button

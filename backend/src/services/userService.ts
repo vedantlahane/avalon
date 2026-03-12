@@ -131,6 +131,7 @@ export async function updateUserOnboarding(userId: string, data: {
     isOnboarded?: boolean;
     role?: string;
     teamSize?: string;
+    company?: string;
     revenueTarget?: number;
 }): Promise<User> {
     return await prisma.user.update({
@@ -142,7 +143,14 @@ export async function updateUserOnboarding(userId: string, data: {
 /**
  * Register user with email and password
  */
-export async function registerWithEmailPassword(email: string, password: string, name?: string): Promise<User> {
+export async function registerWithEmailPassword(
+    email: string, 
+    password: string, 
+    name?: string,
+    company?: string,
+    role?: string,
+    teamSize?: string
+): Promise<User> {
     // Check if user already exists
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
@@ -157,6 +165,9 @@ export async function registerWithEmailPassword(email: string, password: string,
         data: {
             email,
             name: name || null,
+            company: company || null,
+            role: role || null,
+            teamSize: teamSize || null,
             identities: {
                 create: {
                     provider: 'EmailPassword',

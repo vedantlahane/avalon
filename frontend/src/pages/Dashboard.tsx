@@ -31,6 +31,7 @@ import {
   PieChart, 
   Pie
 } from 'recharts';
+import confetti from 'canvas-confetti';
 import { dashboardService } from '../services/dashboard.service';
 import { DashboardData } from '../types';
 import { cn, formatCurrency } from '../lib/utils';
@@ -41,6 +42,7 @@ import { SalesLeaderboard } from '../components/dashboard/SalesLeaderboard';
 import { EmptyState } from '../components/common/EmptyState';
 import { DashboardSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
+import { useModalStore } from '../lib/modal-store';
 
 import { ActivityTimeline } from '../components/activities/ActivityTimeline';
 import { LogActivityModal } from '../components/activities/LogActivityModal';
@@ -79,13 +81,42 @@ export const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState('This Month');
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const { contactModal, dealModal } = useModalStore();
   const navigate = useNavigate();
+
+  const triggerFireworks = () => {
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
+  };
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       const dashboardData = await dashboardService.getDashboardData();
       setData(dashboardData);
+      
+      // Check if monthly target is hit
+      const currentUserRep = dashboardData.salesLeaderboard.reps.find(r => r.isCurrentUser);
+      if (currentUserRep && currentUserRep.target >= 100) {
+        setTimeout(triggerFireworks, 1000);
+      }
+      
       setError(null);
     } catch (err) {
       console.error('Failed to fetch dashboard data:', err);
@@ -98,6 +129,13 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Listen for modal success to refresh data
+  useEffect(() => {
+    if (!contactModal.isOpen && !dealModal.isOpen) {
+      fetchData();
+    }
+  }, [contactModal.isOpen, dealModal.isOpen]);
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -118,8 +156,8 @@ export const Dashboard: React.FC = () => {
           title="Welcome to NexusCRM!"
           description="Your dashboard is currently empty. Start by adding your first contact or deal to unlock AI-powered insights, revenue forecasting, and performance tracking."
           actions={[
-            { label: 'Add Contact', onClick: () => navigate('/contacts'), icon: Users },
-            { label: 'Create Deal', onClick: () => navigate('/deals'), variant: 'secondary', icon: BadgeDollarSign }
+            { label: 'Add Contact', onClick: () => contactModal.open(), icon: Users },
+            { label: 'Create Deal', onClick: () => dealModal.open(), variant: 'secondary', icon: BadgeDollarSign }
           ]}
           aiTip="NexusCRM uses AI to analyze your activities and predict which deals are most likely to close this month!"
         />

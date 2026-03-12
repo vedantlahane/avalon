@@ -119,7 +119,7 @@ export async function updateUserOnboarding(userId, data) {
 /**
  * Register user with email and password
  */
-export async function registerWithEmailPassword(email, password, name) {
+export async function registerWithEmailPassword(email, password, name, company, role, teamSize) {
     // Check if user already exists
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
@@ -132,6 +132,9 @@ export async function registerWithEmailPassword(email, password, name) {
         data: {
             email,
             name: name || null,
+            company: company || null,
+            role: role || null,
+            teamSize: teamSize || null,
             identities: {
                 create: {
                     provider: 'EmailPassword',

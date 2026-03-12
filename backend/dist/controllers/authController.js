@@ -152,18 +152,17 @@ export async function unlinkIdentity(c) {
 /**
  * POST /auth/register
  * Register new user with email and password
- * Body: { email: string, password: string, name?: string }
  */
 export async function register(c) {
     try {
         const body = await c.req.json();
-        const { email, password, name } = body;
+        const { email, password, fullName, companyName, role, teamSize } = body;
         if (!email || !password) {
             throw new ApiError(400, 'Email and password are required');
         }
         validateEmailPassword(email, password);
         // Register user in database with hashed password
-        const user = await userService.registerWithEmailPassword(email, password, name);
+        const user = await userService.registerWithEmailPassword(email, password, fullName, companyName, role, teamSize);
         // Generate JWT tokens
         const tokens = tokenService.generateTokens(user.id, user.email);
         return c.json({
@@ -171,7 +170,10 @@ export async function register(c) {
             user: {
                 id: user.id,
                 email: user.email,
-                name: user.name
+                name: user.name,
+                company: user.company,
+                role: user.role,
+                teamSize: user.teamSize
             }
         }, 201);
     }
@@ -181,6 +183,27 @@ export async function register(c) {
         }
         throw error;
     }
+}
+/**
+ * POST /auth/logout
+ * Logout current user
+ */
+export async function logout(c) {
+    // In JWT, logout is usually handled client-side by deleting the token.
+    // If using a blocklist, it would be added here.
+    return c.json({ message: 'Logged out successfully' });
+}
+/**
+ * POST /auth/forgot-password
+ * Send password reset link
+ */
+export async function forgotPassword(c) {
+    const { email } = await c.req.json();
+    if (!email) {
+        throw new ApiError(400, 'Email is required');
+    }
+    // For prototype, we just return success
+    return c.json({ message: 'Reset link sent successfully' });
 }
 /**
  * POST /auth/login
