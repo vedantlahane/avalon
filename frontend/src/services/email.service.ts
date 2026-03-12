@@ -52,7 +52,13 @@ export const emailService = {
   generateAiReply: async (emailId: number): Promise<string> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      return "Hi Sarah,\n\nThank you for the update! We are thrilled to hear that the budget has been approved. I'll prepare the implementation timeline document as requested.\n\nRegarding the technical deep-dive, would Tuesday at 10 AM or Wednesday at 2 PM work for you and your CTO?\n\nBest regards,\n[My Name]";
+      if (emailId === 1) { // John Smith
+        return "Hi John,\n\nThanks for the reply! Glad to hear the Enterprise Plan is a good fit. \n\nRegarding the timeline: if we sign by Friday, we can have your core team onboarded by March 23rd. I'll send over a detailed rollout plan shortly.\n\nI'm available next Tuesday at 10 AM or Wednesday at 2 PM to walk through the technical validation with your CTO. Which works best?\n\nBest regards,\n[My Name]";
+      }
+      if (emailId === 2) { // Sarah Chen
+        return "Hi Sarah,\n\nI completely understand your concerns regarding the pricing. We value our partnership with Quantum Finance and I'd like to find a way to make this work for you.\n\nI'm currently speaking with my manager about some flexibility on the volume discounts. Are you free for a quick 10-minute call this afternoon to discuss some options?\n\nBest regards,\n[My Name]";
+      }
+      return "Hi, thank you for your email. I'll get back to you shortly with more details.\n\nBest regards,\n[My Name]";
     }
     const response = await api.post(`/crm/emails/${emailId}/generate-reply`);
     return response.data.reply;
@@ -71,16 +77,12 @@ export const emailService = {
       return {
         versions: [
           {
-            subject: "Quick follow-up: Acme Enterprise Plan next steps",
-            body: "Hi John,\n\nGreat speaking with you yesterday about the Enterprise Plan for Acme Technologies. I wanted to follow up on the key points we discussed.\n\nAs mentioned, I've attached the detailed implementation timeline showing a 6-week rollout plan. Given your Q1 budget approval, I'd love to schedule a technical deep-dive with your CTO to address the integration requirements.\n\nI'm also happy to offer our early-commitment discount of 15% if we can finalize by end of March.\n\nWould Thursday at 2 PM work for a 30-minute call with your technical team?\n\nBest regards,\n[Your Name]"
+            subject: "Next steps: Acme Enterprise Plan Implementation",
+            body: "Hi John,\n\nFollowing our conversation, I've attached the detailed implementation timeline for Acme Technologies. We've optimized the rollout to get your core engineering team live within the first two weeks.\n\nSince your Q1 budget is approved, I'd love to finalize the technical validation with your CTO so we can stay on track for a March 15th close.\n\nDoes Tuesday at 10 AM work for that technical deep-dive?\n\nBest regards,\n[Your Name]"
           },
           {
-            subject: "Acme Technologies - Enterprise Plan Implementation",
-            body: "Hello John,\n\nFollowing our conversation regarding the Enterprise Plan, I've drafted a preliminary implementation timeline for Acme Technologies. \n\nWe can definitely work within your Q1 budget constraints. I recommend we jump on a call with your CTO to finalize the technical requirements. If we move forward this month, I can secure a 15% discount for you.\n\nAre you available later this week for a brief technical discussion?\n\nCheers,\n[Your Name]"
-          },
-          {
-            subject: "Enterprise Plan: Next steps for Acme",
-            body: "Hi John, following up on our demo. I've attached the 6-week rollout plan we discussed. Since your Q1 budget is ready, let's get your CTO on a technical deep-dive call to handle the integration. I can also include a 15% discount if we sign by March 31st.\n\nDoes Thursday at 2 PM work?\n\nBest,\n[Your Name]"
+            subject: "Acme Technologies - Proposed Implementation Timeline",
+            body: "Hello John,\n\nIt was great to learn that the Enterprise Plan is officially budgeted for Q1! \n\nI've drafted a 6-week implementation plan that addresses the scalability requirements we discussed. To keep us moving toward the March 15th target date, let's get your CTO on a brief technical call.\n\nWould next Wednesday at 2 PM work for you and the team?\n\nCheers,\n[Your Name]"
           }
         ]
       };
@@ -231,16 +233,16 @@ export const emailService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return [
         {
-          id: 1,
+          id: 2,
           from: "Sarah Chen",
-          company: "Quantum Finance Group",
-          subject: "Disappointed with response time",
+          company: "Quantum Finance",
+          subject: "Pricing Concerns",
           sentiment: "Negative",
-          confidence: 92,
-          keyPhrases: ["frustrated", "considering alternatives", "unacceptable delay"],
-          dealName: "Quantum - Premium Package",
+          confidence: 94,
+          keyPhrases: ["pricing higher than CompetitorX", "not sure we can move forward", "volume discounts"],
+          dealName: "Quantum Finance - Platform License",
           dealValue: 80000,
-          recommendation: "Immediate personal call + offer expedited support setup"
+          recommendation: "Immediate personal call to discuss volume discounting + address CompetitorX comparison"
         }
       ];
     }
@@ -251,9 +253,10 @@ export const emailService = {
   getContactSentimentBreakdown: async (): Promise<any[]> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return [
-        { id: 1, contact: "John S.", company: "Acme", sentiment: "Positive", trend: "up", lastEmail: "2d ago" },
+        { id: 1, contact: "John S.", company: "Acme", sentiment: "Positive", trend: "up", lastEmail: "2h ago" },
         { id: 2, contact: "Sarah C.", company: "Quantum", sentiment: "Negative", trend: "down", lastEmail: "5h ago" },
-        { id: 3, contact: "Mike R.", company: "Beta", sentiment: "Neutral", trend: "stable", lastEmail: "1d ago" },
+        { id: 3, contact: "Mike R.", company: "CloudNine", sentiment: "Positive", trend: "up", lastEmail: "1d ago" },
+        { id: 4, contact: "Lisa P.", company: "GreenLeaf", sentiment: "Positive", trend: "stable", lastEmail: "2d ago" },
       ];
     }
     const response = await api.get('/crm/contacts/sentiment/breakdown');
@@ -262,7 +265,7 @@ export const emailService = {
 
   getSentimentInsights: async (): Promise<string> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
-      return "Overall communication health is good. 3 contacts show declining sentiment this week. Sarah Chen at Quantum Finance requires immediate attention - sentiment dropped from positive to negative in the last 2 emails. Recommended action: Personal outreach within 24 hours.";
+      return "Overall communication health is stable, but 2 deals are at risk due to declining sentiment. Sarah Chen (Quantum Finance) is the primary concern with a sharp sentiment drop following a pricing discussion. John Smith (Acme) remains highly positive, inquiring about implementation logistics which indicates high purchase intent.";
     }
     const response = await api.get('/crm/emails/sentiment/insights');
     return response.data.insights;

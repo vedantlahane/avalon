@@ -1,5 +1,5 @@
-import { DashboardData, Deal, Activity, Task } from '../types';
-import { MOCK_DEALS, MOCK_CONTACTS, MOCK_ACTIVITIES, MOCK_TASKS } from '../data/mockData';
+import { DashboardData } from '../types';
+import { MOCK_DEALS, MOCK_ACTIVITIES, MOCK_TASKS } from '../data/mockData';
 
 export const dashboardService = {
   getDashboardData: async (): Promise<DashboardData> => {
@@ -18,47 +18,50 @@ export const dashboardService = {
         avgDealSizeChange: 8,
       },
       revenueForecast: [
-        { month: 'Jan', actual: 400000, predicted: 410000, target: 450000, confidenceHigh: 420000, confidenceLow: 400000 },
-        { month: 'Feb', actual: 480000, predicted: 460000, target: 450000, confidenceHigh: 480000, confidenceLow: 440000 },
-        { month: 'Mar', actual: 520000, predicted: 510000, target: 450000, confidenceHigh: 540000, confidenceLow: 480000 },
-        { month: 'Apr', actual: 0, predicted: 550000, target: 500000, confidenceHigh: 600000, confidenceLow: 500000 },
-        { month: 'May', actual: 0, predicted: 580000, target: 500000, confidenceHigh: 650000, confidenceLow: 510000 },
-        { month: 'Jun', actual: 0, predicted: 620000, target: 500000, confidenceHigh: 700000, confidenceLow: 540000 },
+        { month: 'Oct', actual: 45000, predicted: 42000, target: 50000, confidenceHigh: 48000, confidenceLow: 42000 },
+        { month: 'Nov', actual: 52000, predicted: 45000, target: 50000, confidenceHigh: 55000, confidenceLow: 48000 },
+        { month: 'Dec', actual: 61000, predicted: 52000, target: 60000, confidenceHigh: 65000, confidenceLow: 58000 },
+        { month: 'Jan', actual: 58000, predicted: 61000, target: 60000, confidenceHigh: 62000, confidenceLow: 55000 },
+        { month: 'Feb', actual: 95000, predicted: 58000, target: 70000, confidenceHigh: 98000, confidenceLow: 92000 },
+        { month: 'Mar', actual: 142000, predicted: 150000, target: 150000, confidenceHigh: 155000, confidenceLow: 135000 },
+        { month: 'Apr', actual: 0, predicted: 165000, target: 150000, confidenceHigh: 180000, confidenceLow: 150000 },
       ],
       pipelineByStage: [
-        { stage: 'Lead', count: 12, value: 150000, color: '#9CA3AF' },
-        { stage: 'Qualified', count: 8, value: 240000, color: '#3B82F6' },
-        { stage: 'Discovery', count: 6, value: 180000, color: '#6366F1' },
-        { stage: 'Proposal', count: 4, value: 320000, color: '#8B5CF6' },
-        { stage: 'Negotiation', count: 3, value: 210000, color: '#F59E0B' },
-        { stage: 'Closed Won', count: 8, value: 500000, color: '#10B981' },
+        { stage: 'Lead', count: 2, value: 165000, color: '#94a3b8' },
+        { stage: 'Qualified', count: 2, value: 35000, color: '#6366f1' },
+        { stage: 'Discovery', count: 2, value: 110000, color: '#8b5cf6' },
+        { stage: 'Proposal', count: 2, value: 175000, color: '#a855f7' },
+        { stage: 'Negotiation', count: 1, value: 80000, color: '#ec4899' },
+        { stage: 'Closed Won', count: 1, value: 95000, color: '#10b981' },
       ],
       aiBriefing: {
         goodNews: [
-          { id: '1', text: 'BrightPath deal moved to Proposal ($60K, probability now 65%)', type: 'success' },
-          { id: '2', text: '3 new leads added from website', type: 'success' },
-          { id: '3', text: 'Email open rate up 12% this week', type: 'info' },
+          { id: '1', text: 'Won GreenLeaf Energy deal ($95K) 2 weeks ago', type: 'success' },
+          { id: '2', text: 'New hot lead detected: Alice Wong (EduStream, score: 72)', type: 'success' },
+          { id: '3', text: 'Mike Ross (CloudNine) scheduled demo for Wednesday 3 PM', type: 'info' },
         ],
         needsAttention: [
-          { id: '4', text: 'Quantum Finance - negative email received', type: 'warning', sentiment: 'frustrated' },
-          { id: '5', text: '2 deals stalled for 10+ days', type: 'warning' },
-          { id: '6', text: '3 overdue tasks need completion', type: 'danger' },
+          { id: '4', text: 'Acme Technologies ($120K) - 7 days inactive, needs follow-up', type: 'warning' },
+          { id: '5', text: 'Quantum Finance ($80K) - Sarah Chen pricing concerns (sentiment drop)', type: 'danger' },
+          { id: '6', text: 'Beta Inc ($55K) - proposal sent 14 days ago, currently stalled', type: 'warning' },
         ],
         priorities: [
-          { id: '7', text: 'Call Sarah Chen (Quantum) - address concerns', actionLabel: 'Start Call', actionType: 'call', target: 'Sarah Chen' },
-          { id: '8', text: 'Follow up Acme deal - send proposal', actionLabel: 'Draft Email', actionType: 'email', target: 'Acme Technologies' },
-          { id: '9', text: 'Prepare for CloudNine demo at 3 PM', actionLabel: 'View Meeting', actionType: 'meeting', target: 'CloudNine' },
+          { id: '7', text: 'Call Sarah Chen (Quantum) - address pricing concerns URGENTLY', actionLabel: 'Start Call', actionType: 'call', target: 'Sarah Chen' },
+          { id: '8', text: 'Follow up Acme deal - send implementation timeline to John Smith', actionLabel: 'Draft Email', actionType: 'email', target: 'Acme Technologies' },
+          { id: '9', text: 'Prepare for CloudNine demo - Wednesday Mar 18 at 3:00 PM', actionLabel: 'View Meeting', actionType: 'meeting', target: 'CloudNine' },
         ],
       },
       activities: MOCK_ACTIVITIES.slice(0, 10),
-      dealsAtRisk: MOCK_DEALS.filter(d => d.priority === 'Critical' || d.priority === 'High').slice(0, 5),
+      dealsAtRisk: MOCK_DEALS.filter(d => ['Acme Technologies - Enterprise Plan', 'Quantum Finance - Platform License', 'Beta Inc Growth Deal'].includes(d.name)),
       upcomingTasks: MOCK_TASKS.filter(t => t.status !== 'Completed').slice(0, 5),
-      upcomingMeetings: MOCK_ACTIVITIES.filter(a => a.type === 'Meeting' || a.type === 'Demo').slice(0, 3),
+      upcomingMeetings: [
+        { id: 99, type: 'Meeting', title: 'CloudNine Demo', description: 'Technical walkthrough with Mike Ross', date: '2026-03-18T15:00:00Z', contactId: 3, dealId: 3, outcome: 'Scheduled' } as any
+      ],
       leadScoreDistribution: [
-        { category: 'Hot', count: 15, color: '#10B981', range: '80-100' },
-        { category: 'Warm', count: 25, color: '#3B82F6', range: '60-79' },
-        { category: 'Cool', count: 30, color: '#EAB308', range: '40-59' },
-        { category: 'Cold', count: 20, color: '#9CA3AF', range: '0-39' },
+        { category: 'Hot', count: 12, color: '#ef4444', range: '90-100' },
+        { category: 'Warm', count: 35, color: '#f59e0b', range: '70-89' },
+        { category: 'Cool', count: 29, color: '#6366f1', range: '50-69' },
+        { category: 'Cold', count: 24, color: '#94a3b8', range: '0-49' },
       ],
       salesLeaderboard: {
         title: 'Sales Leaderboard - March 2026',
@@ -76,7 +79,7 @@ export const dashboardService = {
           { id: '3', icon: '⚡', title: 'Speed Demon', description: 'Fastest deal close (12 days)' },
           { id: '4', icon: '🎯', title: 'Sharpshooter', description: '60%+ win rate' },
         ],
-        aiCoaching: "You're $8K away from hitting your monthly target! The CloudNine deal ($45K, 55% probability) is your best bet. Focus on scheduling the technical review this week.",
+        aiCoaching: "You're only $8K away from hitting your monthly target! The Acme Technologies deal ($120K) is in Proposal stage and very close. Following up on the implementation timeline John requested could seal the win before March 15.",
       },
     };
   }

@@ -129,7 +129,7 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
             className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10 active:bg-blue-500/10 transition-colors"
           >
             <Users className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-            <p className="text-xs font-medium text-foreground leading-tight">Call Sarah Chen (urgent)</p>
+            <p className="text-xs font-medium text-foreground leading-tight">{data.aiBriefing.priorities[0]?.text || "Call Sarah Chen (urgent)"}</p>
           </div>
         </div>
       </DashboardSection>
@@ -150,7 +150,7 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
             >
               <div className={cn(
                 "w-2 h-2 rounded-full",
-                i === 0 ? "bg-red-500" : i === 1 ? "bg-orange-500" : "bg-yellow-500"
+                task.priority === 'High' || task.priority === 'Urgent' ? "bg-red-500" : task.priority === 'Medium' ? "bg-orange-500" : "bg-yellow-500"
               )} />
               <p className="text-xs font-bold text-foreground truncate flex-1">{task.title}</p>
             </div>
@@ -165,20 +165,27 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
         color="violet"
       >
         <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
-            <div>
-              <p className="text-xs font-bold text-foreground">CloudNine Demo</p>
-              <p className="text-[10px] text-muted-foreground">3:00 PM today</p>
+          {data.upcomingMeetings.length > 0 ? (
+            data.upcomingMeetings.map((meeting, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <div>
+                  <p className="text-xs font-bold text-foreground">{meeting.title}</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {meeting.date ? format(new Date(meeting.date), 'h:mm a MMM d') : 'Scheduled'}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="flex items-center gap-3">
+              <Calendar className="w-4 h-4 text-muted-foreground" />
+              <div>
+                <p className="text-xs font-bold text-foreground">Team Standup</p>
+                <p className="text-[10px] text-muted-foreground">9:00 AM tomorrow</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
-            <div>
-              <p className="text-xs font-bold text-foreground">Team Standup</p>
-              <p className="text-[10px] text-muted-foreground">9:00 AM tomorrow</p>
-            </div>
-          </div>
+          )}
         </div>
       </DashboardSection>
 

@@ -108,27 +108,113 @@ export const reportService = {
   getAiInsights: async () => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return {
-        predictions: {
-          nextQuarterRevenue: 1450000,
-          confidence: 0.88
+        lastAnalyzed: new Date().toISOString(),
+        executiveSummary: {
+          title: "March Performance & Pipeline Health",
+          content: "Your pipeline is currently valued at $1.24M, with a strong focus on the Technology sector. While March revenue is tracking well ($142K vs $150K target), two high-value deals (Acme and Quantum) are at critical stages. Acme ($120K) is highly likely to close if technical validation is completed by March 15th, but Quantum ($80K) shows significant sentiment risk that needs immediate personal intervention.",
+          confidence: 92,
+          dataPointsCount: 456
         },
-        recommendedFocus: [
-          'Prioritize Acme Technologies ($120k) - high engagement detected',
-          'Follow up with RetailMax - stalled in Proposal for 12 days',
-          'Increase outreach in the Healthcare sector - 25% higher win rate'
+        actionItems: [
+          { 
+            id: '1', 
+            priority: 'High', 
+            priorityLabel: 'URGENT', 
+            action: 'Call Sarah Chen (Quantum Finance)', 
+            description: 'Address pricing concerns and CompetitorX comparison raised in her latest email.', 
+            type: 'Call', 
+            impact: 'High', 
+            effort: '15 mins' 
+          },
+          { 
+            id: '2', 
+            priority: 'High', 
+            priorityLabel: 'High', 
+            action: 'Draft implementation timeline for John Smith', 
+            description: 'John requested this to proceed with the technical deep-dive and sign-off.', 
+            type: 'Email', 
+            impact: 'High', 
+            effort: '30 mins' 
+          },
+          { 
+            id: '3', 
+            priority: 'Medium', 
+            priorityLabel: 'Medium', 
+            action: 'Prep for CloudNine Demo', 
+            description: 'Scheduled for Wednesday at 3:00 PM. Focus on multi-region data sync.', 
+            type: 'Meeting', 
+            impact: 'Med', 
+            effort: '45 mins' 
+          },
+          { 
+            id: '4', 
+            priority: 'Low', 
+            priorityLabel: 'Low', 
+            action: 'Enrich leads from EduStream', 
+            description: 'New leads from LinkedIn event need demographic and behavioral scoring.', 
+            type: 'Enrichment', 
+            impact: 'Low', 
+            effort: '5 mins' 
+          }
         ],
-        likelyToClose: [
-          { name: 'Acme Enterprise', value: 120000, prob: 0.92 },
-          { name: 'BrightPath API', value: 45000, prob: 0.85 },
+        dealsAtRisk: [
+          { 
+            id: 2, 
+            name: 'Quantum Finance - Platform License', 
+            value: 80000, 
+            riskLevel: 'HIGH', 
+            riskScore: 88, 
+            riskFactors: ['Negative sentiment in recent email', 'CompetitorX mentioned', 'Decision maker silence'], 
+            probabilityChange: { from: 68, to: 45 }, 
+            suggested: 'Personal outreach from manager or executive to discuss volume discounting.' 
+          },
+          { 
+            id: 5, 
+            name: 'Beta Inc Growth Deal', 
+            value: 55000, 
+            riskLevel: 'MODERATE', 
+            riskScore: 62, 
+            riskFactors: ['14 days since last contact', 'Proposal stage stalling', 'SMB sector volatility'], 
+            probabilityChange: { from: 55, to: 38 }, 
+            suggested: 'Send a "Priorities Shifted?" re-engagement email using the stalled deal template.' 
+          },
+          { 
+            id: 1, 
+            name: 'Acme Technologies - Enterprise Plan', 
+            value: 120000, 
+            riskLevel: 'LOW', 
+            riskScore: 25, 
+            riskFactors: ['Approaching close date', 'Pending technical validation'], 
+            probabilityChange: { from: 72, to: 72 }, 
+            suggested: 'Confirm technical deep-dive with CTO to maintain March 15th close date.' 
+          }
         ],
-        likelyToLose: [
-          { name: 'Quantum Finance', value: 80000, reason: 'Negative sentiment' },
-          { name: 'EduVerse Classroom', value: 55000, reason: 'Stalled for 15 days' },
+        opportunities: [
+          { 
+            type: 'Upsell', 
+            title: 'GreenLeaf Energy - Marketing Module', 
+            description: "Successful core implementation and high platform usage suggests readiness for the Marketing Module add-on.", 
+            actions: ['Draft Upsell Email', 'Share Case Study'] 
+          },
+          { 
+            type: 'Expansion', 
+            title: 'CloudNine - Multi-Region Rollout', 
+            description: "Initial demo interest in multi-region data sync suggests potential for a larger infrastructure migration deal.", 
+            actions: ['Prepare Custom ROI', 'Book Discovery'] 
+          }
         ],
-        likelyToChurn: [
-          { name: 'John Smith', company: 'Acme', signal: 'Reduced logins' },
-          { name: 'Sarah Chen', company: 'Quantum', signal: 'Negative email tone' },
-        ]
+        performanceCoaching: {
+          strengths: ['High demo-to-proposal conversion rate (65%)', 'Excellent initial response time on inbound leads', 'Strong technical discovery skills'],
+          improvements: ['Closing cycles for deals >$50K are 15% longer than average', 'Pricing objection handling in late-stage negotiation'],
+          tip: "When facing pricing objections like Sarah's at Quantum, try anchoring the conversation on ROI and long-term TCO before discussing discounts."
+        },
+        competitorIntelligence: {
+          mentions: [
+            { name: 'CompetitorX', count: 3, details: [{ contact: 'Sarah Chen', quote: "CompetitorX is offering a similar feature set for 20% less." }] },
+            { name: 'Global CRM', count: 1, details: [{ note: "Mentioned briefly in initial Acme discovery as a legacy system." }] }
+          ],
+          analysis: "CompetitorX is currently aggressive on pricing to win market share in the Finance sector. Emphasizing our AI-native feature set and deeper platform integration is key to defending against their lower-cost modular offerings."
+        }
       };
     }
     const response = await api.get('/crm/reports/ai-insights');
