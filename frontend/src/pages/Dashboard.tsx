@@ -46,6 +46,8 @@ import { useModalStore } from '../lib/modal-store';
 
 import { ActivityTimeline } from '../components/activities/ActivityTimeline';
 import { LogActivityModal } from '../components/activities/LogActivityModal';
+import { MobileDashboard } from '../components/dashboard/MobileDashboard';
+import { HelpTooltip } from '@/components/common/HelpTooltip';
 
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -146,6 +148,11 @@ export const Dashboard: React.FC = () => {
 
   if (isLoading) return <DashboardSkeleton />;
   if (error) return <ErrorState onRetry={fetchData} />;
+
+  if (window.innerWidth < 768) {
+    if (!data) return <DashboardSkeleton />;
+    return <MobileDashboard data={data} onRefresh={fetchData} />;
+  }
 
   if (!data || (data.stats.pipelineValue === 0 && data.activities.length === 0)) {
     return (
@@ -287,7 +294,10 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="lg:col-span-4 bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <h3 className="text-lg font-bold text-foreground mb-6">Pipeline by Stage</h3>
+          <div className="flex items-center gap-2 mb-6">
+            <h3 className="text-lg font-bold text-foreground">Pipeline by Stage</h3>
+            <HelpTooltip articleId="pipeline-management" />
+          </div>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart layout="vertical" data={data.pipelineByStage}>
@@ -373,7 +383,10 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-            <h3 className="text-lg font-bold text-foreground mb-6">Lead Scoring</h3>
+            <div className="flex items-center gap-2 mb-6">
+              <h3 className="text-lg font-bold text-foreground">Lead Scoring</h3>
+              <HelpTooltip articleId="lead-scoring-explained" />
+            </div>
             <div className="h-48 relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>

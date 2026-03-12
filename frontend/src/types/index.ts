@@ -211,6 +211,7 @@ export interface DashboardStats {
   pipelineValue: number;
   pipelineChange: number;
   dealsWon: number;
+  dealsWonValue?: number;
   dealsWonChange: number;
   dealsWonTarget: number;
   winRate: number;

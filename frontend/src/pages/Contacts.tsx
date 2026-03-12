@@ -29,6 +29,7 @@ import { ErrorState } from '../components/common/ErrorState';
 import { EmptyState } from '../components/common/EmptyState';
 import { useDebounce } from '../hooks/useDebounce';
 import { useModalStore } from '../lib/modal-store';
+import { MobileContactsList } from '../components/contacts/MobileContactsList';
 
 const ITEMS_PER_PAGE = 25;
 
@@ -95,6 +96,10 @@ export const Contacts = () => {
 
   if (isLoading) return view === 'grid' ? <CardGridSkeleton /> : <ListSkeleton />;
   if (error) return <ErrorState onRetry={fetchData} />;
+
+  if (window.innerWidth < 768) {
+    return <MobileContactsList contacts={contacts} onAdd={() => contactModal.open()} />;
+  }
 
   return (
     <div className="p-4 md:p-6 space-y-6 page-fade-in pb-24 md:pb-6">

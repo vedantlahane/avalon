@@ -23,16 +23,19 @@ import {
   Sun,
   Moon,
   Laptop,
-  Info
+  Info,
+  HelpCircle,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../hooks/useTheme';
 import { toastStore } from '../lib/toast-store';
+import { useHelpStore } from '@/lib/help-store';
 
 import { ImportWizard } from '../components/common/ImportWizard';
 import { ExportModal } from '../components/common/ExportModal';
 
-type SettingsTab = 'Profile' | 'Organization' | 'Pipeline' | 'Tags' | 'Email' | 'AI Configuration' | 'Integrations' | 'Goals' | 'Notifications' | 'Import/Export';
+type SettingsTab = 'Profile' | 'Organization' | 'Pipeline' | 'Tags' | 'Email' | 'AI Configuration' | 'Integrations' | 'Goals' | 'Notifications' | 'Import/Export' | 'Help & Documentation';
 
 const TABS: { id: SettingsTab; icon: any }[] = [
   { id: 'Profile', icon: User },
@@ -45,6 +48,7 @@ const TABS: { id: SettingsTab; icon: any }[] = [
   { id: 'Goals', icon: Target },
   { id: 'Notifications', icon: Bell },
   { id: 'Import/Export', icon: Download },
+  { id: 'Help & Documentation', icon: HelpCircle },
 ];
 
 /* --- SECTIONS --- */
@@ -328,6 +332,65 @@ const ImportExportSection = () => {
   );
 };
 
+const HelpSection = () => {
+  const { openHelp } = useHelpStore();
+
+  return (
+    <div className="space-y-8 page-fade-in">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Help & Documentation</h2>
+        <p className="text-muted-foreground">Find answers, learn how to use NexusCRM AI, and get support.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-8 bg-muted/30 border border-border rounded-3xl space-y-4">
+          <div className="p-3 w-fit rounded-2xl bg-indigo-500/10 text-indigo-500">
+            <FileText size={32} />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">Knowledge Base</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Browse our comprehensive guides and tutorials to master every feature of NexusCRM AI. From setting up your pipeline to advanced AI configurations.
+          </p>
+          <button 
+            onClick={() => openHelp()}
+            className="flex items-center gap-2 text-primary font-bold hover:underline group"
+          >
+            Open Help Center
+            <ExternalLink size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </button>
+        </div>
+
+        <div className="p-8 bg-muted/30 border border-border rounded-3xl space-y-4">
+          <div className="p-3 w-fit rounded-2xl bg-emerald-500/10 text-emerald-500">
+            <Bot size={32} />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">AI Assistant</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Need immediate help? Ask our AI assistant anything. It can help you find features, explain concepts, and even perform actions for you.
+          </p>
+          <button 
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-panel'))}
+            className="flex items-center gap-2 text-primary font-bold hover:underline group"
+          >
+            Chat with AI Assistant
+            <ExternalLink size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </button>
+        </div>
+      </div>
+
+      <div className="p-8 bg-primary/5 border border-primary/20 rounded-3xl text-center space-y-4">
+        <h3 className="text-lg font-bold text-foreground">Still need help?</h3>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          Our support team is available Monday through Friday, 9am - 5pm EST. We typically respond within 24 hours.
+        </p>
+        <button className="px-8 py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 ripple">
+          Contact Support Team
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('Profile');
 
@@ -367,6 +430,7 @@ export const Settings: React.FC = () => {
             {activeTab === 'Goals' && <GoalsSection />}
             {activeTab === 'Notifications' && <NotificationsSection />}
             {activeTab === 'Import/Export' && <ImportExportSection />}
+            {activeTab === 'Help & Documentation' && <HelpSection />}
           </div>
         </div>
       </div>

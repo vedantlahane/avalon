@@ -23,6 +23,7 @@ import { useNotificationSimulator } from './hooks/useNotificationSimulator';
 import { commandPaletteStore } from './lib/command-palette-store';
 import { cn } from './lib/utils';
 import { MobileFAB } from './components/layout/MobileFAB';
+import { BottomNav } from './components/layout/BottomNav';
 import { NotFound } from './pages/NotFound';
 
 // Lazy load pages
@@ -123,9 +124,13 @@ const AnimatedRoutes: React.FC<{ user: User | null }> = ({ user }) => {
   );
 };
 
+import { HelpDrawer } from './components/layout/HelpDrawer';
+import { ShortcutsOverlay } from './components/layout/ShortcutsOverlay';
+import { useHelpStore } from './lib/help-store';
+
 const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShowOnboarding: (show: boolean) => void; setUser: (user: User | null) => void }> = ({ user, showOnboarding, setShowOnboarding, setUser }) => {
   const [isAIPanelOpen, setIsAIPanelOpen] = useState(false);
-  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const { openShortcuts, openHelp, closeShortcuts, closeHelp, isShortcutsOpen, isHelpOpen } = useHelpStore();
   const { isOpen: isActivityOpen, close: closeActivity, contactId, dealId } = useActivityStore();
   const { contactModal, dealModal, taskModal } = useModalStore();
   const location = useLocation();
@@ -140,12 +145,17 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
         e.preventDefault();
         commandPaletteStore.toggle();
       }
-      if (e.key === '?') {
+      if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
         e.preventDefault();
-        setIsShortcutsOpen(prev => !prev);
+        isShortcutsOpen ? closeShortcuts() : openShortcuts();
+      }
+      if (e.key === 'F1') {
+        e.preventDefault();
+        isHelpOpen ? closeHelp() : openHelp();
       }
       if (e.key === 'Escape') {
-        setIsShortcutsOpen(false);
+        closeShortcuts();
+        closeHelp();
         setIsAIPanelOpen(false);
       }
       if (isMeta && e.key === '/') {
@@ -183,7 +193,7 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
       window.removeEventListener('toggle-ai-panel', handleToggleAI);
       window.removeEventListener('open-command-palette', handleOpenPalette);
     };
-  }, [contactModal, dealModal, taskModal]);
+  }, [contactModal, dealModal, taskModal, isShortcutsOpen, isHelpOpen, openShortcuts, closeShortcuts, openHelp, closeHelp]);
 
   if (isAuthPage) {
     return (
@@ -225,6 +235,7 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
         </button>
         
         <MobileFAB />
+        <BottomNav />
       </div>
 
       <AIPanel isOpen={isAIPanelOpen} onClose={() => setIsAIPanelOpen(false)} />
@@ -236,7 +247,8 @@ const AppContent: React.FC<{ user: User | null; showOnboarding: boolean; setShow
         dealId={dealId}
       />
       <CommandPalette />
-      <ShortcutGuide isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
+      <ShortcutsOverlay />
+      <HelpDrawer />
       
       {/* Global Modals */}
       <ContactModal 

@@ -15,9 +15,11 @@ import {
   Brain,
   TrendingUp,
   Circle,
-  Zap
+  Zap,
+  HelpCircle
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useHelpStore } from '@/lib/help-store';
 
 interface NavItem {
   icon: any;
@@ -48,6 +50,7 @@ export const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
+  const { openHelp } = useHelpStore();
 
   useEffect(() => {
     const handleToggle = () => setIsMobileOpen(prev => !prev);
@@ -110,23 +113,6 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border md:hidden h-[64px] flex items-center justify-around px-2 pb-safe">
-        {navItems.filter(item => ['Dashboard', 'Contacts', 'Deals', 'Tasks', 'AI Assistant'].includes(item.label)).map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => cn(
-              "flex flex-col items-center justify-center space-y-1 w-full h-full text-[10px] font-bold transition-colors",
-              isActive ? "text-primary" : "text-muted-foreground"
-            )}
-          >
-            <item.icon className="h-6 w-6" />
-            <span>{item.label.split(' ')[0]}</span>
-          </NavLink>
-        ))}
-      </nav>
-
       {/* Backdrop for mobile */}
       {isMobileOpen && (
         <div 
@@ -203,6 +189,17 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <div className="mt-auto border-t border-border">
+          <button 
+            onClick={() => openHelp()}
+            className={cn(
+              "w-full flex items-center px-4 py-3 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border-b border-border",
+              isCollapsed && "justify-center px-2"
+            )}
+            title={isCollapsed ? "Help & Documentation" : undefined}
+          >
+            <HelpCircle size={18} className={cn(!isCollapsed && "mr-3")} />
+            {!isCollapsed && <span>Help & Docs</span>}
+          </button>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
             className={cn(

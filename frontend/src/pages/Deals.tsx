@@ -49,6 +49,7 @@ import { ListSkeleton } from '../components/common/Skeletons';
 import { ErrorState } from '../components/common/ErrorState';
 import { useDebounce } from '../hooks/useDebounce';
 import { useModalStore } from '../lib/modal-store';
+import { MobileDealPipeline } from '../components/deals/MobileDealPipeline';
 import confetti from 'canvas-confetti';
 
 const STAGES: { id: DealStage; label: string; borderColor: string; color: string }[] = [
@@ -350,6 +351,19 @@ export const Deals: React.FC = () => {
 
   if (isLoading) return <ListSkeleton />;
   if (error) return <ErrorState onRetry={fetchData} />;
+
+  if (window.innerWidth < 768) {
+    return (
+      <MobileDealPipeline 
+        deals={deals} 
+        onAdd={(stage) => dealModal.open(undefined, stage)}
+        onUpdateStage={async (id, stage) => {
+          await dealService.updateDeal(id, { stage, probability: STAGE_PROBABILITIES[stage] });
+          fetchData();
+        }}
+      />
+    );
+  }
 
   return (
     <div className="h-full flex flex-col gap-6 overflow-hidden page-fade-in pb-20 md:pb-6">

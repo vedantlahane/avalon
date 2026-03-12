@@ -32,6 +32,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { cn } from '../lib/utils';
+import { HelpTooltip } from '@/components/common/HelpTooltip';
 
 const AIInsights: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -133,6 +134,7 @@ const AIInsights: React.FC = () => {
           <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
             <Brain className="w-8 h-8 text-indigo-500" />
             AI Insights & Recommendations
+            <HelpTooltip articleId="ai-features-intro" />
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
             Last analyzed: {format(new Date(data.lastAnalyzed), 'MMM d, yyyy h:mm a')}

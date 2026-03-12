@@ -412,14 +412,30 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
             className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100]"
           />
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            initial={window.innerWidth < 768 ? { y: '100%' } : { x: '100%' }}
+            animate={window.innerWidth < 768 ? { y: 0 } : { x: 0 }}
+            exit={window.innerWidth < 768 ? { y: '100%' } : { x: '100%' }}
+            drag={window.innerWidth < 768 ? "y" : false}
+            dragConstraints={{ top: 0 }}
+            dragElastic={0.1}
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 200) onClose();
+            }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-[500px] bg-white shadow-2xl z-[101] flex flex-col"
+            className={cn(
+              "fixed bg-white shadow-2xl z-[101] flex flex-col",
+              window.innerWidth < 768 
+                ? "inset-0 h-full w-full rounded-t-3xl pt-2" 
+                : "top-0 right-0 h-full w-full max-w-[500px]"
+            )}
           >
+            {/* Mobile Drag Handle */}
+            <div className="md:hidden flex justify-center pb-2">
+              <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
+            </div>
+
             {/* Header */}
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between relative">
+            <div className="px-6 py-4 md:p-6 border-b border-gray-100 flex items-center justify-between relative shrink-0">
               <AnimatePresence>
                 {showAiToast && (
                   <motion.div
@@ -652,7 +668,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <input
                       {...register('firstName')}
                       className={cn(
-                        "w-full bg-gray-50 border rounded-xl py-2 px-3 text-sm focus:outline-none transition-all",
+                        "w-full bg-gray-50 border rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
                         errors.firstName ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                       )}
                       placeholder="e.g. John"
@@ -664,7 +680,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <input
                       {...register('lastName')}
                       className={cn(
-                        "w-full bg-gray-50 border rounded-xl py-2 px-3 text-sm focus:outline-none transition-all",
+                        "w-full bg-gray-50 border rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
                         errors.lastName ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                       )}
                       placeholder="e.g. Doe"
@@ -680,7 +696,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                       <input
                         {...register('email')}
                         className={cn(
-                          "w-full bg-gray-50 border rounded-xl py-2 px-3 text-sm focus:outline-none transition-all",
+                          "w-full bg-gray-50 border rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
                           errors.email ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                         )}
                         placeholder="john@example.com"
@@ -704,7 +720,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <label className="text-xs font-bold text-gray-700">Phone</label>
                     <input
                       {...register('phone')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="+1 (555) 000-0000"
                     />
                   </div>
@@ -712,7 +728,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <label className="text-xs font-bold text-gray-700">Job Title</label>
                     <input
                       {...register('jobTitle')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="e.g. CEO"
                     />
                   </div>
@@ -730,7 +746,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <div className="space-y-1 relative">
                     <label className="text-xs font-bold text-gray-700">Company</label>
                     <div 
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm cursor-pointer flex items-center justify-between"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 cursor-pointer flex items-center justify-between"
                       onClick={() => setIsCompanyDropdownOpen(!isCompanyDropdownOpen)}
                     >
                       <span className={watchedValues.companyId ? "text-gray-900" : "text-gray-400"}>
@@ -750,7 +766,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                           className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 p-2 max-h-60 overflow-y-auto"
                         >
                           <input 
-                            className="w-full bg-gray-50 border-none rounded-lg py-2 px-3 text-sm focus:ring-0 mb-2"
+                            className="w-full bg-gray-50 border-none rounded-lg py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:ring-0 mb-2"
                             placeholder="Search companies..."
                             value={companySearch}
                             onChange={(e) => setCompanySearch(e.target.value)}
@@ -804,14 +820,14 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                         <label className="text-xs font-bold text-gray-700">Company Name</label>
                         <input
                           {...register('newCompany.name')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                         />
                       </div>
                       <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-700">Domain</label>
                         <input
                           {...register('newCompany.domain')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                         />
                       </div>
                     </div>
@@ -820,7 +836,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                         <label className="text-xs font-bold text-gray-700">Industry</label>
                         <select
                           {...register('newCompany.industry')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-2 px-3 text-sm outline-none"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                         >
                           <option value="">Select industry</option>
                           {['Technology', 'Healthcare', 'Finance', 'Education', 'Retail', 'Other'].map(i => (
@@ -832,7 +848,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                         <label className="text-xs font-bold text-gray-700">Size</label>
                         <select
                           {...register('newCompany.size')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-2 px-3 text-sm outline-none"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                         >
                           <option value="">Select size</option>
                           {['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+'].map(s => (
@@ -856,7 +872,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <label className="text-xs font-bold text-gray-700">Lead Source</label>
                     <select
                       {...register('leadSource')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                     >
                       <option value="">Select source</option>
                       {['Website', 'LinkedIn', 'Referral', 'Cold Outreach', 'Event', 'Other'].map(s => (
@@ -868,7 +884,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <label className="text-xs font-bold text-gray-700">Lead Status</label>
                     <select
                       {...register('leadStatus')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                     >
                       <option value="">Select status</option>
                       {['New', 'Contacted', 'Qualified', 'Unqualified', 'Nurturing'].map(s => (
@@ -893,7 +909,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                      className="flex-1 bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="flex-1 bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="Add a tag..."
                     />
                     <button
@@ -910,7 +926,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <label className="text-xs font-bold text-gray-700">Owner</label>
                   <select
                     {...register('owner')}
-                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 px-3 text-sm outline-none"
+                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                   >
                     <option value="Me">Me</option>
                     <option value="Jane Smith">Jane Smith</option>

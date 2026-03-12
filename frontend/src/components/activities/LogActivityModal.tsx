@@ -205,15 +205,32 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-black/50 backdrop-blur-sm">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          initial={window.innerWidth < 768 ? { y: '100%' } : { opacity: 0, scale: 0.95, y: 20 }}
+          animate={window.innerWidth < 768 ? { y: 0 } : { opacity: 1, scale: 1, y: 0 }}
+          exit={window.innerWidth < 768 ? { y: '100%' } : { opacity: 0, scale: 0.95, y: 20 }}
+          drag={window.innerWidth < 768 ? "y" : false}
+          dragConstraints={{ top: 0 }}
+          dragElastic={0.1}
+          onDragEnd={(_, info) => {
+            if (info.offset.y > 200) onClose();
+          }}
+          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+          className={cn(
+            "bg-white dark:bg-slate-900 w-full shadow-2xl flex flex-col overflow-hidden",
+            window.innerWidth < 768 
+              ? "h-full rounded-t-3xl pt-2" 
+              : "max-w-2xl rounded-2xl max-h-[90vh]"
+          )}
         >
+          {/* Mobile Drag Handle */}
+          <div className="md:hidden flex justify-center pb-2 shrink-0">
+            <div className="w-12 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full" />
+          </div>
+
           {/* Header */}
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50 shrink-0">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               {activeTab === 'Call' && <Phone className="w-5 h-5 text-green-500" />}
               {activeTab === 'Email' && <Mail className="w-5 h-5 text-blue-500" />}
@@ -257,7 +274,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                   <select
                     value={contactId || ''}
                     onChange={(e) => setContactId(parseInt(e.target.value))}
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full pl-10 pr-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
                     <option value="">Select contact...</option>
                     {contacts.map(c => (
@@ -275,7 +292,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                   <select
                     value={dealId || ''}
                     onChange={(e) => setDealId(parseInt(e.target.value))}
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full pl-10 pr-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
                     <option value="">Link to a deal...</option>
                     {deals.map(d => (
@@ -294,7 +311,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full pl-10 pr-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                   />
                 </div>
               </div>
@@ -309,7 +326,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                       type="time"
                       value={time}
                       onChange={(e) => setTime(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full pl-10 pr-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                     />
                   </div>
                 </div>
@@ -319,7 +336,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                     type="number"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full px-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                   />
                 </div>
               </div>
@@ -334,7 +351,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                   placeholder="Re: Enterprise Plan Proposal"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
               </div>
             )}
@@ -369,7 +386,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                   placeholder="Zoom, Google Meet, or Physical Office"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
               </div>
             )}
@@ -498,7 +515,7 @@ export const LogActivityModal: React.FC<LogActivityModalProps> = ({
                 value={nextSteps}
                 onChange={(e) => setNextSteps(e.target.value)}
                 rows={2}
-                className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
+                className="w-full px-4 py-3 text-base md:py-2 md:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
                 placeholder="Follow up on pricing next Tuesday"
               />
             </div>
