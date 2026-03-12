@@ -7,7 +7,7 @@ export const taskService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return MOCK_TASKS;
     }
-    const response = await api.get('/tasks');
+    const response = await api.get('/crm/tasks');
     return response.data;
   },
 
@@ -17,7 +17,7 @@ export const taskService = {
       if (!task) throw new Error('Task not found');
       return task;
     }
-    const response = await api.get(`/tasks/${id}`);
+    const response = await api.get(`/crm/tasks/${id}`);
     return response.data;
   },
 
@@ -32,7 +32,7 @@ export const taskService = {
       } as Task;
       return newTask;
     }
-    const response = await api.post('/tasks', taskData);
+    const response = await api.post('/crm/tasks', taskData);
     return response.data;
   },
 
@@ -43,7 +43,7 @@ export const taskService = {
       const updatedTask = { ...MOCK_TASKS[index], ...taskData, updatedAt: new Date().toISOString() };
       return updatedTask;
     }
-    const response = await api.patch(`/tasks/${id}`, taskData);
+    const response = await api.patch(`/crm/tasks/${id}`, taskData);
     return response.data;
   },
 
@@ -51,7 +51,7 @@ export const taskService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-    await api.delete(`/tasks/${id}`);
+    await api.delete(`/crm/tasks/${id}`);
   },
 
   getSuggestions: async (): Promise<any[]> => {
@@ -87,7 +87,7 @@ export const taskService = {
         }
       ];
     }
-    const response = await api.get('/tasks/suggestions');
+    const response = await api.get('/crm/tasks/suggestions');
     return response.data;
   }
 };

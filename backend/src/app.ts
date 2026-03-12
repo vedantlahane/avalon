@@ -40,7 +40,7 @@ app.get('/health', c => {
 // Mount auth routes only if auth needs to be implemented
 app.route('/auth', authRoutes);
 
-app.route('/', crmRoutes);
+app.route('/crm', crmRoutes);
 
 // send back a 404 error for any unknown api request
 app.notFound(() => {

@@ -11,7 +11,7 @@ export const dealService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return MOCK_DEALS;
     }
-    const response = await api.get('/deals');
+    const response = await api.get('/crm/deals');
     return response.data;
   },
 
@@ -23,7 +23,7 @@ export const dealService = {
       if (!deal) throw new Error('Deal not found');
       updatedDeal = { ...deal, stage, updatedAt: new Date().toISOString() };
     } else {
-      const response = await api.patch(`/deals/${dealId}`, { stage });
+      const response = await api.patch(`/crm/deals/${dealId}`, { stage });
       updatedDeal = response.data;
     }
 
@@ -58,7 +58,7 @@ export const dealService = {
       } as Deal;
       return newDeal;
     }
-    const response = await api.post('/deals', dealData);
+    const response = await api.post('/crm/deals', dealData);
     return response.data;
   },
 
@@ -66,7 +66,7 @@ export const dealService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return MOCK_DEALS.find(d => d.id === id);
     }
-    const response = await api.get(`/deals/${id}`);
+    const response = await api.get(`/crm/deals/${id}`);
     return response.data;
   },
 
@@ -77,7 +77,7 @@ export const dealService = {
       const updatedDeal = { ...MOCK_DEALS[index], ...dealData, updatedAt: new Date().toISOString() };
       return updatedDeal;
     }
-    const response = await api.patch(`/deals/${id}`, dealData);
+    const response = await api.patch(`/crm/deals/${id}`, dealData);
     return response.data;
   },
 
@@ -85,21 +85,21 @@ export const dealService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-    await api.delete(`/deals/${id}`);
+    await api.delete(`/crm/deals/${id}`);
   },
 
   bulkUpdateDeals: async (ids: number[], data: Partial<Deal>): Promise<void> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-    await api.post('/deals/bulk-update', { ids, data });
+    await api.post('/crm/deals/bulk-update', { ids, data });
   },
 
   bulkDeleteDeals: async (ids: number[]): Promise<void> => {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-    await api.post('/deals/bulk-delete', { ids });
+    await api.post('/crm/deals/bulk-delete', { ids });
   },
 
   getForecastData: async (timePeriod: string, category: string, aiConfidence: boolean): Promise<any> => {
@@ -148,7 +148,7 @@ export const dealService = {
         ]
       };
     }
-    const response = await api.get('/deals/forecast', {
+    const response = await api.get('/crm/deals/forecast', {
       params: { timePeriod, category, aiConfidence }
     });
     return response.data;

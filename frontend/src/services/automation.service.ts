@@ -7,7 +7,7 @@ export const automationService = {
       const { mockAutomations } = await import('../data/mockData');
       return mockAutomations;
     }
-    const response = await api.get('/automations');
+    const response = await api.get('/crm/automations');
     return response.data;
   },
 
@@ -18,7 +18,7 @@ export const automationService = {
       if (!automation) throw new Error('Automation not found');
       return automation;
     }
-    const response = await api.get(`/automations/${id}`);
+    const response = await api.get(`/crm/automations/${id}`);
     return response.data;
   },
 
@@ -38,7 +38,7 @@ export const automationService = {
       };
       return newAutomation;
     }
-    const response = await api.post('/automations', data);
+    const response = await api.post('/crm/automations', data);
     return response.data;
   },
 
@@ -46,7 +46,7 @@ export const automationService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
       return { id, ...data } as Automation;
     }
-    const response = await api.patch(`/automations/${id}`, data);
+    const response = await api.patch(`/crm/automations/${id}`, data);
     return response.data;
   },
 
@@ -54,7 +54,7 @@ export const automationService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
       return;
     }
-    await api.delete(`/automations/${id}`);
+    await api.delete(`/crm/automations/${id}`);
   },
 
   getAutomationLogs: async (id: number): Promise<AutomationLog[]> => {
@@ -69,7 +69,7 @@ export const automationService = {
         }
       ];
     }
-    const response = await api.get(`/automations/${id}/logs`);
+    const response = await api.get(`/crm/automations/${id}/logs`);
     return response.data;
   },
 
@@ -77,7 +77,7 @@ export const automationService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
       return { success: true, message: 'Test completed successfully' };
     }
-    const response = await api.post(`/automations/${id}/test`, sampleData);
+    const response = await api.post(`/crm/automations/${id}/test`, sampleData);
     return response.data;
   },
 
@@ -91,7 +91,7 @@ export const automationService = {
       }
       throw new Error('Automation not found');
     }
-    const response = await api.post(`/automations/${id}/toggle`);
+    const response = await api.post(`/crm/automations/${id}/toggle`);
     return response.data;
   },
 };

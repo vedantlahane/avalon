@@ -10,7 +10,7 @@ export const contactService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return MOCK_CONTACTS;
     }
-    const response = await api.get('/contacts');
+    const response = await api.get('/crm/contacts');
     return response.data;
   },
 
@@ -38,7 +38,7 @@ export const contactService = {
       };
       return result;
     }
-    const response = await api.post('/contacts/enrich', { email });
+    const response = await api.post('/crm/contacts/enrich', { email });
     return response.data;
   },
 
@@ -47,7 +47,7 @@ export const contactService = {
       await new Promise(resolve => setTimeout(resolve, 2000));
       return;
     }
-    await api.post('/contacts/bulk-enrich', { contactIds });
+    await api.post('/crm/contacts/bulk-enrich', { contactIds });
   },
 
   createContact: async (contactData: Partial<Contact>): Promise<Contact> => {
@@ -64,7 +64,7 @@ export const contactService = {
         updatedAt: new Date().toISOString(),
       } as Contact;
     } else {
-      const response = await api.post('/contacts', contactData);
+      const response = await api.post('/crm/contacts', contactData);
       newContact = response.data;
     }
 
@@ -88,7 +88,7 @@ export const contactService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return MOCK_CONTACTS.find(c => c.id === id);
     }
-    const response = await api.get(`/contacts/${id}`);
+    const response = await api.get(`/crm/contacts/${id}`);
     return response.data;
   },
 
@@ -99,7 +99,7 @@ export const contactService = {
       const updatedContact = { ...MOCK_CONTACTS[index], ...contactData, updatedAt: new Date().toISOString() };
       return updatedContact;
     }
-    const response = await api.patch(`/contacts/${id}`, contactData);
+    const response = await api.patch(`/crm/contacts/${id}`, contactData);
     return response.data;
   },
 
@@ -107,7 +107,7 @@ export const contactService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-        await api.delete(`/contacts/${id}`);
+        await api.delete(`/crm/contacts/${id}`);
       },
     
       refreshLeadScore: async (id: number): Promise<Partial<Contact>> => {
@@ -119,7 +119,7 @@ export const contactService = {
             scoreTrend: 8,
           };
         }
-        const response = await api.post(`/contacts/${id}/lead-score/refresh`);
+        const response = await api.post(`/crm/contacts/${id}/lead-score/refresh`);
         return response.data;
       },
     
@@ -131,7 +131,7 @@ export const contactService = {
             { id: 3, score: 60, change: -2, reason: 'Inactivity decay', timestamp: new Date(Date.now() - 86400000 * 7).toISOString() },
           ];
         }
-        const response = await api.get(`/contacts/${id}/lead-score/history`);
+        const response = await api.get(`/crm/contacts/${id}/lead-score/history`);
         return response.data;
       }
     };

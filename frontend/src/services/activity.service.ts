@@ -10,7 +10,7 @@ export const activityService = {
       if (filters.dealId) filtered = filtered.filter(a => a.dealId === filters.dealId);
       return filtered;
     }
-    const response = await api.get('/activities', { params: filters });
+    const response = await api.get('/crm/activities', { params: filters });
     return response.data;
   },
 
@@ -25,7 +25,7 @@ export const activityService = {
       } as Activity;
       return newActivity;
     }
-    const response = await api.post('/activities', activityData);
+    const response = await api.post('/crm/activities', activityData);
     return response.data;
   },
 
@@ -73,7 +73,7 @@ export const activityService = {
       const updatedActivity = { ...MOCK_ACTIVITIES[index], ...activityData, updatedAt: new Date().toISOString() };
       return updatedActivity;
     }
-    const response = await api.patch(`/activities/${id}`, activityData);
+    const response = await api.patch(`/crm/activities/${id}`, activityData);
     return response.data;
   },
 
@@ -81,6 +81,6 @@ export const activityService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return;
     }
-    await api.delete(`/activities/${id}`);
+    await api.delete(`/crm/activities/${id}`);
   }
 };

@@ -68,27 +68,27 @@ export interface ReportData {
 
 export const reportService = {
   getSalesPerformance: async () => {
-    const response = await api.get('/reports/sales-performance');
+    const response = await api.get('/crm/reports/sales-performance');
     return response.data;
   },
   getPipelineAnalysis: async () => {
-    const response = await api.get('/reports/pipeline-analysis');
+    const response = await api.get('/crm/reports/pipeline-analysis');
     return response.data;
   },
   getActivityReports: async () => {
-    const response = await api.get('/reports/activity-reports');
+    const response = await api.get('/crm/reports/activity-reports');
     return response.data;
   },
   getContactAnalytics: async () => {
-    const response = await api.get('/reports/contact-analytics');
+    const response = await api.get('/crm/reports/contact-analytics');
     return response.data;
   },
   getAiInsights: async () => {
-    const response = await api.get('/reports/ai-insights');
+    const response = await api.get('/crm/reports/ai-insights');
     return response.data;
   },
   queryAi: async (query: string) => {
-    const response = await api.post('/reports/ai-query', { query });
+    const response = await api.post('/crm/reports/ai-query', { query });
     return response.data;
   }
 };

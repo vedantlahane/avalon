@@ -13,7 +13,7 @@ export const emailService = {
       if (folder) return MOCK_EMAILS.filter(e => e.folder === folder);
       return MOCK_EMAILS;
     }
-    const response = await api.get('/emails', { params: { folder } });
+    const response = await api.get('/crm/emails', { params: { folder } });
     return response.data;
   },
 
@@ -23,7 +23,7 @@ export const emailService = {
       if (!email) throw new Error('Email not found');
       return email;
     }
-    const response = await api.get(`/emails/${id}`);
+    const response = await api.get(`/crm/emails/${id}`);
     return response.data;
   },
 
@@ -34,7 +34,7 @@ export const emailService = {
       email.isStarred = !email.isStarred;
       return email;
     }
-    const response = await api.patch(`/emails/${id}/star`);
+    const response = await api.patch(`/crm/emails/${id}/star`);
     return response.data;
   },
 
@@ -45,7 +45,7 @@ export const emailService = {
       email.isRead = true;
       return email;
     }
-    const response = await api.patch(`/emails/${id}/read`);
+    const response = await api.patch(`/crm/emails/${id}/read`);
     return response.data;
   },
 
@@ -54,7 +54,7 @@ export const emailService = {
       await new Promise(resolve => setTimeout(resolve, 1500));
       return "Hi Sarah,\n\nThank you for the update! We are thrilled to hear that the budget has been approved. I'll prepare the implementation timeline document as requested.\n\nRegarding the technical deep-dive, would Tuesday at 10 AM or Wednesday at 2 PM work for you and your CTO?\n\nBest regards,\n[My Name]";
     }
-    const response = await api.post(`/emails/${emailId}/generate-reply`);
+    const response = await api.post(`/crm/emails/${emailId}/generate-reply`);
     return response.data.reply;
   },
 
@@ -85,7 +85,7 @@ export const emailService = {
         ]
       };
     }
-    const response = await api.post('/emails/generate', params);
+    const response = await api.post('/crm/emails/generate', params);
     return response.data;
   },
 
@@ -98,7 +98,7 @@ export const emailService = {
       await new Promise(resolve => setTimeout(resolve, 1000));
       return params.text + "\n\n(AI Improved: " + params.action + ")";
     }
-    const response = await api.post('/emails/improve', params);
+    const response = await api.post('/crm/emails/improve', params);
     return response.data.text;
   },
 
@@ -110,7 +110,7 @@ export const emailService = {
         "Enterprise Plan: Next steps for Acme"
       ];
     }
-    const response = await api.post('/emails/suggest-subject', { context });
+    const response = await api.post('/crm/emails/suggest-subject', { context });
     return response.data.subjects;
   },
 
@@ -127,7 +127,7 @@ export const emailService = {
         ]
       };
     }
-    const response = await api.post('/emails/score', { content });
+    const response = await api.post('/crm/emails/score', { content });
     return response.data;
   },
 
@@ -138,7 +138,7 @@ export const emailService = {
         reason: "John typically opens emails Tuesday-Thursday mornings"
       };
     }
-    const response = await api.get('/emails/suggest-time', { params: { contactId } });
+    const response = await api.get('/crm/emails/suggest-time', { params: { contactId } });
     return response.data;
   },
 
@@ -167,7 +167,7 @@ export const emailService = {
         dealId: params.dealId,
       } as any;
     }
-    const response = await api.post('/emails/send', params);
+    const response = await api.post('/crm/emails/send', params);
     return response.data;
   },
 
@@ -210,7 +210,7 @@ export const emailService = {
         trends: { positive: 5, neutral: -2, negative: 3 }
       };
     }
-    const response = await api.get('/emails/sentiment/summary');
+    const response = await api.get('/crm/emails/sentiment/summary');
     return response.data;
   },
 
@@ -223,7 +223,7 @@ export const emailService = {
         negative: Math.floor(Math.random() * 10) + 5,
       }));
     }
-    const response = await api.get('/emails/sentiment/trend');
+    const response = await api.get('/crm/emails/sentiment/trend');
     return response.data;
   },
 
@@ -244,7 +244,7 @@ export const emailService = {
         }
       ];
     }
-    const response = await api.get('/emails/sentiment/flagged');
+    const response = await api.get('/crm/emails/sentiment/flagged');
     return response.data;
   },
 
@@ -256,7 +256,7 @@ export const emailService = {
         { id: 3, contact: "Mike R.", company: "Beta", sentiment: "Neutral", trend: "stable", lastEmail: "1d ago" },
       ];
     }
-    const response = await api.get('/contacts/sentiment/breakdown');
+    const response = await api.get('/crm/contacts/sentiment/breakdown');
     return response.data;
   },
 
@@ -264,7 +264,7 @@ export const emailService = {
     if (import.meta.env.VITE_USE_MOCK_DATA === "true") {
       return "Overall communication health is good. 3 contacts show declining sentiment this week. Sarah Chen at Quantum Finance requires immediate attention - sentiment dropped from positive to negative in the last 2 emails. Recommended action: Personal outreach within 24 hours.";
     }
-    const response = await api.get('/emails/sentiment/insights');
+    const response = await api.get('/crm/emails/sentiment/insights');
     return response.data.insights;
   },
 };
