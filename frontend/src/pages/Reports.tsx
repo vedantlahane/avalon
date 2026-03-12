@@ -5,6 +5,15 @@ import {
   AreaChart, Area, ScatterChart, Scatter, ZAxis, FunnelChart, Funnel, LabelList
 } from 'recharts';
 import { 
+  RevenueLineChart, 
+  PipelineFunnel, 
+  LeadScoreDonut, 
+  PipelineByStageBar, 
+  ActivityStackedArea, 
+  PipelineCoverageGauge, 
+  ChartContainer 
+} from '../components/charts';
+import { 
   BarChart3, PieChart as PieChartIcon, LineChart as LineChartIcon, 
   Download, Calendar, Search, Sparkles, TrendingUp, AlertTriangle, 
   CheckCircle2, Clock, Mail, Phone, Users, Zap, ArrowUpRight, ArrowDownRight,
@@ -292,65 +301,21 @@ const SalesPerformanceTab = ({ data }: { data: any }) => {
   return (
     <div className="space-y-8">
       {/* Report 1: Revenue Over Time */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">Revenue Over Time</h3>
-            <p className="text-sm text-gray-500">Monthly revenue for the last 12 months with AI predictions</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input 
-                type="checkbox" 
-                checked={compareYear} 
-                onChange={() => setCompareYear(!compareYear)}
-                className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" 
-              />
-              <span className="text-sm font-medium text-gray-600">Compare with previous year</span>
-            </label>
-            <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-              <Download size={20} />
-            </button>
-          </div>
-        </div>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+        <ChartContainer
+          title="Revenue Over Time"
+          subtitle="Monthly revenue for the last 12 months with AI predictions"
+          showExport={true}
+        >
+          <RevenueLineChart data={data.revenueOverTime.map((r: any) => ({
+            name: r.month,
+            actual: r.actual,
+            predicted: r.predicted,
+            confidenceRange: r.actual ? [r.actual * 0.95, r.actual * 1.05] : [r.predicted * 0.9, r.predicted * 1.1]
+          }))} />
+        </ChartContainer>
 
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data.revenueOverTime}>
-              <defs>
-                <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
-                </linearGradient>
-                <linearGradient id="colorPredicted" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis 
-                stroke="#94a3b8" 
-                fontSize={12} 
-                tickLine={false} 
-                axisLine={false} 
-                tickFormatter={(val) => `$${val / 1000}k`}
-              />
-              <Tooltip 
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                formatter={(val: any) => [`$${val?.toLocaleString()}`, '']}
-              />
-              <Legend />
-              {compareYear && (
-                <Line type="monotone" dataKey="lastYear" name="Last Year" stroke="#cbd5e1" strokeDasharray="5 5" dot={false} strokeWidth={2} />
-              )}
-              <Area type="monotone" dataKey="actual" name="Actual Revenue" stroke="#4f46e5" fillOpacity={1} fill="url(#colorActual)" strokeWidth={3} connectNulls />
-              <Area type="monotone" dataKey="predicted" name="AI Prediction" stroke="#8b5cf6" strokeDasharray="5 5" fillOpacity={1} fill="url(#colorPredicted)" strokeWidth={3} connectNulls />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="mt-8 overflow-x-auto">
+        <div className="px-6 pb-6 overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead>
               <tr className="border-y border-gray-100 bg-gray-50/50">
@@ -515,71 +480,49 @@ const PipelineAnalysisTab = ({ data }: { data: any }) => {
   return (
     <div className="space-y-8">
       {/* Report 4: Pipeline Funnel */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">Pipeline Funnel</h3>
-            <p className="text-sm text-gray-500">Visual conversion rates through each pipeline stage</p>
-          </div>
-          <div className="flex gap-2">
-            <span className="flex items-center gap-1 text-xs font-bold text-gray-500">
-              <span className="w-3 h-3 rounded-full bg-indigo-500"></span>
-              Your Team
-            </span>
-            <span className="flex items-center gap-1 text-xs font-bold text-gray-500">
-              <span className="w-3 h-3 rounded-full bg-gray-300"></span>
-              Industry Benchmark
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-          <div className="lg:col-span-2 h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <FunnelChart>
-                <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                  formatter={(val: any) => [`${val}%`, 'Conversion Rate']}
-                />
-                <Funnel
-                  data={data.funnel}
-                  dataKey="value"
-                >
-                  <LabelList position="right" fill="#4b5563" stroke="none" dataKey="name" />
-                  <LabelList position="inside" fill="#fff" stroke="none" dataKey="label" />
-                  {data.funnel.map((_: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Funnel>
-              </FunnelChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="space-y-4">
-            <div className="p-4 bg-orange-50 rounded-xl border border-orange-100">
-              <div className="flex items-center gap-2 text-orange-700 font-bold mb-2">
-                <AlertTriangle size={18} />
-                AI Callout
-              </div>
-              <p className="text-sm text-orange-800 leading-relaxed font-medium">
-                The weakest conversion point is from <span className="font-black underline">Discovery to Proposal</span> (62%), which is 15% below industry average.
-              </p>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+        <ChartContainer
+          title="Pipeline Conversion Funnel"
+          subtitle="Visual conversion rates through each pipeline stage"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+            <div className="lg:col-span-2">
+              <PipelineFunnel 
+                data={data.funnel.map((f: any, i: number) => ({
+                  name: f.name,
+                  value: f.value,
+                  color: COLORS[i % COLORS.length],
+                  count: f.count
+                }))}
+              />
             </div>
-            
-            <div className="divide-y divide-gray-100">
-              {data.funnel.slice(1).map((stage: any, i: number) => (
-                <div key={i} className="py-3 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center font-bold text-gray-400 text-xs">
-                      {stage.count}
-                    </div>
-                    <span className="text-sm font-bold text-gray-700">{stage.name}</span>
-                  </div>
-                  <span className="text-sm font-black text-gray-900">${(stage.stageValue / 1000).toLocaleString()}k</span>
+            <div className="space-y-4">
+              <div className="p-4 bg-orange-50 rounded-xl border border-orange-100">
+                <div className="flex items-center gap-2 text-orange-700 font-bold mb-2">
+                  <AlertTriangle size={18} />
+                  AI Callout
                 </div>
-              ))}
+                <p className="text-sm text-orange-800 leading-relaxed font-medium">
+                  The weakest conversion point is from <span className="font-black underline">Discovery to Proposal</span> (62%), which is 15% below industry average.
+                </p>
+              </div>
+              
+              <div className="divide-y divide-gray-100">
+                {data.funnel.slice(1).map((stage: any, i: number) => (
+                  <div key={i} className="py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center font-bold text-gray-400 text-xs">
+                        {stage.count}
+                      </div>
+                      <span className="text-sm font-bold text-gray-700">{stage.name}</span>
+                    </div>
+                    <span className="text-sm font-black text-gray-900">${(stage.stageValue / 1000).toLocaleString()}k</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </ChartContainer>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -629,51 +572,17 @@ const PipelineAnalysisTab = ({ data }: { data: any }) => {
         </div>
 
         {/* Report 6: Pipeline Coverage Ratio */}
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Pipeline Coverage Ratio</h3>
-          
-          <div className="flex flex-col items-center text-center py-4">
-            <div className="relative w-48 h-24 mb-6">
-              <div className="absolute inset-0 border-[16px] border-gray-100 rounded-t-full"></div>
-              <div 
-                className={`absolute inset-0 border-[16px] rounded-t-full origin-bottom ${
-                  data.pipelineCoverage.ratio >= 3 ? 'border-green-500' : data.pipelineCoverage.ratio >= 2 ? 'border-yellow-500' : 'border-red-500'
-                }`}
-                style={{ clipPath: 'inset(0 0 0 0)', transform: `rotate(${Math.min(180, (data.pipelineCoverage.ratio / 4) * 180)}deg)` }}
-              ></div>
-              <div className="absolute inset-x-0 bottom-0 flex flex-col items-center">
-                <span className="text-4xl font-black text-gray-900">{data.pipelineCoverage.ratio}x</span>
-              </div>
-            </div>
-            <p className="text-sm font-bold text-gray-900 mb-1">Your pipeline coverage is {data.pipelineCoverage.ratio}x</p>
-            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-              data.pipelineCoverage.ratio >= 3 ? 'bg-green-50 text-green-700' : data.pipelineCoverage.ratio >= 2 ? 'bg-yellow-50 text-yellow-700' : 'bg-red-50 text-red-700'
-            }`}>
-              <Info size={14} />
-              <span>{data.pipelineCoverage.ratio >= 3 ? 'Healthy' : data.pipelineCoverage.ratio >= 2 ? 'Adequate (Goal: 3x)' : 'Needs Attention'}</span>
-            </div>
-          </div>
-
-          <div className="mt-8 space-y-4">
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Historical Trend</p>
-                <h4 className="text-sm font-bold text-gray-900">Coverage Ratio (Last 6 Months)</h4>
-              </div>
-            </div>
-            <div className="h-32 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data.pipelineCoverage.historical}>
-                  <Line type="monotone" dataKey="v" stroke="#4f46e5" strokeWidth={3} dot={{ fill: '#4f46e5', r: 4 }} />
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="m" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <ChartContainer
+            title="Pipeline Coverage Ratio"
+            subtitle="Ratio of pipeline value to sales quota"
+            aiRecommendation="Add $180K to pipeline to reach healthy 3x coverage"
+          >
+            <PipelineCoverageGauge 
+              currentValue={data.pipelineCoverage.ratio}
+              targetValue={3.0}
+            />
+          </ChartContainer>
         </div>
       </div>
     </div>
@@ -686,26 +595,19 @@ const ActivityReportsTab = ({ data }: { data: any }) => {
   return (
     <div className="space-y-8">
       {/* Report 7: Activity Volume */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-8">Activity Volume</h3>
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data.activityVolume}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="week" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-              <Tooltip 
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              />
-              <Legend />
-              <Bar dataKey="Emails" stackId="a" fill="#4f46e5" />
-              <Bar dataKey="Calls" stackId="a" fill="#8b5cf6" />
-              <Bar dataKey="Meetings" stackId="a" fill="#ec4899" />
-              <Bar dataKey="Demos" stackId="a" fill="#f97316" />
-              <Bar dataKey="Notes" stackId="a" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+        <ChartContainer
+          title="Weekly Activity Volume"
+          subtitle="Breakdown of sales activities over time"
+        >
+          <ActivityStackedArea data={data.activityVolume.map((v: any) => ({
+            name: v.week,
+            emails: v.Emails || 0,
+            calls: v.Calls || 0,
+            meetings: v.Meetings || 0,
+            demos: v.Demos || 0
+          }))} />
+        </ChartContainer>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -789,59 +691,37 @@ const ContactAnalyticsTab = ({ data }: { data: any }) => {
   return (
     <div className="space-y-8">
       {/* Report 10: Lead Source Performance */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-8">Lead Source Performance</h3>
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data.leadSourcePerformance} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-              <XAxis type="number" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis type="category" dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} width={100} />
-              <Tooltip 
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              />
-              <Legend />
-              <Bar dataKey="value" name="Total Leads" fill="#4f46e5" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="rate" name="Conv. Rate (%)" fill="#ec4899" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Highest Volume</p>
-            <p className="text-lg font-bold text-gray-900">{data.leadSourcePerformance[0].name} ({data.leadSourcePerformance[0].value} leads)</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Best Conversion</p>
-            <p className="text-lg font-bold text-gray-900">Referral (25%)</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Highest ROI</p>
-            <p className="text-lg font-bold text-gray-900">Website ($240k)</p>
-          </div>
-        </div>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+        <ChartContainer
+          title="Lead Source Performance"
+          subtitle="Total leads and conversion rates by source"
+        >
+          <PipelineByStageBar 
+            data={data.leadSourcePerformance.map((s: any) => ({
+              name: s.name,
+              value: s.value * 1000, // Mocking value for visual
+              count: s.value,
+              color: COLORS[Math.floor(Math.random() * COLORS.length)]
+            }))}
+          />
+        </ChartContainer>
       </div>
 
-      {/* Report 11: Lead Score Distribution Over Time */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-8">Lead Score Distribution Over Time</h3>
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data.leadScoreDistribution}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-              <Tooltip 
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              />
-              <Legend />
-              <Area type="monotone" dataKey="hot" stackId="1" stroke="#22c55e" fill="#22c55e" fillOpacity={0.6} />
-              <Area type="monotone" dataKey="warm" stackId="1" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-              <Area type="monotone" dataKey="cool" stackId="1" stroke="#eab308" fill="#eab308" fillOpacity={0.6} />
-              <Area type="monotone" dataKey="cold" stackId="1" stroke="#94a3b8" fill="#94a3b8" fillOpacity={0.6} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Report 11: Lead Score Distribution */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+        <ChartContainer
+          title="Lead Score Distribution"
+          subtitle="Breakdown of leads by quality score"
+        >
+          <LeadScoreDonut 
+            data={[
+              { name: 'Hot', value: 45, color: '#ef4444', range: '90-100', icon: '🔥' },
+              { name: 'Warm', value: 82, color: '#f59e0b', range: '70-89', icon: '🌡️' },
+              { name: 'Cool', value: 64, color: '#3b82f6', range: '50-69', icon: '😐' },
+              { name: 'Cold', value: 38, color: '#94a3b8', range: '0-49', icon: '❄️' },
+            ]}
+          />
+        </ChartContainer>
       </div>
     </div>
   );

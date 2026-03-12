@@ -1,5 +1,5 @@
-import { AgentConfig } from './types';
 import { z } from 'zod';
+import { AgentConfig } from './types';
 
 export const AGENT_CONFIGS: AgentConfig[] = [
   {
@@ -11,7 +11,9 @@ export const AGENT_CONFIGS: AgentConfig[] = [
         "name": "new_lead_captured",
         "description": "When a new contact or lead is added to the CRM, the agent should analyze their profile and provide a suggested personalized outreach script.",
         "type": "sync",
-        "outputSchema": z.any()
+        "outputSchema": z.object({
+          suggestion: z.string()
+        })
       },
       {
         "name": "deal_stagnation_alert",
@@ -22,7 +24,10 @@ export const AGENT_CONFIGS: AgentConfig[] = [
         "name": "incoming_email_analysis",
         "description": "When a new email is received in the Inbox, the agent should automatically summarize the content and update the contact's sentiment score.",
         "type": "sync",
-        "outputSchema": z.any()
+        "outputSchema": z.object({
+          summary: z.string(),
+          sentiment: z.number()
+        })
       }
     ],
     "config": {

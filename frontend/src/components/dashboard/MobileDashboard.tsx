@@ -17,6 +17,8 @@ import { formatCurrency, cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
+import { Sparkline } from '../charts';
+
 interface MobileDashboardProps {
   data: DashboardData;
   onRefresh: () => Promise<void>;
@@ -65,6 +67,7 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
           change={`↑ ${data.stats.pipelineChange}%`} 
           icon={BadgeDollarSign}
           color="indigo"
+          sparklineData={[45, 52, 48, 61, 55, 67, 72]}
           onClick={() => navigate('/deals')}
         />
         <KPICard 
@@ -73,6 +76,7 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
           change={`${data.stats.dealsWon || 8} deals`} 
           icon={Target}
           color="emerald"
+          sparklineData={[2, 4, 3, 5, 4, 7, 8]}
           onClick={() => navigate('/deals')}
         />
         <KPICard 
@@ -81,6 +85,7 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
           change={`${data.stats.winRateChange > 0 ? '↑' : '↓'} ${Math.abs(data.stats.winRateChange)}%`} 
           icon={TrendingUp}
           color="violet"
+          sparklineData={[48, 47, 49, 46, 45, 44, 45]}
           onClick={() => navigate('/reports')}
         />
         <KPICard 
@@ -89,6 +94,7 @@ export const MobileDashboard: React.FC<MobileDashboardProps> = ({ data, onRefres
           change={`↑ ${data.stats.avgDealSizeChange}%`} 
           icon={Users}
           color="amber"
+          sparklineData={[58, 60, 59, 62, 61, 63, 62]}
           onClick={() => navigate('/deals')}
         />
       </div>
@@ -200,8 +206,9 @@ const KPICard: React.FC<{
   change: string; 
   icon: any; 
   color: string;
+  sparklineData: number[];
   onClick: () => void;
-}> = ({ title, value, change, icon: Icon, color, onClick }) => {
+}> = ({ title, value, change, icon: Icon, color, sparklineData, onClick }) => {
   const colors: Record<string, string> = {
     indigo: 'bg-indigo-500/10 text-indigo-500',
     emerald: 'bg-emerald-500/10 text-emerald-500',
@@ -221,9 +228,14 @@ const KPICard: React.FC<{
         </div>
         <span className="text-[10px] font-bold text-emerald-500">{change}</span>
       </div>
-      <div>
-        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{title}</p>
-        <p className="text-lg font-bold text-foreground mt-0.5">{value}</p>
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{title}</p>
+          <p className="text-lg font-bold text-foreground mt-0.5">{value}</p>
+        </div>
+        <div className="pb-1">
+          <Sparkline data={sparklineData} width={40} height={16} />
+        </div>
       </div>
     </motion.div>
   );

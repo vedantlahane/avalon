@@ -49,6 +49,14 @@ import { LogActivityModal } from '../components/activities/LogActivityModal';
 import { MobileDashboard } from '../components/dashboard/MobileDashboard';
 import { HelpTooltip } from '@/components/common/HelpTooltip';
 
+import { 
+  RevenueLineChart, 
+  PipelineByStageBar, 
+  LeadScoreDonut,
+  ChartContainer,
+  Sparkline
+} from '../components/charts';
+
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -217,6 +225,7 @@ export const Dashboard: React.FC = () => {
           isPositive={true}
           icon={BadgeDollarSign}
           color="indigo"
+          sparklineData={[45, 52, 48, 61, 55, 67, 72]}
           onClick={() => navigate('/deals')}
         />
         <StatCard 
@@ -226,6 +235,7 @@ export const Dashboard: React.FC = () => {
           isPositive={true}
           icon={Target}
           color="emerald"
+          sparklineData={[2, 4, 3, 5, 4, 7, 8]}
           onClick={() => navigate('/deals?stage=Closed%20Won')}
         />
         <StatCard 
@@ -236,6 +246,7 @@ export const Dashboard: React.FC = () => {
           isPositive={false}
           icon={TrendingUp}
           color="violet"
+          sparklineData={[48, 47, 49, 46, 45, 44, 45]}
           onClick={() => navigate('/reports')}
         />
         <StatCard 
@@ -246,75 +257,42 @@ export const Dashboard: React.FC = () => {
           isPositive={true}
           icon={Users}
           color="amber"
+          sparklineData={[58, 60, 59, 62, 61, 63, 62]}
           onClick={() => navigate('/deals')}
         />
       </div>
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
-        <div className="lg:col-span-6 bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-lg font-bold text-foreground">Revenue Forecast</h3>
-            <div className="flex gap-4">
-              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <span className="w-2 h-2 rounded-full bg-primary"></span> Actual
-              </span>
-              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <span className="w-2 h-2 rounded-full bg-primary/40"></span> Predicted
-              </span>
-            </div>
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data.revenueForecast}>
-                <defs>
-                  <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#818CF8" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#818CF8" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-border" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'currentColor' }} className="text-muted-foreground" />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'currentColor' }} className="text-muted-foreground" tickFormatter={(v) => `$${v/1000}k`} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'var(--card)', 
-                    borderColor: 'var(--border)', 
-                    color: 'var(--foreground)',
-                    borderRadius: '12px', 
-                    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' 
-                  }} 
-                  itemStyle={{ color: 'var(--foreground)' }}
-                />
-                <Area type="monotone" dataKey="actual" stroke="#818CF8" fill="url(#colorActual)" strokeWidth={3} animationDuration={1500} />
-                <Area type="monotone" dataKey="predicted" stroke="#818CF8" strokeOpacity={0.4} strokeDasharray="5 5" fill="none" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+        <div className="lg:col-span-6 h-full">
+          <ChartContainer
+            title="Revenue Forecast"
+            subtitle="Monthly revenue with AI-powered predictions"
+          >
+            <RevenueLineChart data={data.revenueForecast.map(d => ({
+              name: d.month,
+              actual: d.actual,
+              predicted: d.predicted,
+              confidenceRange: d.actual ? [d.actual * 0.9, d.actual * 1.1] : [d.predicted! * 0.85, d.predicted! * 1.15]
+            }))} />
+          </ChartContainer>
         </div>
 
-        <div className="lg:col-span-4 bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <div className="flex items-center gap-2 mb-6">
-            <h3 className="text-lg font-bold text-foreground">Pipeline by Stage</h3>
-            <HelpTooltip articleId="pipeline-management" />
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart layout="vertical" data={data.pipelineByStage}>
-                <XAxis type="number" hide />
-                <YAxis dataKey="stage" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 600, fill: 'currentColor' }} className="text-foreground" width={80} />
-                <Tooltip 
-                  cursor={{ fill: 'var(--muted)', opacity: 0.1 }} 
-                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', borderRadius: '12px' }} 
-                />
-                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={20}>
-                  {data.pipelineByStage.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <div className="lg:col-span-4 h-full">
+          <ChartContainer
+            title="Pipeline by Stage"
+            subtitle="Current deal distribution across stages"
+          >
+            <PipelineByStageBar 
+              data={data.pipelineByStage.map(d => ({
+                name: d.stage,
+                value: d.value,
+                count: Math.round(d.value / 25000) || 1, // Mocking count for demo
+                color: d.color
+              }))} 
+              onBarClick={(stage) => navigate(`/deals?stage=${encodeURIComponent(stage)}`)}
+            />
+          </ChartContainer>
         </div>
       </div>
 
@@ -382,35 +360,23 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
-            <div className="flex items-center gap-2 mb-6">
-              <h3 className="text-lg font-bold text-foreground">Lead Scoring</h3>
-              <HelpTooltip articleId="lead-scoring-explained" />
-            </div>
-            <div className="h-48 relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data.leadScoreDistribution}
-                    cx="50%" cy="50%"
-                    innerRadius={60} outerRadius={80}
-                    paddingAngle={5} dataKey="count"
-                  >
-                    {data.leadScoreDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--card)', border: 'none', borderRadius: '12px' }}
-                    itemStyle={{ color: 'var(--foreground)' }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-foreground">90</span>
-                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Leads</span>
-              </div>
-            </div>
+          <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+            <ChartContainer
+              title="Lead Scoring"
+              subtitle="Distribution of lead quality"
+              showExport={false}
+            >
+              <LeadScoreDonut 
+                data={data.leadScoreDistribution.map(d => ({
+                  name: d.category,
+                  value: d.count,
+                  color: d.color,
+                  range: d.category === 'Hot' ? '90-100' : d.category === 'Warm' ? '70-89' : d.category === 'Cool' ? '50-69' : '0-49',
+                  icon: d.category === 'Hot' ? '🔥' : d.category === 'Warm' ? '🌡️' : d.category === 'Cool' ? '😐' : '❄️'
+                }))}
+                onSegmentClick={(segment) => navigate(`/contacts?score=${segment}`)}
+              />
+            </ChartContainer>
           </div>
         </div>
       </div>
@@ -433,10 +399,11 @@ interface StatCardProps {
   isPositive: boolean;
   icon: any;
   color: string;
+  sparklineData: number[];
   onClick?: () => void;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, prefix, suffix, change, isPositive, icon: Icon, color, onClick }) => {
+const StatCard: React.FC<StatCardProps> = ({ label, value, prefix, suffix, change, isPositive, icon: Icon, color, sparklineData, onClick }) => {
   const colorMap: Record<string, string> = {
     indigo: 'bg-indigo-500/10 text-indigo-500',
     emerald: 'bg-emerald-500/10 text-emerald-500',
@@ -461,8 +428,13 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, prefix, suffix, chang
         </div>
       </div>
       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</p>
-      <div className="text-2xl font-bold text-foreground mt-1">
-        <AnimatedNumber value={value} prefix={prefix} suffix={suffix} />
+      <div className="flex items-end justify-between mt-1">
+        <div className="text-2xl font-bold text-foreground">
+          <AnimatedNumber value={value} prefix={prefix} suffix={suffix} />
+        </div>
+        <div className="pb-1">
+          <Sparkline data={sparklineData} width={60} height={24} />
+        </div>
       </div>
     </div>
   );
