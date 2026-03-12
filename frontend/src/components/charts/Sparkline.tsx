@@ -38,9 +38,10 @@ export const Sparkline: React.FC<SparklineProps> = ({ data, width = 50, height =
                      key={index}
                      cx={cx}
                      cy={cy}
-                     r={2}
+                     r={3}
                      fill={color}
-                     stroke="none"
+                     stroke="#fff"
+                     strokeWidth={1}
                    />
                  );
                }

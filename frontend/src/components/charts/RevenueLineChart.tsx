@@ -60,7 +60,12 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
               const actual = payload.find(p => p.dataKey === 'actual')?.value as number | undefined;
               const predicted = payload.find(p => p.dataKey === 'predicted')?.value as number | undefined;
               const value = actual ?? predicted;
-              const prevValue = payload[0].payload.prevValue as number | undefined;
+              const payloadData = payload[0].payload;
+              const prevValue = payloadData.prevValue as number | undefined;
+              
+              // Find previous month name
+              const dataIndex = data.findIndex(d => d.name === label);
+              const prevMonthName = dataIndex > 0 ? data[dataIndex - 1].name : null;
               
               if (value === undefined) return null;
               
@@ -73,7 +78,7 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
                     ${value?.toLocaleString()}
                     {diff !== 0 && (
                       <span className={diff > 0 ? "text-emerald-400 ml-2" : "text-rose-400 ml-2"}>
-                        ({diff > 0 ? '↑' : '↓'}{Math.abs(diff)}% vs prev)
+                        ({diff > 0 ? '↑' : '↓'}{Math.abs(diff)}% {prevMonthName ? `vs ${prevMonthName}` : ''})
                       </span>
                     )}
                   </p>
@@ -93,6 +98,8 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({
           fillOpacity={0.1}
           connectNulls
           animationDuration={800}
+          activeDot={false}
+          tooltipType="none"
         />
 
         {/* Main Revenue Area */}

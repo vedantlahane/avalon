@@ -70,13 +70,21 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
 
       <div ref={chartRef} className="flex-1 relative p-5 min-h-[300px]">
         {isLoading ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 p-5">
-            <div className="w-full h-full bg-slate-100 dark:bg-slate-800 animate-pulse rounded-lg" />
-            <div className="flex space-x-2">
-              <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />
-              <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-              <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-            </div>
+          <div className="absolute inset-0 p-5 space-y-4">
+             <div className="flex items-end justify-between h-[200px] gap-2 pt-10">
+               {[...Array(6)].map((_, i) => (
+                 <div 
+                   key={i} 
+                   className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-lg animate-pulse" 
+                   style={{ height: `${20 + Math.random() * 60}%`, animationDelay: `${i * 0.1}s` }}
+                 />
+               ))}
+             </div>
+             <div className="flex justify-between">
+               {[...Array(6)].map((_, i) => (
+                 <div key={i} className="h-2 w-8 bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />
+               ))}
+             </div>
           </div>
         ) : isError ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-5 text-center">
