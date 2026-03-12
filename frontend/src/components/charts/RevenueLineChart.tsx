@@ -15,12 +15,25 @@ import {
 interface RevenueLineChartProps {
   data: any[];
   targetValue?: number;
+  onPointClick?: (point: any) => void;
 }
 
-export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ data, targetValue = 180000 }) => {
+export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ 
+  data, 
+  targetValue = 180000,
+  onPointClick
+}) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ComposedChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+      <ComposedChart 
+        data={data} 
+        margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+        onClick={(state: any) => {
+          if (state && state.activePayload && state.activePayload.length) {
+            onPointClick?.(state.activePayload[0].payload);
+          }
+        }}
+      >
         <defs>
           <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
@@ -79,6 +92,7 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ data, target
           fill="#6366f1"
           fillOpacity={0.1}
           connectNulls
+          animationDuration={800}
         />
 
         {/* Main Revenue Area */}
@@ -88,6 +102,7 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ data, target
           stroke="none"
           fill="url(#colorRevenue)"
           animationDuration={800}
+          connectNulls
         />
 
         {/* Target Line */}
@@ -105,8 +120,9 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ data, target
           stroke="#6366f1"
           strokeWidth={3}
           dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }}
-          activeDot={{ r: 6, strokeWidth: 0 }}
+          activeDot={{ r: 6, strokeWidth: 0, cursor: 'pointer' }}
           animationDuration={800}
+          connectNulls
         />
 
         {/* Predicted Revenue Line */}
@@ -118,6 +134,7 @@ export const RevenueLineChart: React.FC<RevenueLineChartProps> = ({ data, target
           strokeDasharray="5 5"
           dot={false}
           animationDuration={800}
+          connectNulls
         />
       </ComposedChart>
     </ResponsiveContainer>

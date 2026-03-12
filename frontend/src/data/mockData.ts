@@ -1076,3 +1076,60 @@ export const mockAutomations: Automation[] = [
     updatedAt: new Date().toISOString(),
   },
 ];
+    
+    export const REVENUE_DATA = [
+      { name: 'Jan', actual: 45000, prevValue: 42000 },
+      { name: 'Feb', actual: 52000, prevValue: 45000 },
+      { name: 'Mar', actual: 61000, prevValue: 52000 },
+      { name: 'Apr', actual: 58000, prevValue: 61000 },
+      { name: 'May', actual: 72000, prevValue: 58000 },
+      { name: 'Jun', actual: 85000, prevValue: 72000 },
+      { name: 'Jul', actual: 98000, prevValue: 85000 },
+      { name: 'Aug', predicted: 115000, confidenceRange: [105000, 125000], prevValue: 98000 },
+      { name: 'Sep', predicted: 128000, confidenceRange: [115000, 140000], prevValue: 115000 },
+      { name: 'Oct', predicted: 142000, confidenceRange: [125000, 160000], prevValue: 128000 },
+      { name: 'Nov', predicted: 155000, confidenceRange: [135000, 175000], prevValue: 142000 },
+      { name: 'Dec', predicted: 172000, confidenceRange: [150000, 195000], prevValue: 155000 },
+    ];
+    
+    export const FUNNEL_DATA = [
+      { name: 'Lead', value: 100, count: 100, color: '#6366f1' },
+      { name: 'Qualified', value: 65, count: 65, color: '#8b5cf6' },
+      { name: 'Discovery', value: 40, count: 40, color: '#a855f7' },
+      { name: 'Proposal', value: 25, count: 25, color: '#d946ef' },
+      { name: 'Negotiation', value: 15, count: 15, color: '#ec4899' },
+      { name: 'Won', value: 8, count: 8, color: '#10b981' },
+    ];
+    
+    export const LEAD_SCORE_DATA = [
+      { name: 'Hot', value: 15, color: '#ef4444', range: '90-100', icon: '🔥' },
+      { name: 'Warm', value: 35, color: '#f59e0b', range: '70-89', icon: '🌡️' },
+      { name: 'Cool', value: 29, color: '#6366f1', range: '50-69', icon: '😐' },
+      { name: 'Cold', value: 21, color: '#94a3b8', range: '0-49', icon: '❄️' },
+    ];
+    
+    export const PIPELINE_STAGE_DATA = [
+      { name: 'Lead', value: 65000, count: 3, color: '#94a3b8' },
+      { name: 'Qualified', value: 120000, count: 2, color: '#6366f1' },
+      { name: 'Discovery', value: 80000, count: 1, color: '#8b5cf6' },
+      { name: 'Proposal', value: 195000, count: 2, color: '#a855f7' },
+      { name: 'Negotiation', value: 80000, count: 1, color: '#ec4899' },
+      { name: 'Won', value: 95000, count: 1, color: '#10b981' },
+      { name: 'Lost', value: 45000, count: 1, color: '#ef4444' },
+    ];
+    
+    export const ACTIVITY_DATA = [
+      { name: 'W1', emails: 15, calls: 8, meetings: 4, demos: 2 },
+      { name: 'W2', emails: 22, calls: 12, meetings: 5, demos: 3 },
+      { name: 'W3', emails: 18, calls: 15, meetings: 8, demos: 4 },
+      { name: 'W4', emails: 25, calls: 10, meetings: 6, demos: 2 },
+      { name: 'W5', emails: 20, calls: 14, meetings: 10, demos: 5 },
+    ];
+    
+    export const PIPELINE_COVERAGE = {
+      current: 2.4,
+      target: 3.0,
+      recommendation: 'Add     80K to pipeline to reach healthy 3x coverage'
+    };
+    
+    

@@ -475,6 +475,7 @@ const SalesPerformanceTab = ({ data }: { data: any }) => {
 };
 
 const PipelineAnalysisTab = ({ data }: { data: any }) => {
+  const navigate = useNavigate();
   if (!data) return null;
 
   return (
@@ -526,8 +527,43 @@ const PipelineAnalysisTab = ({ data }: { data: any }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Report 5: Stage Duration Analysis */}
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+        {/* Report 5: Pipeline by Stage */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <ChartContainer
+            title="Pipeline by Stage"
+            subtitle="Value and count of deals in each stage"
+          >
+            <PipelineByStageBar 
+              data={data.stageData || [
+                { name: 'Lead', value: 65000, count: 3, color: '#94a3b8' },
+                { name: 'Qualified', value: 120000, count: 2, color: '#6366f1' },
+                { name: 'Discovery', value: 80000, count: 1, color: '#8b5cf6' },
+                { name: 'Proposal', value: 195000, count: 2, color: '#a855f7' },
+                { name: 'Negotiation', value: 80000, count: 1, color: '#ec4899' },
+                { name: 'Won', value: 95000, count: 1, color: '#10b981' },
+              ]} 
+              onBarClick={(stage) => navigate(`/deals?stage=${encodeURIComponent(stage)}`)}
+            />
+          </ChartContainer>
+        </div>
+
+        {/* Report 6: Pipeline Coverage Ratio */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <ChartContainer
+            title="Pipeline Coverage Ratio"
+            subtitle="Ratio of pipeline value to sales quota"
+            aiRecommendation="Add $180K to pipeline to reach healthy 3x coverage"
+          >
+            <PipelineCoverageGauge 
+              currentValue={data.pipelineCoverage?.ratio || 2.4}
+              targetValue={3.0}
+            />
+          </ChartContainer>
+        </div>
+      </div>
+
+      {/* Report 7: Stage Duration Analysis */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-6">Stage Duration Analysis</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -570,21 +606,6 @@ const PipelineAnalysisTab = ({ data }: { data: any }) => {
             </div>
           </div>
         </div>
-
-        {/* Report 6: Pipeline Coverage Ratio */}
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-          <ChartContainer
-            title="Pipeline Coverage Ratio"
-            subtitle="Ratio of pipeline value to sales quota"
-            aiRecommendation="Add $180K to pipeline to reach healthy 3x coverage"
-          >
-            <PipelineCoverageGauge 
-              currentValue={data.pipelineCoverage.ratio}
-              targetValue={3.0}
-            />
-          </ChartContainer>
-        </div>
-      </div>
     </div>
   );
 };
