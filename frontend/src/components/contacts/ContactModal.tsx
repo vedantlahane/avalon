@@ -419,7 +419,15 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
             dragConstraints={{ top: 0 }}
             dragElastic={0.1}
             onDragEnd={(_, info) => {
-              if (info.offset.y > 200) onClose();
+              if (info.offset.y > 200) {
+                if (isDirty) {
+                  if (confirm('You have unsaved changes. Discard them?')) {
+                    onClose();
+                  }
+                } else {
+                  onClose();
+                }
+              }
             }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className={cn(
@@ -430,7 +438,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
             )}
           >
             {/* Mobile Drag Handle */}
-            <div className="md:hidden flex justify-center pb-2">
+            <div className="md:hidden flex justify-center pb-2 shrink-0">
               <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
             </div>
 
@@ -466,13 +474,19 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
               </div>
               <div className="flex items-center gap-4">
                 {showDraftToast && (
-                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100 flex items-center gap-1">
+                  <span className="hidden md:flex text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100 items-center gap-1">
                     <CheckCircle2 size={10} />
                     Draft saved
                   </span>
                 )}
                 <button
-                  onClick={onClose}
+                  onClick={() => {
+                    if (isDirty) {
+                      if (confirm('Discard unsaved changes?')) onClose();
+                    } else {
+                      onClose();
+                    }
+                  }}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
                 >
                   <X size={20} />
@@ -481,7 +495,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
             </div>
 
             {/* Form Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
               {/* Enrichment Animation */}
               <AnimatePresence>
                 {isAiEnriching && (
@@ -539,7 +553,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-white border-2 border-indigo-600 rounded-2xl shadow-xl p-6 space-y-6 relative overflow-hidden"
+                    className="bg-white border-2 border-indigo-600 rounded-2xl shadow-xl p-4 md:p-6 space-y-6 relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 p-3 opacity-10">
                       <Sparkles size={100} className="text-indigo-600" />
@@ -569,18 +583,18 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                         { label: 'Company Size', value: enrichmentResults.companySize, field: 'companySize' },
                       ].map((item) => (
                         <div key={item.field} className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                          <div className="flex items-center gap-3">
-                            <CheckCircle2 size={16} className="text-emerald-500" />
-                            <div>
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
+                            <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+                            <div className="min-w-0">
                               <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">{item.label}</p>
-                              <p className="text-xs font-bold text-gray-900">{item.value}</p>
+                              <p className="text-xs font-bold text-gray-900 truncate">{item.value}</p>
                             </div>
                           </div>
                           <button
                             type="button"
                             onClick={() => toggleField(item.field)}
                             className={cn(
-                              "text-[10px] font-bold px-2 py-1 rounded-lg border transition-all",
+                              "text-[10px] font-bold px-2 py-1 rounded-lg border transition-all shrink-0 ml-2",
                               acceptedFields.has(item.field)
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-100"
                                 : "bg-gray-50 text-gray-500 border-gray-100"
@@ -615,39 +629,20 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                           </div>
                         </div>
                       )}
-                      {enrichmentResults.recentNews && (
-                        <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 space-y-1">
-                          <p className="text-[10px] font-black uppercase tracking-wider text-emerald-600">Recent News / Funding</p>
-                          <p className="text-xs font-bold text-gray-900">{enrichmentResults.recentNews}</p>
-                        </div>
-                      )}
-
-                      {enrichmentResults.technologies && (
-                        <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">Technologies Used</p>
-                          <div className="flex flex-wrap gap-2">
-                            {enrichmentResults.technologies.map(tech => (
-                              <span key={tech} className="bg-white text-gray-700 px-2 py-1 rounded-lg text-[10px] font-bold border border-gray-200">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                     </div>
 
-                    <div className="flex items-center gap-3 relative pt-2">
+                    <div className="flex flex-col md:flex-row items-center gap-3 relative pt-2">
                       <button
                         type="button"
                         onClick={acceptAllEnrichment}
-                        className="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl text-xs font-black hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
+                        className="w-full md:flex-1 bg-indigo-600 text-white py-3 rounded-xl text-xs font-black hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
                       >
                         Accept All
                       </button>
                       <button
                         type="button"
                         onClick={acceptSelectedEnrichment}
-                        className="flex-1 bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-black hover:bg-gray-50 transition-all"
+                        className="w-full md:flex-1 bg-white border border-gray-200 text-gray-700 py-3 rounded-xl text-xs font-black hover:bg-gray-50 transition-all"
                       >
                         Accept Selected
                       </button>
@@ -662,13 +657,13 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <User size={16} className="text-indigo-600" />
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Basic Information</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-700">First Name*</label>
                     <input
                       {...register('firstName')}
                       className={cn(
-                        "w-full bg-gray-50 border rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
+                        "w-full bg-gray-50 border rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
                         errors.firstName ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                       )}
                       placeholder="e.g. John"
@@ -680,7 +675,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <input
                       {...register('lastName')}
                       className={cn(
-                        "w-full bg-gray-50 border rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
+                        "w-full bg-gray-50 border rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
                         errors.lastName ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                       )}
                       placeholder="e.g. Doe"
@@ -691,12 +686,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-700">Email*</label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col md:flex-row gap-2">
                     <div className="relative flex-1">
                       <input
                         {...register('email')}
                         className={cn(
-                          "w-full bg-gray-50 border rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
+                          "w-full bg-gray-50 border rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none transition-all",
                           errors.email ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                         )}
                         placeholder="john@example.com"
@@ -706,7 +701,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                       type="button"
                       onClick={handleAiEnrich}
                       disabled={isAiEnriching || !watchedValues.email}
-                      className="flex items-center gap-2 bg-indigo-50 text-indigo-700 border border-indigo-100 px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-all disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 bg-indigo-50 text-indigo-700 border border-indigo-100 px-4 py-3 md:py-2 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-all disabled:opacity-50"
                     >
                       {isAiEnriching ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                       AI Enrich
@@ -715,12 +710,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   {errors.email && <p className="text-[10px] font-bold text-rose-500">{errors.email.message}</p>}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-700">Phone</label>
                     <input
                       {...register('phone')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="+1 (555) 000-0000"
                     />
                   </div>
@@ -728,7 +723,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <label className="text-xs font-bold text-gray-700">Job Title</label>
                     <input
                       {...register('jobTitle')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="e.g. CEO"
                     />
                   </div>
@@ -746,7 +741,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <div className="space-y-1 relative">
                     <label className="text-xs font-bold text-gray-700">Company</label>
                     <div 
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 cursor-pointer flex items-center justify-between"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 cursor-pointer flex items-center justify-between"
                       onClick={() => setIsCompanyDropdownOpen(!isCompanyDropdownOpen)}
                     >
                       <span className={watchedValues.companyId ? "text-gray-900" : "text-gray-400"}>
@@ -766,7 +761,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                           className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 p-2 max-h-60 overflow-y-auto"
                         >
                           <input 
-                            className="w-full bg-gray-50 border-none rounded-lg py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:ring-0 mb-2"
+                            className="w-full bg-gray-50 border-none rounded-lg py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:ring-0 mb-2"
                             placeholder="Search companies..."
                             value={companySearch}
                             onChange={(e) => setCompanySearch(e.target.value)}
@@ -777,7 +772,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                               <button
                                 key={comp.id}
                                 type="button"
-                                className="w-full text-left px-3 py-2 rounded-xl text-sm hover:bg-indigo-50 hover:text-indigo-700 transition-all"
+                                className="w-full text-left px-3 py-3 md:py-2 rounded-xl text-base md:text-sm hover:bg-indigo-50 hover:text-indigo-700 transition-all"
                                 onClick={() => {
                                   setValue('companyId', comp.id);
                                   setIsCompanyDropdownOpen(false);
@@ -788,7 +783,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                             ))}
                             <button
                               type="button"
-                              className="w-full text-left px-3 py-2 rounded-xl text-sm font-bold text-indigo-600 hover:bg-indigo-50 transition-all flex items-center gap-2"
+                              className="w-full text-left px-3 py-3 md:py-2 rounded-xl text-base md:text-sm font-bold text-indigo-600 hover:bg-indigo-50 transition-all flex items-center gap-2"
                               onClick={() => {
                                 setIsCreatingCompany(true);
                                 setIsCompanyDropdownOpen(false);
@@ -815,28 +810,28 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                         Cancel
                       </button>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-700">Company Name</label>
                         <input
                           {...register('newCompany.name')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                         />
                       </div>
                       <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-700">Domain</label>
                         <input
                           {...register('newCompany.domain')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1">
                         <label className="text-xs font-bold text-gray-700">Industry</label>
                         <select
                           {...register('newCompany.industry')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                         >
                           <option value="">Select industry</option>
                           {['Technology', 'Healthcare', 'Finance', 'Education', 'Retail', 'Other'].map(i => (
@@ -848,7 +843,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                         <label className="text-xs font-bold text-gray-700">Size</label>
                         <select
                           {...register('newCompany.size')}
-                          className="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
+                          className="w-full bg-white border border-gray-200 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                         >
                           <option value="">Select size</option>
                           {['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+'].map(s => (
@@ -867,12 +862,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <StickyNote size={16} className="text-indigo-600" />
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Lead Details</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-700">Lead Source</label>
                     <select
                       {...register('leadSource')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                     >
                       <option value="">Select source</option>
                       {['Website', 'LinkedIn', 'Referral', 'Cold Outreach', 'Event', 'Other'].map(s => (
@@ -884,7 +879,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                     <label className="text-xs font-bold text-gray-700">Lead Status</label>
                     <select
                       {...register('leadStatus')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                     >
                       <option value="">Select status</option>
                       {['New', 'Contacted', 'Qualified', 'Unqualified', 'Nurturing'].map(s => (
@@ -898,26 +893,26 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <label className="text-xs font-bold text-gray-700">Tags</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {(watchedValues.tags || []).map(tag => (
-                      <span key={tag} className="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 border border-indigo-100">
+                      <span key={tag} className="bg-indigo-50 text-indigo-700 px-3 py-1.5 md:py-1 rounded-lg text-sm md:text-xs font-bold flex items-center gap-1.5 border border-indigo-100">
                         {tag}
                         <X size={12} className="cursor-pointer hover:text-indigo-900" onClick={() => removeTag(tag)} />
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col md:flex-row gap-2">
                     <input
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                      className="flex-1 bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="flex-1 bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="Add a tag..."
                     />
                     <button
                       type="button"
                       onClick={addTag}
-                      className="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 transition-all"
+                      className="bg-white border border-gray-200 text-gray-600 px-4 py-3 md:py-2 rounded-xl text-sm md:text-xs font-bold hover:bg-gray-50 transition-all"
                     >
-                      Add
+                      Add Tag
                     </button>
                   </div>
                 </div>
@@ -926,7 +921,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                   <label className="text-xs font-bold text-gray-700">Owner</label>
                   <select
                     {...register('owner')}
-                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
+                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none"
                   >
                     <option value="Me">Me</option>
                     <option value="Jane Smith">Jane Smith</option>
@@ -943,26 +938,26 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                 </div>
                 <div className="space-y-3">
                   <div className="relative">
-                    <Linkedin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Linkedin size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       {...register('linkedinUrl')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 pl-10 pr-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="LinkedIn URL"
                     />
                   </div>
                   <div className="relative">
-                    <Twitter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Twitter size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       {...register('twitterUrl')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 pl-10 pr-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="Twitter URL"
                     />
                   </div>
                   <div className="relative">
-                    <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Globe size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       {...register('website')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 pl-10 pr-4 text-base md:text-sm md:py-2 md:px-3 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                       placeholder="Website"
                     />
                   </div>
@@ -978,30 +973,22 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
                 <textarea
                   {...register('address')}
                   rows={3}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3 px-4 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none"
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-base md:text-sm md:py-3 md:px-4 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none"
                   placeholder="Full address..."
                 />
               </section>
 
               {/* Section 6: Notes */}
-              <section className="space-y-4 pb-12">
+              <section className="space-y-4 pb-24">
                 <div className="flex items-center gap-2 mb-2">
                   <StickyNote size={16} className="text-indigo-600" />
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Notes</h3>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 p-1 rounded-t-2xl border-b-0">
-                    <button type="button" className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg text-xs font-bold text-gray-600 transition-all">B</button>
-                    <button type="button" className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg text-xs italic text-gray-600 transition-all">I</button>
-                    <button type="button" className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg text-xs underline text-gray-600 transition-all">U</button>
-                    <div className="w-[1px] h-4 bg-gray-200 mx-1" />
-                    <button type="button" className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg text-xs text-gray-600 transition-all">List</button>
-                    <button type="button" className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg text-xs text-gray-600 transition-all">Link</button>
-                  </div>
                   <textarea
                     {...register('notes')}
                     rows={4}
-                    className="w-full bg-gray-50 border border-gray-100 rounded-b-2xl py-3 px-4 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none"
+                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-base md:text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none"
                     placeholder="Additional notes..."
                   />
                 </div>
@@ -1009,31 +996,40 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onS
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-100 bg-white flex items-center justify-between">
-              {contact ? (
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="flex items-center gap-2 text-rose-600 hover:text-rose-700 font-bold text-sm transition-colors"
-                >
-                  <Trash2 size={16} />
-                  <span>Delete Contact</span>
-                </button>
-              ) : (
-                <div />
-              )}
-              <div className="flex items-center gap-3">
+            <div className="p-4 md:p-6 border-t border-gray-100 bg-white flex flex-col md:flex-row items-center justify-between gap-3 shrink-0 sticky bottom-0 z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
+              <div className="w-full md:w-auto flex justify-between md:justify-start items-center">
+                {contact ? (
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    className="flex items-center gap-2 text-rose-600 hover:text-rose-700 font-bold text-sm transition-colors"
+                  >
+                    <Trash2 size={16} />
+                    <span>Delete Contact</span>
+                  </button>
+                ) : (
+                  <div />
+                )}
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all"
+                  className="md:hidden px-4 py-2 text-sm font-bold text-gray-500"
+                >
+                  Cancel
+                </button>
+              </div>
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="hidden md:block px-6 py-2.5 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmit(onSubmit)}
                   disabled={isSubmitting}
-                  className="bg-indigo-600 text-white px-8 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                  className="flex-1 md:flex-none bg-indigo-600 text-white px-8 py-4 md:py-2.5 rounded-xl text-base md:text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isSubmitting && <Loader2 size={16} className="animate-spin" />}
                   {contact ? 'Save Changes' : 'Save Contact'}

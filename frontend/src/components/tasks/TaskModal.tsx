@@ -137,7 +137,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
             dragConstraints={{ top: 0 }}
             dragElastic={0.1}
             onDragEnd={(_, info) => {
-              if (info.offset.y > 200) onClose();
+              if (info.offset.y > 200) {
+                if (title) {
+                  if (confirm('Discard changes?')) onClose();
+                } else {
+                  onClose();
+                }
+              }
             }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className={cn(
@@ -154,12 +160,21 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
 
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10 shrink-0">
               <h2 className="text-xl font-bold text-gray-900">{task ? 'Edit Task' : 'Add New Task'}</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+              <button 
+                onClick={() => {
+                  if (title) {
+                    if (confirm('Discard changes?')) onClose();
+                  } else {
+                    onClose();
+                  }
+                }} 
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+              >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar pb-24">
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">Title</label>
@@ -169,7 +184,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="What needs to be done?"
-                    className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-base md:text-sm"
+                    className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium text-base md:text-sm"
                   />
                 </div>
 
@@ -180,7 +195,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Add more details..."
                     rows={3}
-                    className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm resize-none"
+                    className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm resize-none"
                   />
                 </div>
 
@@ -188,12 +203,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">Due Date</label>
                     <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                      <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                       <input
                         type="date"
                         value={dueDate}
                         onChange={(e) => setDueDate(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                        className="w-full pl-10 pr-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                       />
                     </div>
                   </div>
@@ -203,7 +218,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                       type="time"
                       value={dueTime}
                       onChange={(e) => setDueTime(e.target.value)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     />
                   </div>
                 </div>
@@ -214,7 +229,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={priority}
                       onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>
@@ -227,7 +242,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={status}
                       onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="To Do">To Do</option>
                       <option value="In Progress">In Progress</option>
@@ -244,7 +259,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={contactId || ''}
                       onChange={(e) => setContactId(e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="">None</option>
                       {contacts.map(c => (
@@ -259,7 +274,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={dealId || ''}
                       onChange={(e) => setDealId(e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="">None</option>
                       {deals.map(d => (
@@ -275,7 +290,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={assignee}
                       onChange={(e) => setAssignee(e.target.value)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="Me">Me</option>
                       <option value="Alex Johnson">Alex Johnson</option>
@@ -289,7 +304,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={reminder}
                       onChange={(e) => setReminder(e.target.value)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="None">None</option>
                       <option value="15min">15 min before</option>
@@ -305,7 +320,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
                     <select
                       value={recurring}
                       onChange={(e) => setRecurring(e.target.value)}
-                      className="w-full px-4 py-3 md:py-2 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
+                      className="w-full px-4 py-3.5 md:py-2.5 border border-gray-100 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-base md:text-sm"
                     >
                       <option value="None">None</option>
                       <option value="Daily">Daily</option>
@@ -317,18 +332,18 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSuccess
               </div>
             </form>
 
-            <div className="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-end gap-3 shrink-0 sticky bottom-0 z-10">
+            <div className="px-6 py-4 border-t border-gray-100 bg-white flex flex-col md:flex-row items-center justify-end gap-3 shrink-0 sticky bottom-0 z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all"
+                className="w-full md:w-auto px-6 py-4 md:py-2.5 rounded-xl text-base md:text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !title}
-                className="bg-indigo-600 text-white px-8 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                className="w-full md:w-auto bg-indigo-600 text-white px-8 py-4 md:py-2.5 rounded-xl text-base md:text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2"
               >
                 {isSubmitting ? 'Saving...' : task ? 'Update Task' : 'Create Task'}
               </button>

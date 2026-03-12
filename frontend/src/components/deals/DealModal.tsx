@@ -350,7 +350,13 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
             dragConstraints={{ top: 0 }}
             dragElastic={0.1}
             onDragEnd={(_, info) => {
-              if (info.offset.y > 200) onClose();
+              if (info.offset.y > 200) {
+                if (watchedLineItems.length > 0 || watchedStage !== 'Lead') {
+                   if (confirm('Discard unsaved changes?')) onClose();
+                } else {
+                   onClose();
+                }
+              }
             }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className={cn(
@@ -369,7 +375,13 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10 shrink-0">
               <div className="flex items-center gap-4">
                 <button
-                  onClick={onClose}
+                  onClick={() => {
+                    if (watchedLineItems.length > 0) {
+                      if (confirm('Discard changes?')) onClose();
+                    } else {
+                      onClose();
+                    }
+                  }}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
                 >
                   <X size={20} />
@@ -388,7 +400,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                   className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all border border-indigo-100"
                 >
                   {isAiAssisting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                  <span>🤖 AI Assist</span>
+                  <span className="hidden sm:inline">🤖 AI Assist</span>
                 </button>
               </div>
             </div>
@@ -417,7 +429,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                     <input
                       {...register('name')}
                       className={cn(
-                        "w-full bg-gray-50 border rounded-xl py-2.5 px-4 text-sm focus:outline-none transition-all",
+                        "w-full bg-gray-50 border rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 focus:outline-none transition-all",
                         errors.name ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                       )}
                       placeholder="e.g. Acme - Enterprise Plan"
@@ -425,7 +437,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                     {errors.name && <p className="text-[10px] font-bold text-rose-500">{errors.name.message as string}</p>}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-700">Deal Value*</label>
                       <div className="relative">
@@ -435,7 +447,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                           step="0.01"
                           {...register('value', { valueAsNumber: true })}
                           className={cn(
-                            "w-full bg-gray-50 border rounded-xl py-2.5 pl-8 pr-4 text-sm focus:outline-none transition-all font-bold",
+                            "w-full bg-gray-50 border rounded-xl py-3.5 pl-8 pr-4 text-base md:text-sm md:py-2.5 md:pl-8 md:pr-4 focus:outline-none transition-all font-bold",
                             errors.value ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                           )}
                           placeholder="0.00"
@@ -447,20 +459,20 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                       <label className="text-xs font-bold text-gray-700">Currency</label>
                       <select
                         {...register('currency')}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
                       >
                         {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-700">Pipeline Stage</label>
                       <div className="relative">
                         <select
                           {...register('stage')}
-                          className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 px-4 text-sm outline-none appearance-none focus:ring-indigo-500/10 focus:border-indigo-500"
+                          className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 outline-none appearance-none focus:ring-indigo-500/10 focus:border-indigo-500"
                         >
                           {STAGES.map(s => (
                             <option key={s.value} value={s.value}>
@@ -481,7 +493,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                       <label className="text-xs font-bold text-gray-700">Priority</label>
                       <select
                         {...register('priority')}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
                       >
                         {PRIORITIES.map(p => (
                           <option key={p.value} value={p.value}>{p.emoji} {p.value}</option>
@@ -505,7 +517,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center">
                       <label className="text-xs font-bold text-gray-700">Contact*</label>
-                      <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">+ Create New Contact</button>
+                      <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">+ Create New</button>
                     </div>
                     <Select
                       options={contactOptions}
@@ -516,7 +528,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                       formatOptionLabel={(option: any) => (
                         <div className="flex flex-col">
                           <span className="font-bold text-sm">{option.label}</span>
-                          <span className="text-[10px] text-gray-400">{option.email} • {option.company}</span>
+                          <span className="text-[10px] text-gray-400">{option.email}</span>
                         </div>
                       )}
                     />
@@ -538,7 +550,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                     <label className="text-xs font-bold text-gray-700">Deal Owner</label>
                     <select
                       {...register('owner')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
                     >
                       <option value="Me">Me (Alex Smith)</option>
                       <option value="Sarah Johnson">Sarah Johnson</option>
@@ -557,14 +569,14 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                   <h3 className="text-sm font-bold text-gray-900 tracking-tight">Timeline</h3>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-700">Expected Close Date*</label>
                     <input
                       type="date"
                       {...register('expectedCloseDate')}
                       className={cn(
-                        "w-full bg-gray-50 border rounded-xl py-2.5 px-4 text-sm focus:outline-none transition-all",
+                        "w-full bg-gray-50 border rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 focus:outline-none transition-all",
                         errors.expectedCloseDate ? "border-rose-300 focus:ring-rose-500/10 focus:border-rose-500" : "border-gray-100 focus:ring-indigo-500/10 focus:border-indigo-500"
                       )}
                     />
@@ -579,7 +591,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                       type="text"
                       readOnly
                       value={format(new Date(), 'yyyy-MM-dd')}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 px-4 text-sm outline-none text-gray-400 cursor-not-allowed"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 outline-none text-gray-400 cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -610,7 +622,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                       min="0"
                       max="100"
                       {...register('probability', { valueAsNumber: true })}
-                      className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                      className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                     />
                   </div>
 
@@ -618,7 +630,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                     <label className="text-xs font-bold text-gray-700">Competitors</label>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {watchedCompetitors.map((comp: any) => (
-                        <span key={comp} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-bold">
+                        <span key={comp} className="inline-flex items-center gap-1 px-3 py-1.5 md:px-2 md:py-1 bg-gray-100 text-gray-700 rounded-lg text-sm md:text-[10px] font-bold">
                           {comp}
                           <button type="button" onClick={() => removeCompetitor(comp)} className="text-gray-400 hover:text-rose-500">
                             <X size={12} />
@@ -632,7 +644,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                       onChange={(e) => setCompetitorInput(e.target.value)}
                       onKeyDown={handleAddCompetitor}
                       placeholder="Add competitor and press Enter..."
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm md:py-2.5 md:px-4 focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500"
                     />
                   </div>
 
@@ -641,7 +653,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                     <textarea
                       {...register('notes')}
                       rows={3}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-4 text-base md:text-sm focus:outline-none focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none"
                       placeholder="Key takeaways, blockers, or strategy..."
                     />
                   </div>
@@ -649,7 +661,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
               </section>
 
               {/* Section 5: Products/Line Items */}
-              <section className="space-y-6 pb-8">
+              <section className="space-y-6 pb-24">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
@@ -660,7 +672,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                   <button
                     type="button"
                     onClick={() => append({ productName: '', quantity: 1, unitPrice: 0, total: 0 })}
-                    className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-bold text-xs"
+                    className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-bold text-sm"
                   >
                     <Plus size={14} /> Add Item
                   </button>
@@ -668,41 +680,43 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
 
                 <div className="space-y-4">
                   {fields.map((field, index) => (
-                    <div key={field.id} className="p-4 bg-gray-50 border border-gray-100 rounded-xl space-y-3 relative group">
+                    <div key={field.id} className="p-4 bg-gray-50 border border-gray-100 rounded-xl space-y-4 relative group">
                       <button
                         type="button"
                         onClick={() => remove(index)}
-                        className="absolute -top-2 -right-2 w-6 h-6 bg-white border border-gray-100 rounded-full flex items-center justify-center text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                        className="absolute top-4 right-4 text-rose-500"
                       >
-                        <Minus size={14} />
+                        <Trash2 size={18} />
                       </button>
                       
-                      <div className="grid grid-cols-12 gap-3">
-                        <div className="col-span-12 md:col-span-6 space-y-1">
+                      <div className="flex flex-col gap-4">
+                        <div className="space-y-1">
                           <label className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Product Name</label>
                           <input
                             {...register(`lineItems.${index}.productName`)}
-                            className="w-full bg-white border border-gray-100 rounded-lg py-1.5 px-3 text-sm outline-none focus:border-indigo-300"
+                            className="w-full bg-white border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none focus:border-indigo-300"
                             placeholder="e.g. Enterprise License"
                           />
                         </div>
-                        <div className="col-span-4 md:col-span-2 space-y-1">
-                          <label className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Qty</label>
-                          <input
-                            type="number"
-                            {...register(`lineItems.${index}.quantity`, { valueAsNumber: true })}
-                            className="w-full bg-white border border-gray-100 rounded-lg py-1.5 px-3 text-sm outline-none focus:border-indigo-300"
-                          />
-                        </div>
-                        <div className="col-span-8 md:col-span-4 space-y-1">
-                          <label className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Price</label>
-                          <div className="relative">
-                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Qty</label>
                             <input
                               type="number"
-                              {...register(`lineItems.${index}.unitPrice`, { valueAsNumber: true })}
-                              className="w-full bg-white border border-gray-100 rounded-lg py-1.5 pl-5 pr-3 text-sm outline-none focus:border-indigo-300"
+                              {...register(`lineItems.${index}.quantity`, { valueAsNumber: true })}
+                              className="w-full bg-white border border-gray-100 rounded-xl py-3 px-4 text-base md:text-sm md:py-2 md:px-3 outline-none focus:border-indigo-300"
                             />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Price</label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                              <input
+                                type="number"
+                                {...register(`lineItems.${index}.unitPrice`, { valueAsNumber: true })}
+                                className="w-full bg-white border border-gray-100 rounded-xl py-3 pl-7 pr-3 text-base md:text-sm md:py-2 md:pl-6 md:pr-3 outline-none focus:border-indigo-300"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -710,12 +724,12 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                   ))}
 
                   {fields.length === 0 && (
-                    <div className="text-center py-6 border-2 border-dashed border-gray-100 rounded-2xl">
-                      <p className="text-xs text-gray-400">No products added yet.</p>
+                    <div className="text-center py-8 border-2 border-dashed border-gray-100 rounded-2xl">
+                      <p className="text-sm text-gray-400 font-medium">No products added yet.</p>
                       <button
                         type="button"
                         onClick={() => append({ productName: '', quantity: 1, unitPrice: 0, total: 0 })}
-                        className="text-xs text-indigo-600 font-bold mt-2"
+                        className="text-sm text-indigo-600 font-bold mt-2"
                       >
                         + Add your first product
                       </button>
@@ -726,38 +740,47 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-100 bg-white flex items-center justify-between sticky bottom-0 z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
-              {deal ? (
-                <button
-                  type="button"
-                  onClick={async () => {
-                    if (confirm('Delete this deal?')) {
-                      await dealService.deleteDeal(deal.id);
-                      onSuccess();
-                      onClose();
-                    }
-                  }}
-                  className="flex items-center gap-2 text-rose-600 hover:text-rose-700 font-bold text-sm transition-colors"
-                >
-                  <Trash2 size={16} />
-                  <span>Delete</span>
-                </button>
-              ) : (
+            <div className="p-4 md:p-6 border-t border-gray-100 bg-white flex flex-col md:flex-row items-center justify-between sticky bottom-0 z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
+              <div className="w-full md:w-auto flex justify-between md:justify-start items-center">
+                {deal ? (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (confirm('Delete this deal?')) {
+                        await dealService.deleteDeal(deal.id);
+                        onSuccess();
+                        onClose();
+                      }
+                    }}
+                    className="flex items-center gap-2 text-rose-600 hover:text-rose-700 font-bold text-sm transition-colors"
+                  >
+                    <Trash2 size={16} />
+                    <span>Delete</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="md:hidden px-4 py-2 text-sm font-bold text-gray-500"
+                  >
+                    Cancel
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700"
+                  className="hidden md:block px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700"
                 >
                   Cancel
                 </button>
-              )}
-              <div className="flex items-center gap-3">
+              </div>
+              <div className="flex items-center gap-3 w-full md:w-auto">
                 {!deal && (
                   <button
                     type="button"
                     disabled={isSubmitting}
                     onClick={handleSubmit((data: any) => saveDeal(data, true))}
-                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-indigo-600 border border-indigo-100 hover:bg-indigo-50 transition-all disabled:opacity-50"
+                    className="hidden md:block px-4 py-2.5 rounded-xl text-sm font-bold text-indigo-600 border border-indigo-100 hover:bg-indigo-50 transition-all disabled:opacity-50"
                   >
                     Save & Add Another
                   </button>
@@ -765,7 +788,7 @@ export const DealModal: React.FC<DealModalProps> = ({ isOpen, onClose, onSuccess
                 <button
                   onClick={handleSubmit((data: any) => saveDeal(data, false))}
                   disabled={isSubmitting}
-                  className="bg-indigo-600 text-white px-8 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                  className="flex-1 md:flex-none bg-indigo-600 text-white px-8 py-4 md:py-2.5 rounded-xl text-base md:text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isSubmitting && <Loader2 size={16} className="animate-spin" />}
                   {deal ? 'Save Changes' : 'Save Deal'}
